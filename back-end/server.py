@@ -34,7 +34,7 @@ def search():
 
     response = search.execute()
 
-    app.logger.debug(response.aggregations.to_dict())
+    app.logger.debug(response)
     return response.to_dict()
 
 
