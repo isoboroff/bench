@@ -27,7 +27,7 @@ def search():
     query = request.args['q']
     # unescape the query
     search = Search(using=es, index=args.index).query("match", text=query)
-    search.aggs.bucket('persons', 'terms', field='PER.keyword')
+    search.aggs.bucket('persons', 'terms', field='PERSON.keyword')
     search.aggs.bucket('orgs', 'terms', field='ORG.keyword')
     search.aggs.bucket('gpes', 'terms', field='GPE.keyword')
     search.aggs.bucket('events', 'terms', field='EVENT.keyword')
