@@ -7,6 +7,10 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
+import Nav from "react-bootstrap/Nav";
+import Accordion from "react-bootstrap/Accordion";
+import Button from "react-bootstrap/Button";
 
 class SearchBox extends React.Component {
   constructor(props) {
@@ -53,7 +57,25 @@ class SearchBox extends React.Component {
 
 class SearchHit extends React.Component {
   render() {
-    return <li>{this.props.value}</li>;
+    // return <li key={this.props.key}>{this.props.children}</li>;
+    const doc = this.props.content;
+    return (
+      <Card>
+        <Accordion.Toggle
+          as={Card.Header}
+          variant="link"
+          eventKey={this.props.hitkey}
+        >
+          {this.props.title}
+        </Accordion.Toggle>
+        <Accordion.Collapse eventKey={this.props.hitkey}>
+          <Card.Body>
+            {doc.first_date} {this.props.hitkey} <p />
+            <div style={{ whiteSpace: "pre-wrap" }}>{doc.text}</div>
+          </Card.Body>
+        </Accordion.Collapse>
+      </Card>
+    );
   }
 }
 
@@ -63,14 +85,17 @@ class SearchResults extends React.Component {
     if (hits.length > 0) {
       const hitlist = hits.map(hit => (
         <SearchHit
-          key={hit._source.uuid}
-          value={hit._source.text.split("\n")[0]}
+          hitkey={hit._source.uuid}
+          title={hit._source.text.split("\n")[0]}
+          content={hit._source}
         />
       ));
       return (
         <div>
           {this.props.results.hits.total.value} Results Found. <p />
-          <ol>{hitlist}</ol>
+          <Accordion defaultActiveKey={hits[0]._source.uuid}>
+            {hitlist}
+          </Accordion>
         </div>
       );
     } else {
@@ -82,12 +107,16 @@ class SearchResults extends React.Component {
 class Facet extends React.Component {
   render() {
     var switches = [];
-    for (var o in this.props.data) {
-      switches = switches.concat(<li>{o.key}</li>);
+    for (var o of this.props.facetdata) {
+      switches = switches.concat(
+        <li>
+          {o.key} ({o.doc_count})
+        </li>
+      );
     }
     return (
       <React.Fragment>
-        <dt>{this.props.key}</dt>
+        <dt>{this.props.facetkey}</dt>
         <dd>
           <ul>{switches}</ul>
         </dd>
@@ -100,7 +129,7 @@ class FacetView extends React.Component {
   render() {
     const facets = this.props.facets;
     var facetlist = Object.entries(facets).map(([key, data]) => (
-      <Facet key={key} data={data.buckets} />
+      <Facet facetkey={key} facetdata={data.buckets} />
     ));
     return <dl>{facetlist}</dl>;
   }
@@ -132,7 +161,7 @@ class Layout extends React.Component {
           <Col sm="2">
             <FacetView facets={facets} />
           </Col>
-          <Col sm="auto">
+          <Col sm="8">
             <SearchResults results={results} />
           </Col>
         </Row>
