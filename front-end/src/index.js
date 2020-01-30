@@ -69,7 +69,7 @@ class SearchResults extends React.Component {
       ));
       return (
         <div>
-          {hits.length} Results Found. <p />
+          {this.props.results.hits.total.value} Results Found. <p />
           <ol>{hitlist}</ol>
         </div>
       );
