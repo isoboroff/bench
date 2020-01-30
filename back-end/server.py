@@ -25,7 +25,7 @@ def hello():
 @app.route('/search')
 def search():
     query = request.args['q']
-    # unescape the query
+
     search = Search(using=es, index=args.index).query("match", text=query)
     search.aggs.bucket('persons', 'terms', field='PERSON.keyword')
     search.aggs.bucket('orgs', 'terms', field='ORG.keyword')
