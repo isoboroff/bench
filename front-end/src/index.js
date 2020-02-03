@@ -90,7 +90,7 @@ class SearchHit extends React.Component {
           variant="link"
           eventKey={this.props.hitkey}
         >
-          {this.props.title}
+          {this.props.seqno + 1}. {this.props.title}
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={this.props.hitkey}>
           <Card.Body>
@@ -115,8 +115,9 @@ class SearchResults extends React.Component {
       // use map() to convert it to a list of JSX things, then use that directly
       // in the JSX rendering.  (Otherwise JSX would need loop primitives, yuck)
       // An equivalent approach is to declare an empty list and push() things onto it.
-      const hitlist = hits.map(hit => (
+      const hitlist = hits.map((hit, index) => (
         <SearchHit
+          seqno={index}
           hitkey={hit._source.uuid}
           title={hit._source.text.split("\n")[0]}
           content={hit._source}
