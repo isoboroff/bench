@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
+from elasticsearch_dsl.query import Q
 
 import argparse
+import json
 
 argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 argparser.add_argument('--host', help='ElasticSearch host', default='localhost')
@@ -26,12 +28,17 @@ def hello():
 def search():
     query = request.args['q']
 
-    search = Search(using=es, index=args.index).query("match", text=query)
+    search = Search(using=es, index=args.index)
+    search = search.query(Q('match', text=query))
+    search = search.highlight('text')
+    search = search.highlight_options(pre_tags='<mark>', post_tags='</mark>')
     search.aggs.bucket('persons', 'terms', field='PERSON.keyword')
     search.aggs.bucket('orgs', 'terms', field='ORG.keyword')
     search.aggs.bucket('gpes', 'terms', field='GPE.keyword')
     search.aggs.bucket('events', 'terms', field='EVENT.keyword')
 
+    app.logger.debug(json.dumps(search.to_dict()))
+    
     response = search.execute()
 
     app.logger.debug(response)

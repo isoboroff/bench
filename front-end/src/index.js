@@ -90,7 +90,10 @@ class SearchHit extends React.Component {
           variant="link"
           eventKey={this.props.hitkey}
         >
-          {this.props.seqno + 1}. {this.props.title}
+          {this.props.seqno + 1}. {this.props.title} <br />
+          <div
+            dangerouslySetInnerHTML={{ __html: this.props.highlight.text[0] }}
+          />
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={this.props.hitkey}>
           <Card.Body>
@@ -121,6 +124,7 @@ class SearchResults extends React.Component {
           hitkey={hit._source.uuid}
           title={hit._source.text.split("\n")[0]}
           content={hit._source}
+          highlight={hit.highlight}
         />
       ));
       return (
