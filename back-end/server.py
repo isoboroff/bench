@@ -31,7 +31,9 @@ def search():
     search = Search(using=es, index=args.index)
     search = search.query(Q('match', text=query))
     search = search.highlight('text')
-    search = search.highlight_options(pre_tags='<mark>', post_tags='</mark>')
+    search = search.highlight_options(pre_tags='<mark>',
+                                      post_tags='</mark>',
+                                      number_of_fragments=0)
     search.aggs.bucket('persons', 'terms', field='PERSON.keyword')
     search.aggs.bucket('orgs', 'terms', field='ORG.keyword')
     search.aggs.bucket('gpes', 'terms', field='GPE.keyword')

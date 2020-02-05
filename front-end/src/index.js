@@ -91,14 +91,14 @@ class SearchHit extends React.Component {
           eventKey={this.props.hitkey}
         >
           {this.props.seqno + 1}. {this.props.title} <br />
-          <div
-            dangerouslySetInnerHTML={{ __html: this.props.highlight.text[0] }}
-          />
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={this.props.hitkey}>
           <Card.Body>
             {doc.first_date} {this.props.hitkey} <p />
-            <div style={{ whiteSpace: "pre-wrap" }}>{doc.text}</div>
+            <div
+              style={{ whiteSpace: "pre-wrap" }}
+              dangerouslySetInnerHTML={{ __html: doc.text }}
+            />
           </Card.Body>
         </Accordion.Collapse>
       </Card>
@@ -123,8 +123,7 @@ class SearchResults extends React.Component {
           seqno={index}
           hitkey={hit._source.uuid}
           title={hit._source.text.split("\n")[0]}
-          content={hit._source}
-          highlight={hit.highlight}
+          content={hit.highlight}
         />
       ));
       return (
@@ -205,7 +204,7 @@ class Layout extends React.Component {
           <Col sm="2">
             <FacetView facets={facets} />
           </Col>
-          <Col sm="8">
+          <Col sm="10">
             <SearchResults results={results} />
           </Col>
         </Row>
