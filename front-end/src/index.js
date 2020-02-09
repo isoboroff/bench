@@ -142,18 +142,26 @@ class SearchResults extends React.Component {
 
 /** Facet a search facet, a.k.a. an ElasticSearch aggregation. */
 class Facet extends React.Component {
+  constructor(props) {
+    super(props);
+    this.onFacetCheck = this.onFacetCheck.bind(this);
+  }
+  onFacetCheck(event) {
+    this.props.onCheck(event.target.id, event.target.checked);
+  }
   render() {
     const switches = this.props.facetdata.map(o => (
-      <li>
-        {o.key} ({o.doc_count})
-      </li>
+      <Form.Check
+        type="checkbox"
+        id={`${this.props.facetkey}-${o.key}`}
+        label={`${o.key} (${o.doc_count})`}
+        onClick={this.onFacetCheck}
+      />
     ));
     return (
       <React.Fragment>
         <dt>{this.props.facetkey}</dt>
-        <dd>
-          <ul>{switches}</ul>
-        </dd>
+        <dd>{switches}</dd>
       </React.Fragment>
     );
   }
@@ -164,7 +172,11 @@ class FacetView extends React.Component {
   render() {
     const facets = this.props.facets;
     var facetlist = Object.entries(facets).map(([key, data]) => (
-      <Facet facetkey={key} facetdata={data.buckets} />
+      <Facet
+        facetkey={key}
+        facetdata={data.buckets}
+        onCheck={this.props.onCheck}
+      />
     ));
     return <dl>{facetlist}</dl>;
   }
@@ -180,6 +192,7 @@ class Layout extends React.Component {
     super(props);
     this.state = { results: "" };
     this.updateResults = this.updateResults.bind(this);
+    this.updateFilters = this.updateFilters.bind(this);
   }
 
   /**
@@ -187,6 +200,10 @@ class Layout extends React.Component {
    */
   updateResults(hits) {
     this.setState({ results: hits });
+  }
+
+  updateFilters(facetkey, checked) {
+    this.setState({ facets: { facetkey: checked } });
   }
 
   render() {
@@ -202,7 +219,7 @@ class Layout extends React.Component {
         </Row>
         <Row>
           <Col sm="2">
-            <FacetView facets={facets} />
+            <FacetView facets={facets} onCheck={this.updateFilters} />
           </Col>
           <Col sm="10">
             <SearchResults results={results} />
