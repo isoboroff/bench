@@ -25,6 +25,12 @@ class SearchBox extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // The HTML implements this with a form; when the user presses return
+  // it causes the form to submit.  However, we aren't running a normal
+  // form submission... we intercept it using the Form onSubmit event, and
+  // send the form content directly back to the App through the onSearch
+  // callback we got through props.
+
   /**
    * handleChange: update the state if the query changes.
    * @param {Object} event the browser event.
@@ -34,7 +40,7 @@ class SearchBox extends React.Component {
   }
 
   /**
-   * handleSubmit: run the search.
+   * handleSubmit: Send the query up to the App.
    * @param {Object} event the browser event.
    */
   handleSubmit(event) {
@@ -180,20 +186,35 @@ class App extends React.Component {
     this.state = { query: "", facets: new Map(), results: "" };
 
     // remove
-    this.do_search = this.do_search.bind(this);
+    // this.do_search = this.do_search.bind(this);
+    this.update_query = this.update_query.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
     // to here
+  }
+
+  update_query(query_box_contents) {
+    this.setState({ query: query_box_contents }, /* then, do */ this.do_search);
+  }
+
+  build_query() {
+    let query_string = "q=" + this.state.query;
+    const facet_string = Array.from(this.state.facets.keys()).join(",");
+    if (facet_string.length > 0) {
+      query_string += "&facets=" + facet_string;
+    }
+    query_string = encodeURI(query_string);
+    return query_string;
   }
 
   /**
    * updateResults - put search hits into the state
    */
-  do_search(query_box_contents) {
-    const url = window.location.href + "search?q=" + query_box_contents;
+  do_search() {
+    const url = window.location.href + "search?" + this.build_query();
     // The query needs to be escaped before fetching.
-    const escaped = encodeURI(url);
+    // const escaped = encodeURI(url);
 
-    fetch(escaped)
+    fetch(url)
       .then(response => {
         return response.json(); // ElasticSearch returns JSON data
       })
@@ -217,7 +238,7 @@ class App extends React.Component {
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
           <Col sm="8">
-            <SearchBox onSearch={this.do_search} />
+            <SearchBox onSearch={this.update_query} />
           </Col>
         </Row>
         <Row>
