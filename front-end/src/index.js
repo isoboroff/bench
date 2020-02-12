@@ -183,7 +183,7 @@ class FacetView extends React.Component {
 }
 
 /** Layout the main app */
-class Layout extends React.Component {
+class App extends React.Component {
   /**
    * constructor
    * @param {Object} this.state.results a set of search results.  The updateResults callback manipulates this.
@@ -230,4 +230,4 @@ class Layout extends React.Component {
   }
 }
 
-ReactDOM.render(<Layout />, document.getElementById("root"));
+ReactDOM.render(<App />, document.getElementById("root"));
