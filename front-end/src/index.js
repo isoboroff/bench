@@ -38,20 +38,7 @@ class SearchBox extends React.Component {
    * @param {Object} event the browser event.
    */
   handleSubmit(event) {
-    const url = window.location.href + "search?q=" + this.state.value;
-    // The query needs to be escaped before fetching.
-    const escaped = encodeURI(url);
-
-    fetch(escaped)
-      .then(response => {
-        return response.json(); // ElasticSearch returns JSON data
-      })
-      .then(data => {
-        this.props.onSearch(data); // Pass the data to the callback function
-      })
-      .catch(err => {
-        // do something on an error here.
-      });
+    this.props.onSearch(this.state.value);
     event.preventDefault();
   }
 
@@ -190,16 +177,32 @@ class App extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = { results: "" };
+    this.state = { query: "", facets: new Map(), results: "" };
+
+    // remove
     this.updateResults = this.updateResults.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
+    // to here
   }
 
   /**
    * updateResults - put search hits into the state
    */
-  updateResults(hits) {
-    this.setState({ results: hits });
+  updateResults(query_box_contents) {
+    const url = window.location.href + "search?q=" + query_box_contents;
+    // The query needs to be escaped before fetching.
+    const escaped = encodeURI(url);
+
+    fetch(escaped)
+      .then(response => {
+        return response.json(); // ElasticSearch returns JSON data
+      })
+      .then(data => {
+        this.setState({ results: data }); // Update the search results
+      })
+      .catch(err => {
+        // do something on an error here.
+      });
   }
 
   updateFilters(facetkey, checked) {
