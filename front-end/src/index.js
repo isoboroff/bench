@@ -180,7 +180,7 @@ class App extends React.Component {
     this.state = { query: "", facets: new Map(), results: "" };
 
     // remove
-    this.updateResults = this.updateResults.bind(this);
+    this.do_search = this.do_search.bind(this);
     this.updateFilters = this.updateFilters.bind(this);
     // to here
   }
@@ -188,7 +188,7 @@ class App extends React.Component {
   /**
    * updateResults - put search hits into the state
    */
-  updateResults(query_box_contents) {
+  do_search(query_box_contents) {
     const url = window.location.href + "search?q=" + query_box_contents;
     // The query needs to be escaped before fetching.
     const escaped = encodeURI(url);
@@ -217,7 +217,7 @@ class App extends React.Component {
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
           <Col sm="8">
-            <SearchBox onSearch={this.updateResults} />
+            <SearchBox onSearch={this.do_search} />
           </Col>
         </Row>
         <Row>
