@@ -143,12 +143,13 @@ class Facet extends React.Component {
     this.props.onCheck(event.target.id, event.target.checked);
   }
   render() {
-    const switches = this.props.facetdata.map(o => (
+    const switches = this.props.aggdata.map(o => (
       <Form.Check
         type="checkbox"
-        id={`${this.props.facetkey}-${o.key}`}
+        id={`${this.props.aggkey}-${o.key}`}
         label={`${o.key} (${o.doc_count})`}
         onClick={this.onFacetCheck}
+        checked={!!this.props.checked.has(this.props.aggkey + "-" + o.key)}
       />
     ));
     return (
@@ -163,12 +164,14 @@ class Facet extends React.Component {
 /** FacetView unpacks the aggregation facets into a HTML dl for now. */
 class FacetView extends React.Component {
   render() {
-    const facets = this.props.facets;
-    var facetlist = Object.entries(facets).map(([key, data]) => (
+    const aggs = this.props.aggs;
+
+    var facetlist = Object.entries(aggs).map(([key, data]) => (
       <Facet
-        facetkey={key}
-        facetdata={data.buckets}
+        aggkey={key}
+        aggdata={data.buckets}
         onCheck={this.props.onCheck}
+        checked={this.props.checked}
       />
     ));
     return <dl>{facetlist}</dl>;
@@ -188,7 +191,7 @@ class App extends React.Component {
     // remove
     // this.do_search = this.do_search.bind(this);
     this.update_query = this.update_query.bind(this);
-    this.updateFilters = this.updateFilters.bind(this);
+    this.update_filters = this.update_filters.bind(this);
     // to here
   }
 
@@ -196,8 +199,19 @@ class App extends React.Component {
     this.setState({ query: query_box_contents }, /* then, do */ this.do_search);
   }
 
+  update_filters(facetkey, checked) {
+    // this.setState({ facets: { facetkey: checked } });
+    var facetmap = this.state.facets;
+    if (checked) {
+      facetmap.set(facetkey, checked);
+    } else {
+      facetmap.delete(facetkey);
+    }
+    this.setState({ facets: facetmap }, /* then, do */ this.do_search);
+  }
+
   build_query() {
-    let query_string = "q=" + this.state.query;
+    var query_string = "q=" + this.state.query;
     const facet_string = Array.from(this.state.facets.keys()).join(",");
     if (facet_string.length > 0) {
       query_string += "&facets=" + facet_string;
@@ -226,13 +240,9 @@ class App extends React.Component {
       });
   }
 
-  updateFilters(facetkey, checked) {
-    this.setState({ facets: { facetkey: checked } });
-  }
-
   render() {
     const results = this.state.results;
-    const facets = results ? results.aggregations : "";
+    const aggs = results ? results.aggregations : "";
 
     return (
       <Container fluid="true">
@@ -243,7 +253,11 @@ class App extends React.Component {
         </Row>
         <Row>
           <Col sm="2">
-            <FacetView facets={facets} onCheck={this.updateFilters} />
+            <FacetView
+              aggs={aggs}
+              checked={this.state.facets}
+              onCheck={this.update_filters}
+            />
           </Col>
           <Col sm="10">
             <SearchResults results={results} />

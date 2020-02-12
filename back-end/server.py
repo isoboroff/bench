@@ -18,6 +18,13 @@ es = Elasticsearch([
     {'host': args.host, 'port': args.port}
 ])
 
+agg2field = {
+    'persons': 'PERSON.keyword',
+    'orgs': 'ORG.keyword',
+    'gpes': 'GPE.keyword',
+    'events': 'EVENT.keyword',
+}
+
 
 @app.route('/')
 def hello():
@@ -30,17 +37,22 @@ def search():
 
     search = Search(using=es, index=args.index)
     search = search.query(Q('match', text=query))
+
+    if 'facets' in request.args:
+        facets = request.args['facets'].split(",")
+        for f in facets:
+            (cat, key) = f.split('-', 1)
+            search = search.filter('term', **{agg2field[cat]: key})
+
     search = search.highlight('text')
     search = search.highlight_options(pre_tags='<mark>',
                                       post_tags='</mark>',
                                       number_of_fragments=0)
-    search.aggs.bucket('persons', 'terms', field='PERSON.keyword')
-    search.aggs.bucket('orgs', 'terms', field='ORG.keyword')
-    search.aggs.bucket('gpes', 'terms', field='GPE.keyword')
-    search.aggs.bucket('events', 'terms', field='EVENT.keyword')
+    for (agg, field) in agg2field.items():
+        search.aggs.bucket(agg, 'terms', field=field)
 
     app.logger.debug(json.dumps(search.to_dict()))
-    
+
     response = search.execute()
 
     app.logger.debug(response)
