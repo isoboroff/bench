@@ -76,16 +76,22 @@ class SearchHit extends React.Component {
    */
   render() {
     const doc = this.props.content;
+    const event_key = this.props.hitkey;
+    const rel_key = "rel." + this.props.hitkey;
+
     return (
       <Card>
-        <Accordion.Toggle
-          as={Card.Header}
-          variant="link"
-          eventKey={this.props.hitkey}
-        >
-          {this.props.seqno + 1}. {this.props.title} <br />
+        <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
+          {this.props.seqno + 1}. {this.props.title}{" "}
+          <div class="custom-control custom-switch float-right">
+            <input class="custom-control-input" type="checkbox" id={rel_key} />
+            <label class="custom-control-label" for={rel_key}>
+              Rel
+            </label>
+          </div>{" "}
+          <br />
         </Accordion.Toggle>
-        <Accordion.Collapse eventKey={this.props.hitkey}>
+        <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
             {doc.first_date} {this.props.hitkey} <p />
             <div
