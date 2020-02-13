@@ -39,10 +39,16 @@ def search():
     search = search.query(Q('match', text=query))
 
     if 'facets' in request.args:
+        qlist = []
         facets = request.args['facets'].split(",")
         for f in facets:
             (cat, key) = f.split('-', 1)
-            search = search.filter('term', **{agg2field[cat]: key})
+            # search = search.filter('term', **{agg2field[cat]: key})
+            qlist.append(Q('match', **{agg2field[cat]: key}))
+        search.query = Q('bool',
+                         must=search.query,
+                         should=qlist,
+                         minimum_should_match=1)
 
     search = search.highlight('text')
     search = search.highlight_options(pre_tags='<mark>',
