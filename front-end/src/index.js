@@ -12,7 +12,7 @@ import Nav from "react-bootstrap/Nav";
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 
-/** SearchBox class: takes a query from the user and runs the search. */
+/** SearchBox class: takes a query from the user. */
 class SearchBox extends React.Component {
   /**
    * Constructor.
@@ -161,7 +161,7 @@ class Facet extends React.Component {
   }
 }
 
-/** FacetView unpacks the aggregation facets into a HTML dl for now. */
+/** FacetView unpacks the aggregation facets into a HTML dl. */
 class FacetView extends React.Component {
   render() {
     const aggs = this.props.aggs;
@@ -178,7 +178,7 @@ class FacetView extends React.Component {
   }
 }
 
-/** Layout the main app */
+/** The main app */
 class App extends React.Component {
   /**
    * constructor
@@ -188,19 +188,25 @@ class App extends React.Component {
     super(props);
     this.state = { query: "", facets: new Map(), results: "" };
 
-    // remove
-    // this.do_search = this.do_search.bind(this);
     this.update_query = this.update_query.bind(this);
     this.update_filters = this.update_filters.bind(this);
-    // to here
   }
 
+  /**
+   * update_query
+   * When the user presses <return> in the search box, this callback updates
+   * the App state to hold the textual portion of the query, and triggers a search update.
+   */
   update_query(query_box_contents) {
     this.setState({ query: query_box_contents }, /* then, do */ this.do_search);
   }
 
+  /**
+   * update_filters
+   * When the user checks or unchecks the radio buttons, this callback updates
+   * the App state, and triggers a search update.
+   */
   update_filters(facetkey, checked) {
-    // this.setState({ facets: { facetkey: checked } });
     var facetmap = this.state.facets;
     if (checked) {
       facetmap.set(facetkey, checked);
@@ -210,6 +216,12 @@ class App extends React.Component {
     this.setState({ facets: facetmap }, /* then, do */ this.do_search);
   }
 
+  /**
+   * build_query
+   * Take the textual query and the facet filters and assemble the query to send
+   * to the back-end.  Note that this is just a simple URL form... the back-end
+   * builds this into the query for ElasticSearch.
+   */
   build_query() {
     var query_string = "q=" + this.state.query;
     const facet_string = Array.from(this.state.facets.keys()).join(",");
@@ -221,7 +233,7 @@ class App extends React.Component {
   }
 
   /**
-   * updateResults - put search hits into the state
+   * do_search: send the search query to the backend, catch the result, and update state.
    */
   do_search() {
     const url = window.location.href + "search?" + this.build_query();
