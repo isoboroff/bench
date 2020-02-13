@@ -154,7 +154,7 @@ class Facet extends React.Component {
     ));
     return (
       <React.Fragment>
-        <dt>{this.props.facetkey}</dt>
+        <dt>{this.props.aggkey}</dt>
         <dd>{switches}</dd>
       </React.Fragment>
     );
@@ -165,8 +165,16 @@ class Facet extends React.Component {
 class FacetView extends React.Component {
   render() {
     const aggs = this.props.aggs;
-
-    var facetlist = Object.entries(aggs).map(([key, data]) => (
+    const forder = {
+      persons: 1,
+      gpes: 2,
+      orgs: 3,
+      events: 4
+    };
+    var agglist = Object.entries(aggs).sort(
+      (a, b) => forder[a[0]] - forder[b[0]]
+    );
+    var facetlist = agglist.map(([key, data]) => (
       <Facet
         aggkey={key}
         aggdata={data.buckets}
