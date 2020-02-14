@@ -57,6 +57,11 @@ def search():
     for (agg, field) in agg2field.items():
         search.aggs.bucket(agg, 'terms', field=field)
 
+    if 'from' in request.args:
+        s_from = int(request.args['from'])
+        s_size = int(request.args.get('size', 10))
+        search = search[s_from:s_size]
+        
     app.logger.debug(json.dumps(search.to_dict()))
 
     response = search.execute()
