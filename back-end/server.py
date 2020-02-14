@@ -35,33 +35,41 @@ def hello():
 def search():
     query = request.args['q']
 
+    # Build the query
+    # This is the query from the search box
     search = Search(using=es, index=args.index)
     search = search.query(Q('match', text=query))
 
+    # Add in any checked facets.  These do not filter the results but
+    # influence the ranking.
     if 'facets' in request.args:
         qlist = []
         facets = request.args['facets'].split(",")
         for f in facets:
             (cat, key) = f.split('-', 1)
-            # search = search.filter('term', **{agg2field[cat]: key})
             qlist.append(Q('match', **{agg2field[cat]: key}))
         search.query = Q('bool',
                          must=search.query,
                          should=qlist,
                          minimum_should_match=1)
 
+    # Add search term highlighting.  The <mark> tag is a Bootstrap-ism.
     search = search.highlight('text')
     search = search.highlight_options(pre_tags='<mark>',
                                       post_tags='</mark>',
                                       number_of_fragments=0)
+
+    # Add in aggregations for the facet fields
     for (agg, field) in agg2field.items():
         search.aggs.bucket(agg, 'terms', field=field)
 
+    # Add in what page we are fetching.  If not specified, the first 10 results.
     if 'from' in request.args:
         s_from = int(request.args['from'])
         s_size = int(request.args.get('size', 10))
         search = search[s_from:s_size]
-        
+
+    # I like reading the query in the logs, but that might just be me.
     app.logger.debug(json.dumps(search.to_dict()))
 
     response = search.execute()
