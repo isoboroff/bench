@@ -65,6 +65,16 @@ class SearchBox extends React.Component {
 
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
 class SearchHit extends React.Component {
+  constructor(props) {
+    super(props);
+    this.on_relevant = this.on_relevant.bind(this);
+  }
+
+  on_relevant(event) {
+    console.log("HI THERE");
+    this.props.onRelevant(this.props.hitkey, event.target.checked);
+  }
+
   /**
    * render function
    * @param {Object} this,props.content a JSON object representing a search hit.
@@ -84,7 +94,15 @@ class SearchHit extends React.Component {
         <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
           {this.props.seqno + 1}. {this.props.title}{" "}
           <div class="custom-control custom-switch float-right">
-            <input class="custom-control-input" type="checkbox" id={rel_key} />
+            <input
+              class="custom-control-input"
+              type="checkbox"
+              id={rel_key}
+              checked={this.props.rel}
+              onClick={this.on_relevant}
+              data-toggle="button"
+              aria-pressed={this.props.rel}
+            />
             <label class="custom-control-label" for={rel_key}>
               Rel
             </label>
@@ -112,6 +130,8 @@ class SearchResults extends React.Component {
    */
   render() {
     const hits = this.props.results.hits ? this.props.results.hits.hits : [];
+    const qrels = this.props.qrels;
+
     if (hits.length > 0) {
       // This is a common React pattern: if you have an array of things to render,
       // use map() to convert it to a list of JSX things, then use that directly
@@ -123,6 +143,8 @@ class SearchResults extends React.Component {
           hitkey={hit._source.uuid}
           title={hit._source.text.split("\n")[0]}
           content={hit.highlight}
+          rel={!!qrels.has(hit._source.uuid)}
+          onRelevant={this.props.onRelevant}
         />
       ));
       return (
@@ -200,10 +222,26 @@ class App extends React.Component {
    */
   constructor(props) {
     super(props);
-    this.state = { query: "", facets: new Map(), results: "" };
+    this.state = {
+      query: "",
+      facets: new Map(),
+      results: "",
+      qrels: new Map()
+    };
 
     this.update_query = this.update_query.bind(this);
     this.update_filters = this.update_filters.bind(this);
+    this.mark_relevant = this.mark_relevant.bind(this);
+  }
+
+  mark_relevant(docid, checked) {
+    var qrels = this.state.qrels;
+    if (checked) {
+      qrels.set(docid, checked);
+    } else {
+      qrels.delete(docid);
+    }
+    this.setState({ qrels: qrels });
   }
 
   /**
@@ -286,7 +324,11 @@ class App extends React.Component {
             />
           </Col>
           <Col sm="10">
-            <SearchResults results={results} />
+            <SearchResults
+              results={results}
+              qrels={this.state.qrels}
+              onRelevant={this.mark_relevant}
+            />
           </Col>
         </Row>
       </Container>
