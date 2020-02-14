@@ -64,10 +64,11 @@ def search():
         search.aggs.bucket(agg, 'terms', field=field)
 
     # Add in what page we are fetching.  If not specified, the first 10 results.
-    if 'from' in request.args:
-        s_from = int(request.args['from'])
-        s_size = int(request.args.get('size', 10))
-        search = search[s_from:s_size]
+    if 'page' in request.args:
+        s_from = 10 * (int(request.args['page']) - 1)
+        if s_from < 0 or s_from > 9999:
+            s_from = 0
+        search = search[s_from:s_from + 10]
 
     # I like reading the query in the logs, but that might just be me.
     app.logger.debug(json.dumps(search.to_dict()))
