@@ -88,9 +88,13 @@ export class SearchResults extends React.Component {
           onRelevant={this.props.onRelevant}
         />
       ));
+      var count = this.props.results.hits.total.value + " results found.";
+      if (this.props.results.hits.total.relation == "gte") {
+        count = "At least " + count;
+      }
       return (
         <div>
-          {this.props.results.hits.total.value} Results Found. <p />
+          {count} <p />
           <Accordion defaultActiveKey={hits[0]._source.uuid}>
             {hitlist}
           </Accordion>
