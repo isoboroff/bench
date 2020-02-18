@@ -97,7 +97,7 @@ class App extends React.Component {
    * builds this into the query for ElasticSearch.
    */
   build_query() {
-    var query_string = "q=" + this.state.query;
+    var query_string = "q=" + this.state.query + "&page=" + this.state.page;
     const facet_string = Array.from(this.state.facets.keys()).join(",");
     if (facet_string.length > 0) {
       query_string += "&facets=" + facet_string;
