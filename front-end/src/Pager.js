@@ -16,29 +16,15 @@ class Pager extends React.Component {
     var active = this.props.page;
     var last = this.props.num_pages;
 
+    items.push(<Pagination.First id="1" disabled={active === 1} />);
     items.push(<Pagination.Prev id="-1" disabled={active === 1} />);
-    if (active === last) {
-      items.push(
-        <Pagination.Item id={active - 2}>{active - 2}</Pagination.Item>
-      );
-    }
-    if (active - 1 > 0) {
-      items.push(
-        <Pagination.Item id={active - 1}>{active - 1}</Pagination.Item>
-      );
-    }
     items.push(
       <Pagination.Item id={active} active>
         {active}
       </Pagination.Item>
     );
-    items.push(<Pagination.Item id={active + 1}>{active + 1}</Pagination.Item>);
-    if (active === 1) {
-      items.push(
-        <Pagination.Item id={active + 2}>{active + 2}</Pagination.Item>
-      );
-    }
     items.push(<Pagination.Next id="+1" disabled={active === last} />);
+    items.push(<Pagination.Last id={last} disabled={active === last} />);
 
     return (
       <div>

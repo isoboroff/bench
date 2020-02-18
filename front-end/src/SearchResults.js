@@ -93,11 +93,16 @@ class SearchResults extends React.Component {
       if (this.props.results.hits.total.relation === "gte") {
         count = "At least " + count;
       }
+      var num_pages = Math.floor(this.props.results.hits.total.value / 10);
       return (
         <div>
           <div className="d-flex align-items-center justify-content-between">
             {count}
-            <Pager page={this.props.page} turnPage={this.props.turnPage} />
+            <Pager
+              page={this.props.page}
+              num_pages={num_pages}
+              turnPage={this.props.turnPage}
+            />
           </div>
           <Accordion defaultActiveKey={hits[0]._source.uuid}>
             {hitlist}
