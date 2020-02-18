@@ -6,15 +6,10 @@ import "./index.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import Card from "react-bootstrap/Card";
-import Nav from "react-bootstrap/Nav";
-import Accordion from "react-bootstrap/Accordion";
-import Button from "react-bootstrap/Button";
 
 import SearchBox from "./SearchBox.js";
-import { SearchHit, SearchResults } from "./SearchResults.js";
-import { Facet, FacetView } from "./Facet.js";
+import SearchResults from "./SearchResults.js";
+import FacetView from "./Facet.js";
 
 /** The main app */
 class App extends React.Component {
@@ -28,7 +23,8 @@ class App extends React.Component {
       query: "",
       facets: new Map(),
       results: "",
-      qrels: new Map()
+      qrels: new Map(),
+      page: 1
     };
 
     this.update_query = this.update_query.bind(this);
@@ -68,6 +64,30 @@ class App extends React.Component {
       facetmap.delete(facetkey);
     }
     this.setState({ facets: facetmap }, /* then, do */ this.do_search);
+  }
+
+  turn_page(change) {
+    const num_pages = this.state.results
+      ? Math.floor(this.state.results.hits.total.value / 10)
+      : 0;
+    var this_page = this.state.page;
+
+    if (change === "+1") {
+      this_page += 1;
+    } else if (change === "-1") {
+      this_page -= 1;
+    } else if (change.match("/^[0-9]+$/")) {
+      this_page = parseInt(change);
+    }
+
+    if (this_page > num_pages) {
+      this_page = num_pages;
+    }
+    if (this_page < 1) {
+      this_page = 1;
+    }
+
+    this.setState({ page: this_page }, /* then, do */ this.do_search);
   }
 
   /**

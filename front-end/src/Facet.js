@@ -3,7 +3,7 @@ import React from "react";
 import Form from "react-bootstrap/Form";
 
 /** Facet a search facet, a.k.a. an ElasticSearch aggregation. */
-export default class Facet extends React.Component {
+export class Facet extends React.Component {
   constructor(props) {
     super(props);
     this.onFacetCheck = this.onFacetCheck.bind(this);
@@ -54,3 +54,5 @@ export class FacetView extends React.Component {
     return <dl>{facetlist}</dl>;
   }
 }
+
+export { FacetView as default };

@@ -2,10 +2,9 @@ import React from "react";
 
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
-import Button from "react-bootstrap/Button";
 
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
-export default class SearchHit extends React.Component {
+export class SearchHit extends React.Component {
   constructor(props) {
     super(props);
     this.on_relevant = this.on_relevant.bind(this);
@@ -89,7 +88,7 @@ export class SearchResults extends React.Component {
         />
       ));
       var count = this.props.results.hits.total.value + " results found.";
-      if (this.props.results.hits.total.relation == "gte") {
+      if (this.props.results.hits.total.relation === "gte") {
         count = "At least " + count;
       }
       return (
@@ -105,3 +104,5 @@ export class SearchResults extends React.Component {
     }
   }
 }
+
+export { SearchResults as default };
