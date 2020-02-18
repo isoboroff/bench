@@ -3,8 +3,10 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 
+import Pager from "./Pager.js";
+
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
-export class SearchHit extends React.Component {
+class SearchHit extends React.Component {
   constructor(props) {
     super(props);
     this.on_relevant = this.on_relevant.bind(this);
@@ -64,7 +66,7 @@ export class SearchHit extends React.Component {
 }
 
 /** SearchResults this is the list of search hits.  Using a Bootstrap Accordion. */
-export class SearchResults extends React.Component {
+class SearchResults extends React.Component {
   /**
    * @param {Object} this.props.results the result object from ElasticSearch, see https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-search.html
    */
@@ -79,7 +81,7 @@ export class SearchResults extends React.Component {
       // An equivalent approach is to declare an empty list and push() things onto it.
       const hitlist = hits.map((hit, index) => (
         <SearchHit
-          seqno={index}
+          seqno={index + (this.props.page - 1) * 10}
           hitkey={hit._source.uuid}
           title={hit._source.text.split("\n")[0]}
           content={hit.highlight}
@@ -93,7 +95,10 @@ export class SearchResults extends React.Component {
       }
       return (
         <div>
-          {count} <p />
+          <div className="d-flex align-items-center justify-content-between">
+            {count}
+            <Pager page={this.props.page} turnPage={this.props.turnPage} />
+          </div>
           <Accordion defaultActiveKey={hits[0]._source.uuid}>
             {hitlist}
           </Accordion>

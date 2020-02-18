@@ -30,6 +30,7 @@ class App extends React.Component {
     this.update_query = this.update_query.bind(this);
     this.update_filters = this.update_filters.bind(this);
     this.mark_relevant = this.mark_relevant.bind(this);
+    this.turn_page = this.turn_page.bind(this);
   }
 
   mark_relevant(docid, checked) {
@@ -76,7 +77,7 @@ class App extends React.Component {
       this_page += 1;
     } else if (change === "-1") {
       this_page -= 1;
-    } else if (change.match("/^[0-9]+$/")) {
+    } else if (change.match(/^[0-9]+$/)) {
       this_page = parseInt(change);
     }
 
@@ -150,6 +151,8 @@ class App extends React.Component {
               results={results}
               qrels={this.state.qrels}
               onRelevant={this.mark_relevant}
+              page={this.state.page}
+              turnPage={this.turn_page}
             />
           </Col>
         </Row>
