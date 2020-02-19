@@ -163,7 +163,7 @@ class App extends React.Component {
           </Container>
         </Tab>
         <Tab eventKey="writeup" title="Write-Up">
-          <Writeup />
+          <Writeup qrels={this.state.qrels}/>
         </Tab>
       </Tabs>
     );
