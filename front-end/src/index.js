@@ -6,10 +6,13 @@ import "./index.css";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
 
 import SearchBox from "./SearchBox.js";
 import SearchResults from "./SearchResults.js";
 import FacetView from "./Facet.js";
+import Writeup from "./Writeup.js";
 
 /** The main app */
 class App extends React.Component {
@@ -103,6 +106,7 @@ class App extends React.Component {
     if (facet_string.length > 0) {
       query_string += "&facets=" + facet_string;
     }
+    // The query needs to be escaped before fetching.
     query_string = encodeURI(query_string);
     return query_string;
   }
@@ -112,8 +116,6 @@ class App extends React.Component {
    */
   do_search() {
     const url = window.location.href + "search?" + this.build_query();
-    // The query needs to be escaped before fetching.
-    // const escaped = encodeURI(url);
 
     fetch(url)
       .then(response => {
@@ -132,31 +134,38 @@ class App extends React.Component {
     const aggs = results ? results.aggregations : "";
 
     return (
-      <Container fluid="true">
-        <Row className="justify-content-md-center mt-5">
-          <Col sm="8">
-            <SearchBox onSearch={this.update_query} />
-          </Col>
-        </Row>
-        <Row>
-          <Col sm="2">
-            <FacetView
-              aggs={aggs}
-              checked={this.state.facets}
-              onCheck={this.update_filters}
-            />
-          </Col>
-          <Col sm="10">
-            <SearchResults
-              results={results}
-              qrels={this.state.qrels}
-              onRelevant={this.mark_relevant}
-              page={this.state.page}
-              turnPage={this.turn_page}
-            />
-          </Col>
-        </Row>
-      </Container>
+      <Tabs defaultActiveKey="search" id="workbench">
+        <Tab eventKey="search" title="Search">
+          <Container fluid="true">
+            <Row className="justify-content-md-center mt-5">
+              <Col sm="8">
+                <SearchBox onSearch={this.update_query} />
+              </Col>
+            </Row>
+            <Row>
+              <Col sm="2">
+                <FacetView
+                  aggs={aggs}
+                  checked={this.state.facets}
+                  onCheck={this.update_filters}
+                />
+              </Col>
+              <Col sm="10">
+                <SearchResults
+                  results={results}
+                  qrels={this.state.qrels}
+                  onRelevant={this.mark_relevant}
+                  page={this.state.page}
+                  turnPage={this.turn_page}
+                />
+              </Col>
+            </Row>
+          </Container>
+        </Tab>
+        <Tab eventKey="writeup" title="Write-Up">
+          <Writeup />
+        </Tab>
+      </Tabs>
     );
   }
 }
