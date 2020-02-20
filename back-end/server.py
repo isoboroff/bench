@@ -96,7 +96,7 @@ def search():
     app.logger.debug(response)
     return response.to_dict()
 
-
-print('Starting Flask...')
-app.debug = True
-app.run(host = '0.0.0.0')
+if __name__ == '__main__':
+    print('Starting Flask...')
+    # app.debug = True
+    app.run(host = '0.0.0.0')
