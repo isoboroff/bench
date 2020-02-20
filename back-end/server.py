@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 from elasticsearch_dsl.query import Q
@@ -29,6 +29,24 @@ agg2field = {
 @app.route('/')
 def hello():
     return render_template('index.html')
+
+
+# This is not currently being used, but I'm keeping it so I remember how to
+# ship a file back to the browser, not that it worked.
+@app.route('/save', methods=['POST'])
+def save():
+    data = {}
+    resp = None
+
+    if request.method == 'POST':
+        data = request.get_json()
+        app.logger.debug('Got save: ' + json.dumps(data))
+        resp = make_response(json.dumps(data))
+        resp.headers['Content-Disposition'] = 'attachment'
+        return resp
+    else:
+        app.logger.debug('Save error')
+        return render_template('/', error = 'Error in data')
 
 
 @app.route('/search')

@@ -13,6 +13,8 @@ class Writeup extends React.Component {
     this.updateQuestion = this.updateQuestion.bind(this);
     this.removeQuestion = this.removeQuestion.bind(this);
     this.changeFields = this.changeFields.bind(this);
+	this.save = this.save.bind(this);
+	this.clear = this.clear.bind(this);
   }
 
   addQuestion(event) {
@@ -53,9 +55,9 @@ class Writeup extends React.Component {
             remove
           </Button>
         </div>
-		<Form.Text className="text-muted">
-            Enter a sentence-length information request related to the analytic
-            task.
+        <Form.Text className="text-muted">
+          Enter a sentence-length information request related to the analytic
+          task.
         </Form.Text>
       </Form.Group>
     ));
@@ -79,26 +81,48 @@ class Writeup extends React.Component {
     });
   }
 
-  render() {
-	const reldocs = [];
-	for (let key of this.props.qrels.keys()) {
-	  reldocs.push(<li>{key}</li>);
+  save(event) {
+    let data =  this.state;
+	data.qrels = [];
+	for (let k of this.props.qrels.keys()) {
+	  data.qrels.push(k);
 	}
-								   
+	data = JSON.stringify(data);
+	let w = window.open("about:blank", "foo");
+	w.document.write(data);
+	w.document.close();
+  }
+
+  clear(event) {
+	this.setState({ title: "", link: "", task: "", narr: "", questions: [] },
+				  /* then, do */ this.props.clearState);
+  }
+
+  render() {
+    const reldocs = [];
+    for (let key of this.props.qrels.keys()) {
+      reldocs.push(<li>{key}</li>);
+    }
+
     return (
       <Container>
         <Row className="justify-content-md-center mt-5">
           <Col md={10}>
-			<div class="mb-3 d-md-flex">
-			<Button variant="primary" className="mx-1">Save</Button>
-			<Button variant="primary" className="mx-1">Clear</Button>
-			</div>
+            <div class="mb-3 d-md-flex">
+              <Button variant="primary" className="mx-1" onClick={this.save}>
+                Save
+              </Button>
+              <Button variant="primary" className="mx-1" onClick={this.clear}>
+                Clear
+              </Button>
+            </div>
             <Form.Group controlId="title">
               <Form.Label>Task title</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="title"
                 name="title"
+				value={this.state.title}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
@@ -112,6 +136,7 @@ class Writeup extends React.Component {
                 type="text"
                 placeholder="https://en.wikipedia.org/useful-background-page/"
                 name="link"
+				value={this.state.link}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
@@ -126,6 +151,7 @@ class Writeup extends React.Component {
                 type="text"
                 placeholder="A sentence-length description of the analytic task."
                 name="task"
+				value={this.state.task}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
@@ -140,6 +166,7 @@ class Writeup extends React.Component {
                 rows="5"
                 placeholder="A narrative paragraph."
                 name="narr"
+				value={this.state.narr}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
@@ -152,14 +179,12 @@ class Writeup extends React.Component {
             <div>{this.renderQuestions()}</div>
           </Col>
         </Row>
-		<Row className="justify-content-md-center mt-3">
-		  <Col md={10}>
-		  Relevant documents:
-		  <ul>
-			{reldocs}
-		  </ul>
-		  </Col>
-		</Row>
+        <Row className="justify-content-md-center mt-3">
+          <Col md={10}>
+            Relevant documents:
+            <ul>{reldocs}</ul>
+          </Col>
+        </Row>
       </Container>
     );
   }

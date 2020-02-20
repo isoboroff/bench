@@ -29,13 +29,24 @@ class App extends React.Component {
       qrels: new Map(),
       page: 1
     };
-
+	
+	this.clear_state = this.clear_state.bind(this);
     this.update_query = this.update_query.bind(this);
     this.update_filters = this.update_filters.bind(this);
     this.mark_relevant = this.mark_relevant.bind(this);
     this.turn_page = this.turn_page.bind(this);
   }
 
+  clear_state() {
+	this.setState({
+      query: "",
+      facets: new Map(),
+      results: "",
+      qrels: new Map(),
+      page: 1
+    });
+  }
+  
   mark_relevant(docid, checked) {
     var qrels = this.state.qrels;
     if (checked) {
@@ -163,7 +174,7 @@ class App extends React.Component {
           </Container>
         </Tab>
         <Tab eventKey="writeup" title="Write-Up">
-          <Writeup qrels={this.state.qrels}/>
+          <Writeup qrels={this.state.qrels} clearState={this.clear_state}/>
         </Tab>
       </Tabs>
     );

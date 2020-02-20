@@ -13,7 +13,6 @@ class SearchHit extends React.Component {
   }
 
   on_relevant(event) {
-    console.log("HI THERE");
     this.props.onRelevant(this.props.hitkey, event.target.checked);
   }
 
