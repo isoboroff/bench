@@ -33,21 +33,21 @@ class SearchHit extends React.Component {
 	const people = new Map();
 	if (this.props.people) {
 	  for (let p of this.props.people) {
-		people.set(p, (<span class="badge badge-info">{p}</span>
+		people.set(p, (<span class="badge badge-info ml-1">{p}</span>
 					  ));
 	  }
 	}
 	const orgs = new Map();
 	if (this.props.orgs) {
 	  for (let o of this.props.orgs) {
-		orgs.set(o, (<span class="badge badge-success">{o}</span>
+		orgs.set(o, (<span class="badge badge-success ml-1">{o}</span>
 					));
 	  }
 	}
 	const gpes = new Map();
 	if (this.props.gpes) {
 	  for (let g of this.props.gpes) {
-		gpes.set(g, (<span class="badge badge-warning">{g}</span>
+		gpes.set(g, (<span class="badge badge-warning ml-1">{g}</span>
 					));
 	  }
 	}
