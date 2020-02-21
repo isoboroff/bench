@@ -13,15 +13,13 @@ if (__name__ == '__main__'):
     argparser.add_argument('--index', help='Index to search against', default='better')
     args = argparser.parse_args()
 else:
-    args = {'host': 'localhost',
-            'port': 9200,
-            'index': 'better'}
+    args = argparse.Namespace(**{'host': 'localhost',
+                                 'port': 9200,
+                                 'index': 'better'})
 
 
 app = Flask(__name__, static_folder='../front-end/build/static', template_folder='../front-end/build')
-es = Elasticsearch([
-    {'host': args.host, 'port': args.port}
-])
+es = Elasticsearch([{'host': args.host, 'port': args.port}])
 
 agg2field = {
     'persons': 'PERSON.keyword',

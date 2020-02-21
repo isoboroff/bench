@@ -7,7 +7,7 @@ RUN apt-get install -y --no-install-recommends \
 COPY back-end /bench
 COPY front-end /bench
 
-RUN pip3 install /bench/requirements.txt
+RUN pip3 install -r /bench/requirements.txt
 
 RUN useradd --no-create-home nginx
 
