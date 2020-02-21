@@ -16,7 +16,7 @@
     "typescript": "^3.7.5"
   },
   "watch": {
-	"build": "src/*.js"
+	"build": "src/*.js src/*.css"
   },
   "scripts": {
     "start": "react-scripts start",
