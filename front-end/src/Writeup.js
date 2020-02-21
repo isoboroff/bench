@@ -8,7 +8,10 @@ import Button from "react-bootstrap/Button";
 class Writeup extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { title: "", link: "", task: "", narr: "", questions: [] };
+    this.state = { state_is_live: false, title: "", link: "", task: "", narr: "", questions: [] };
+
+	this.restore_state = this.restore_state.bind(this);
+	this.save_state = this.save_state.bind(this);
     this.addQuestion = this.addQuestion.bind(this);
     this.updateQuestion = this.updateQuestion.bind(this);
     this.removeQuestion = this.removeQuestion.bind(this);
@@ -17,6 +20,20 @@ class Writeup extends React.Component {
 	this.clear = this.clear.bind(this);
   }
 
+  restore_state() {
+	var writeup_state = localStorage.getItem('writeup_state');
+	if (writeup_state) {
+	  var new_state = JSON.parse(writeup_state);
+	  new_state.state_is_live = true;
+	  this.setState(new_state);
+	}
+  }
+
+  save_state() {
+	var writeup_state = JSON.stringify(this.state);
+	localStorage.setItem('writeup_state', writeup_state);
+  }
+  
   addQuestion(event) {
     var qs = this.state.questions;
     qs.push("");
@@ -94,11 +111,20 @@ class Writeup extends React.Component {
   }
 
   clear(event) {
-	this.setState({ title: "", link: "", task: "", narr: "", questions: [] },
+	this.setState({ state_is_live: true, title: "", link: "", task: "", narr: "", questions: [] },
 				  /* then, do */ this.props.clearState);
+	this.save_state();
   }
 
+  componentDidUpdate() {
+	this.save_state();
+  }
+	
   render() {
+	if (!this.state.state_is_live) {
+	  this.restore_state();
+	}
+	
     const reldocs = [];
     for (let key of this.props.qrels.keys()) {
       reldocs.push(<li>{key}</li>);
