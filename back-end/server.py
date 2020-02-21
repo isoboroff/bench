@@ -13,7 +13,7 @@ if (__name__ == '__main__'):
     argparser.add_argument('--index', help='Index to search against', default='better')
     args = argparser.parse_args()
 else:
-    args = argparse.Namespace(**{'host': 'localhost',
+    args = argparse.Namespace(**{'host': 'elastic',
                                  'port': 9200,
                                  'index': 'better'})
 
