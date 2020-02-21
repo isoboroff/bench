@@ -30,6 +30,28 @@ class SearchHit extends React.Component {
     const event_key = this.props.hitkey;
     const rel_key = "rel." + this.props.hitkey;
 
+	const people = new Map();
+	if (this.props.people) {
+	  for (let p of this.props.people) {
+		people.set(p, (<span class="badge badge-info">{p}</span>
+					  ));
+	  }
+	}
+	const orgs = new Map();
+	if (this.props.orgs) {
+	  for (let o of this.props.orgs) {
+		orgs.set(o, (<span class="badge badge-success">{o}</span>
+					));
+	  }
+	}
+	const gpes = new Map();
+	if (this.props.gpes) {
+	  for (let g of this.props.gpes) {
+		gpes.set(g, (<span class="badge badge-warning">{g}</span>
+					));
+	  }
+	}
+	
     return (
       <Card>
         <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
@@ -53,6 +75,7 @@ class SearchHit extends React.Component {
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
             {doc.first_date} {this.props.hitkey} <p />
+			{people.values()} {orgs.values()} {gpes.values()} <p />
             <div
               style={{ whiteSpace: "pre-wrap" }}
               dangerouslySetInnerHTML={{ __html: doc.text }}
@@ -86,6 +109,9 @@ class SearchResults extends React.Component {
           content={hit.highlight}
           rel={!!qrels.has(hit._source.uuid)}
           onRelevant={this.props.onRelevant}
+		  people={hit._source.PERSON}
+		  orgs={hit._source.ORG}
+		  gpes={hit._source.GPE}
         />
       ));
       var count = this.props.results.hits.total.value + " results found.";
