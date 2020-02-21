@@ -140,6 +140,10 @@ class App extends React.Component {
       });
   }
 
+  componentDidMount() {
+	document.title = 'BETTER Workbench';
+  }
+  
   render() {
     const results = this.state.results;
     const aggs = results ? results.aggregations : "";
