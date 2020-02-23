@@ -22,7 +22,7 @@ If you want to modify the front-end (and who wouldn't) you will need to run `npm
 
 ## Deployment
 
-The parts are here to deploy the system on two Docker containers using docker-compose.  One container is the app, bundled with nginx for serving, and the second container is a stock Elasticsearch 7.6.0 container.
+The parts are here to deploy the system on two Docker containers using docker-compose.  One container is the app, bundled with nginx for serving, and the second container is a stock Elasticsearch 7.6.0 container.  To use Docker, clone the project, build the front-end (`cd front-end; npm run build`), and then do:
 
 ```sh
 docker-compose up -d
