@@ -4,6 +4,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { saveAs } from 'file-saver';
 
 class Writeup extends React.Component {
   constructor(props) {
@@ -104,10 +105,9 @@ class Writeup extends React.Component {
 	for (let k of this.props.qrels.keys()) {
 	  data.qrels.push(k);
 	}
-	data = JSON.stringify(data);
-	let w = window.open("about:blank", "foo");
-	w.document.write(data);
-	w.document.close();
+	var filename = data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+	var blob = new Blob([JSON.stringify(data)], {type: "application/json;charset=utf-8"});
+	saveAs(blob, filename + ".json");
   }
 
   clear(event) {
