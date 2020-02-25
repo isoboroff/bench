@@ -106,6 +106,8 @@ class Writeup extends React.Component {
 	for (let k of this.props.qrels.keys()) {
 	  data.qrels.push(k);
 	}
+
+	// First, toss the save object back to the server for safe-keeping
 	fetch(window.location.href + 'save', {
 	  method: 'POST',
 	  headers: {
@@ -120,6 +122,7 @@ class Writeup extends React.Component {
 		console.error('Backend save not ok');
 	  });
 
+	// Then, send a save object to the browser.
 	var filename = data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 	var blob = new Blob([JSON.stringify(data)], {type: "application/json;charset=utf-8"});
 	saveAs(blob, filename + ".json");
