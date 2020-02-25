@@ -14,11 +14,19 @@ You may need to update the `server.py` to match your Elastic setup.  It takes co
 
 To start the backend, make sure you have the environment activated (`. venv/bin/activate`) and then do `python3 server.py`.  It will start a little webserver on localhost:5000.
 
-The frontend is in React and React-Boostrap.  The Python backend serves all files.  To get it compiled, you will need NodeJS v13+ and npm 6+ installed.  Then, `npm build` will compile the JavaScript resources into minified form for serving.
+The frontend is in React and React-Boostrap.  The Python backend serves all files.  To get it compiled, you will need NodeJS v13+ and npm 6+ installed.  Install `react` and `react-scripts` in npm:
+
+```sh
+npm install react
+npm install react-dom
+npm install react-scripts
+```
+
+Then, `npm run build` will compile the JavaScript resources into minified form for serving.
 
 Note that the frontend knows about the search facet fields because their order on the SERP is specified there.
 
-If you want to modify the front-end (and who wouldn't) you will need to run `npm build` to compile things into the `front-end/build` directory that the backend is serving out of.  There is a `npm run watch` script in the `package.json` file which will watch files for changes and recompile, this might be handy if you're doing significant development.
+If you want to modify the front-end (and who wouldn't) you will need to run `npm run abuild` to compile things into the `front-end/build` directory that the backend is serving out of.  There is a `npm run watch` script in the `package.json` file which will watch files for changes and recompile, this might be handy if you're doing significant development.
 
 ## Deployment
 
