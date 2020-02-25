@@ -19,6 +19,7 @@ class Writeup extends React.Component {
     this.changeFields = this.changeFields.bind(this);
 	this.save = this.save.bind(this);
 	this.clear = this.clear.bind(this);
+	this.print = this.print.bind(this);
   }
 
   restore_state() {
@@ -116,6 +117,10 @@ class Writeup extends React.Component {
 	this.save_state();
   }
 
+  print(event) {
+	window.print();
+  }
+  
   componentDidUpdate() {
 	this.save_state();
   }
@@ -137,6 +142,9 @@ class Writeup extends React.Component {
             <div class="mb-3 d-md-flex">
               <Button variant="primary" className="mx-1" onClick={this.save}>
                 Save
+              </Button>
+              <Button variant="primary" className="mx-1" onClick={this.print}>
+                Print
               </Button>
               <Button variant="primary" className="mx-1" onClick={this.clear}>
                 Clear
