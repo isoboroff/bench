@@ -5,6 +5,7 @@ from elasticsearch_dsl.query import Q
 
 import argparse
 import json
+import sys
 
 if (__name__ == '__main__'):
     argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -34,22 +35,23 @@ def hello():
     return render_template('index.html')
 
 
-# This is not currently being used, but I'm keeping it so I remember how to
-# ship a file back to the browser, not that it worked.
 @app.route('/save', methods=['POST'])
 def save():
     data = {}
-    resp = None
 
     if request.method == 'POST':
         data = request.get_json()
-        app.logger.debug('Got save: ' + json.dumps(data))
-        resp = make_response(json.dumps(data))
-        resp.headers['Content-Disposition'] = 'attachment'
-        return resp
+        try:
+            with open('save.log', 'a') as fp:
+                print(json.dumps(data), file=fp)
+        except:
+            app.logger.debug('Save log not available: ' + sys.exc_info()[0])
+        finally:
+            app.logger.debug('Got save: ' + json.dumps(data))
+            return ('', 204)
     else:
         app.logger.debug('Save error')
-        return render_template('/', error = 'Error in data')
+        return ('', 204)
 
 
 @app.route('/search')

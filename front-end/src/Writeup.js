@@ -100,12 +100,26 @@ class Writeup extends React.Component {
     });
   }
 
-  save(event) {
+  async save(event) {
     let data =  this.state;
 	data.qrels = [];
 	for (let k of this.props.qrels.keys()) {
 	  data.qrels.push(k);
 	}
+	fetch(window.location.href + 'save', {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json'
+	  },
+	  body: JSON.stringify(data)
+	}).then((response) => response.json())
+      .then((data) => {
+		console.log('Backend save ok');
+	  })
+	  .catch((error) => {
+		console.error('Backend save not ok');
+	  });
+
 	var filename = data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 	var blob = new Blob([JSON.stringify(data)], {type: "application/json;charset=utf-8"});
 	saveAs(blob, filename + ".json");
