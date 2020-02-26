@@ -2,14 +2,27 @@ import React from "react";
 
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
-
 import Pager from "./Pager.js";
+import { TextAnnotator } from "react-text-annotate";
 
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
 class SearchHit extends React.Component {
   constructor(props) {
     super(props);
     this.on_relevant = this.on_relevant.bind(this);
+	this.state = { value: [],
+				   tag: 'REL',
+				 };
+	this.TAG_NAMES = [ "REL",
+					   "PER",
+					   "ORG",
+					   "GPE",
+					 ];
+	this.TAG_COLORS = { REL: "#84d2ff",
+					   PER: "#ffe2ec",
+					   ORG: "#dcffee",
+					   GPE: "#dafffe",
+					  };
   }
 
   on_relevant(event) {
@@ -51,6 +64,8 @@ class SearchHit extends React.Component {
 					));
 	  }
 	}
+
+	const tag_options = this.TAG_NAMES.map((value) => (<option value={value}>{value}</option>));
 	
     return (
       <Card>
@@ -74,11 +89,23 @@ class SearchHit extends React.Component {
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
+			<select
+			  onChange={e => this.setState({tag: e.target.value})}
+			  value={this.state.tag}>
+			  { tag_options }
+			</select>
             {doc.first_date} {this.props.hitkey} <p />
 			{people.values()} {orgs.values()} {gpes.values()} <p />
-            <div
+            <TextAnnotator
               style={{ whiteSpace: "pre-wrap" }}
-              dangerouslySetInnerHTML={{ __html: doc.text }}
+              content={ doc.text }
+			  value={ this.state.value }
+			  onChange={ value => this.setState({ value }) }
+			  getSpan={ span => ({
+				...span,
+				tag: this.state.tag,
+				color: this.TAG_COLORS[this.state.tag]
+			  })}
             />
           </Card.Body>
         </Accordion.Collapse>
