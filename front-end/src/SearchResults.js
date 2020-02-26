@@ -98,7 +98,7 @@ class SearchHit extends React.Component {
 			{people.values()} {orgs.values()} {gpes.values()} <p />
             <TextAnnotator
               style={{ whiteSpace: "pre-wrap" }}
-              content={ doc.text }
+              content={ String(doc.text) }
 			  value={ this.state.value }
 			  onChange={ value => this.setState({ value }) }
 			  getSpan={ span => ({
