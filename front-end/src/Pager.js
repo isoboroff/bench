@@ -12,9 +12,9 @@ class Pager extends React.Component {
   }
 
   render() {
-    var items = [];
-    var active = this.props.page;
-    var last = this.props.num_pages;
+    let items = [];
+    let active = this.props.page;
+    let last = this.props.num_pages;
 
     items.push(<Pagination.First id="1" disabled={active === 1} />);
     items.push(<Pagination.Prev id="-1" disabled={active === 1} />);

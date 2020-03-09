@@ -114,11 +114,11 @@ class SearchResults extends React.Component {
 		  gpes={hit._source.GPE}
         />
       ));
-      var count = this.props.results.hits.total.value + " results found.";
+      let count = this.props.results.hits.total.value + " results found.";
       if (this.props.results.hits.total.relation === "gte") {
         count = "At least " + count;
       }
-      var num_pages = Math.floor(this.props.results.hits.total.value / 10);
+      let num_pages = Math.floor(this.props.results.hits.total.value / 10);
       return (
         <div>
           <div className="d-flex align-items-center justify-content-between">
