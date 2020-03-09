@@ -23,40 +23,40 @@ class Writeup extends React.Component {
   }
 
   restore_state() {
-	var writeup_state = localStorage.getItem('writeup_state');
+	let writeup_state = localStorage.getItem('writeup_state');
 	if (writeup_state) {
-	  var new_state = JSON.parse(writeup_state);
+	  let new_state = JSON.parse(writeup_state);
 	  new_state.state_is_live = true;
 	  this.setState(new_state);
 	}
   }
 
   save_state() {
-	var writeup_state = JSON.stringify(this.state);
+	let writeup_state = JSON.stringify(this.state);
 	localStorage.setItem('writeup_state', writeup_state);
   }
   
   addQuestion(event) {
-    var qs = this.state.questions;
+    let qs = this.state.questions;
     qs.push("");
     this.setState({ questions: qs });
     event.preventDefault();
   }
 
   removeQuestion(index, event) {
-    var qs = this.state.questions;
+    let qs = this.state.questions;
     qs.splice(index, 1);
     this.setState({ questions: qs });
   }
 
   updateQuestion(index, event) {
-    var qs = this.state.questions;
+    let qs = this.state.questions;
     qs[index] = event.target.value;
     this.setState({ questions: qs });
   }
 
   renderQuestions() {
-    var questions = this.state.questions.map((input, index) => (
+    let questions = this.state.questions.map((input, index) => (
       <Form.Group controlId="question-{index}">
         <Form.Label>Analytic request {index + 1}</Form.Label>
         <div class="d-flex">
@@ -123,8 +123,8 @@ class Writeup extends React.Component {
 	  });
 
 	// Then, send a save object to the browser.
-	var filename = data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-	var blob = new Blob([JSON.stringify(data)], {type: "application/json;charset=utf-8"});
+	let filename = data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+	let blob = new Blob([JSON.stringify(data)], {type: "application/json;charset=utf-8"});
 	saveAs(blob, filename + ".json");
   }
 

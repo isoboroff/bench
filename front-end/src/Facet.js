@@ -40,10 +40,10 @@ class FacetView extends React.Component {
       orgs: 3,
       events: 4
     };
-    var agglist = Object.entries(aggs).sort(
+    let agglist = Object.entries(aggs).sort(
       (a, b) => forder[a[0]] - forder[b[0]]
     );
-    var facetlist = agglist.map(([key, data]) => (
+    let facetlist = agglist.map(([key, data]) => (
       <Facet
         aggkey={key}
         aggdata={data.buckets}

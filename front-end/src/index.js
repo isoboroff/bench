@@ -48,7 +48,7 @@ class App extends React.Component {
   }
   
   mark_relevant(docid, checked) {
-    var qrels = this.state.qrels;
+    let qrels = this.state.qrels;
     if (checked) {
       qrels.set(docid, checked);
     } else {
@@ -72,7 +72,7 @@ class App extends React.Component {
    * the App state, and triggers a search update.
    */
   update_filters(facetkey, checked) {
-    var facetmap = this.state.facets;
+    let facetmap = this.state.facets;
     if (checked) {
       facetmap.set(facetkey, checked);
     } else {
@@ -85,7 +85,7 @@ class App extends React.Component {
     const num_pages = this.state.results
       ? Math.floor(this.state.results.hits.total.value / 10)
       : 0;
-    var this_page = this.state.page;
+    let this_page = this.state.page;
 
     if (change === "+1") {
       this_page += 1;
@@ -112,7 +112,7 @@ class App extends React.Component {
    * builds this into the query for ElasticSearch.
    */
   build_query() {
-    var query_string = "q=" + this.state.query + "&page=" + this.state.page;
+    let query_string = "q=" + this.state.query + "&page=" + this.state.page;
     const facet_string = Array.from(this.state.facets.keys()).join(",");
     if (facet_string.length > 0) {
       query_string += "&facets=" + facet_string;
