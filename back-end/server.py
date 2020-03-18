@@ -11,12 +11,12 @@ if (__name__ == '__main__'):
     argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     argparser.add_argument('--host', help='ElasticSearch host', default='localhost')
     argparser.add_argument('--port', help='ElasticSearch port', default=9200)
-    argparser.add_argument('--index', help='Index to search against', default='better')
+    argparser.add_argument('--index', help='Index to search against', default='wapo')
     args = argparser.parse_args()
 else:
     args = argparse.Namespace(**{'host': 'elastic',
                                  'port': 9200,
-                                 'index': 'better'})
+                                 'index': 'wapo'})
 
 
 app = Flask(__name__, static_folder='../front-end/build/static', template_folder='../front-end/build')

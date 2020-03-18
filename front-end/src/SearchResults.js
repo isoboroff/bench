@@ -1,4 +1,6 @@
 import React from "react";
+import ReactDOMServer from "react-dom/server";
+import DOMPurify from "dompurify";
 
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
@@ -16,6 +18,34 @@ class SearchHit extends React.Component {
     this.props.onRelevant(this.props.hitkey, event.target.checked);
   }
 
+  display_doc(objstring) {
+	let obj = JSON.parse(objstring);
+	let content = obj.contents.map(obj => {
+	  switch (obj.type) {
+	  case 'kicker': return (<h3> {obj.content} </h3>);
+	  case 'title': return (<h1> {obj.content} </h1>);
+	  case 'byline': return (<h3> {obj.content} </h3>);
+	  case 'date': return (<p> { new Date(obj.content).toDateString() } </p>);
+	  case 'sanitized_html': return (<div class="text-wrap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(obj.content)}} />);
+	  case 'image': return (
+		<figure class="figure">
+		  <img src={obj.imageURL} class="figure-img img-fluid"/>
+		  <figcaption class="figure-caption">{obj.fullcaption}</figcaption>
+		</figure>
+	  );
+	  case 'video': return (
+		<video controls src={obj.mediaURL} poster={obj.imageURL}>
+		  A video should appear here
+		</video>
+	  );
+	  case 'author_info': return (<p><i>{obj.bio}</i></p>);
+	  default: return (<i> {obj.type} not rendered</i>);
+	  };
+	});
+	let doc = ( <div>{content}</div> );
+	return doc;
+  }
+  
   /**
    * render function
    * @param {Object} this,props.content a JSON object representing a search hit.
@@ -26,7 +56,7 @@ class SearchHit extends React.Component {
    * use it.
    */
   render() {
-    const doc = this.props.content;
+    const doc = this.display_doc(this.props.content);
     const event_key = this.props.hitkey;
     const rel_key = "rel." + this.props.hitkey;
 
@@ -78,7 +108,7 @@ class SearchHit extends React.Component {
 			{people.values()} {orgs.values()} {gpes.values()} <p />
             <div
               style={{ whiteSpace: "pre-wrap" }}
-              dangerouslySetInnerHTML={{ __html: doc.text }}
+              dangerouslySetInnerHTML={{ __html: ReactDOMServer.renderToStaticMarkup(doc) }}
             />
           </Card.Body>
         </Accordion.Collapse>
@@ -104,10 +134,10 @@ class SearchResults extends React.Component {
       const hitlist = hits.map((hit, index) => (
         <SearchHit
           seqno={index + (this.props.page - 1) * 10}
-          hitkey={hit._source.uuid}
-          title={hit._source.text.split("\n")[0]}
-          content={hit.highlight}
-          rel={!!qrels.has(hit._source.uuid)}
+          hitkey={hit._id}
+          title={hit._source.title}
+          content={hit._source.orig}
+          rel={!!qrels.has(hit._id)}
           onRelevant={this.props.onRelevant}
 		  people={hit._source.PERSON}
 		  orgs={hit._source.ORG}
