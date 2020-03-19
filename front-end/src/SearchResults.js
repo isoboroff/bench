@@ -29,7 +29,7 @@ class SearchHit extends React.Component {
 	  case 'sanitized_html': return (<div class="text-wrap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(obj.content)}} />);
 	  case 'image': return (
 		<figure class="figure">
-		  <img src={obj.imageURL} class="figure-img img-fluid"/>
+		  <img src={obj.imageURL} class="figure-img img-fluid w-75"/>
 		  <figcaption class="figure-caption">{obj.fullcaption}</figcaption>
 		</figure>
 	  );
