@@ -26,7 +26,7 @@ class SearchHit extends React.Component {
 	  case 'title': return (<h1> {obj.content} </h1>);
 	  case 'byline': return (<h3> {obj.content} </h3>);
 	  case 'date': return (<p> { new Date(obj.content).toDateString() } </p>);
-	  case 'sanitized_html': return (<div class="text-wrap" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(obj.content)}} />);
+	  case 'sanitized_html': return (<div class="text-wrap article-text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(obj.content)}} />);
 	  case 'image': return (
 		<figure class="figure">
 		  <img src={obj.imageURL} class="figure-img img-fluid w-75"/>
