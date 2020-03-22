@@ -141,7 +141,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-	document.title = 'BETTER Workbench';
+	document.title = 'Topic Workbench';
   }
   
   render() {
