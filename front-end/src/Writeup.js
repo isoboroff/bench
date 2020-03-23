@@ -9,7 +9,7 @@ import { saveAs } from 'file-saver';
 class Writeup extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { state_is_live: false, title: "", link: "", task: "", narr: "", questions: [] };
+    this.state = { state_is_live: false, title: "", desc: "", narr: "", questions: [] };
 
 	this.restore_state = this.restore_state.bind(this);
 	this.save_state = this.save_state.bind(this);
@@ -129,7 +129,7 @@ class Writeup extends React.Component {
   }
 
   clear(event) {
-	this.setState({ state_is_live: true, title: "", link: "", task: "", narr: "", questions: [] },
+	this.setState({ state_is_live: true, title: "", desc: "", narr: "", questions: [] },
 				  /* then, do */ this.props.clearState);
 	this.save_state();
   }
@@ -177,41 +177,26 @@ class Writeup extends React.Component {
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
-                A brief title for your analytic task write-up.
-              </Form.Text>
-            </Form.Group>
-
-            <Form.Group controlId="link">
-              <Form.Label>Background link</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="https://en.wikipedia.org/useful-background-page/"
-                name="link"
-				value={this.state.link}
-                onChange={this.changeFields}
-              />
-              <Form.Text className="text-muted">
-                A Wikipedia page providing useful background on the analytic
-                task.
+                A brief title for your topic, two to four key words.
               </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="task">
-              <Form.Label>Analytic task</Form.Label>
+              <Form.Label>Description</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="A sentence-length description of the analytic task."
-                name="task"
-				value={this.state.task}
+                name="desc"
+				value={this.state.desc}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
-                A single sentence describing the analytic task.
+                A single sentence describing the information need.
               </Form.Text>
             </Form.Group>
 
             <Form.Group controlId="narr">
-              <Form.Label>Task narrative</Form.Label>
+              <Form.Label>Narrative</Form.Label>
               <Form.Control
                 as="textarea"
                 rows="5"
@@ -227,7 +212,7 @@ class Writeup extends React.Component {
               </Form.Text>
             </Form.Group>
 
-            <div>{this.renderQuestions()}</div>
+            {/* <div>{this.renderQuestions()}</div> */}
           </Col>
         </Row>
         <Row className="justify-content-md-center mt-3">
