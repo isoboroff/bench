@@ -40,11 +40,19 @@ class SearchHit extends React.Component {
 		  <figcaption class="figure-caption">{block.fullcaption}</figcaption>
 		</figure>
 	  );
-	  case 'video': return (
-		<video controls src={block.mediaURL} poster={block.imageURL}>
-		  A video should appear here
-		</video>
-	  );
+	  case 'video': if (/youtube/.test(block.mediaURL)) {
+		let id = block.mediaURL.match(/v=([^&]+)&/)[1];
+		let url = "https://www.youtube.com/embed/" + id + "?feature=oembed";
+		return (
+		  <iframe width="480" height="270" src={url} frameborder="0" allowfullscreen></iframe>
+		);
+	  } else {
+		return (
+		  <video controls src={block.mediaURL} poster={block.imageURL}>
+			A video should appear here
+		  </video>
+		);
+	  }
 	  case 'author_info': return (<p><i>{block.bio}</i></p>);
 	  default: return (<i> {block.type} not rendered</i>);
 	  };
@@ -52,7 +60,8 @@ class SearchHit extends React.Component {
 	let doc = ( <div>{content}</div> );
 	return doc;
   }
-  
+
+		
   /**
    * render function
    * @param {Object} this,props.content a JSON object representing a search hit.
@@ -164,7 +173,7 @@ class SearchResults extends React.Component {
             <Pager
               page={this.props.page}
               num_pages={num_pages}
-              turnPage={this.props.turn_page}
+              turn_page={this.props.turn_page}
             />
           </div>
           <Accordion defaultActiveKey={hits[0]._source.uuid}>
