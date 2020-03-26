@@ -21,6 +21,8 @@ class SearchTab extends React.Component {
 
 	this.update_query = this.update_query.bind(this);
 	this.update_facets = this.update_facets.bind(this);
+	this.turn_page = this.turn_page.bind(this);
+	this.mark_relevant = this.mark_relevant.bind(this);
   }
 
   update_search() {
@@ -129,7 +131,7 @@ class SearchTab extends React.Component {
             <FacetView
               aggs={this.state.results ? this.state.results.aggregations : ""}
               checked={this.state.facets}
-              onCheck={this.update_filters}
+              onCheck={this.update_facets}
               />
           </Col>
           <Col sm="10">
