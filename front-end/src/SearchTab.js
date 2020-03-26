@@ -14,7 +14,7 @@ class SearchTab extends React.Component {
 	this.state = {
 	  query: "",
 	  qrels: this.props.qrels,
-	  page: 0,
+	  page: 1,
 	  facets: new Map(),
 	  results: "",
 	};
