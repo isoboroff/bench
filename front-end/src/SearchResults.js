@@ -15,31 +15,38 @@ class SearchHit extends React.Component {
   }
 
   on_relevant(event) {
-    this.props.onRelevant(this.props.hitkey, event.target.checked);
+    this.props.on_relevant(this.props.hitkey, event.target.checked);
   }
 
+  /**
+   * display_doc: render a WashingtonPost document object to JSX
+   * @Param {String} objstring a JSON string of a WaPo doc.
+   */
   display_doc(objstring) {
 	let obj = JSON.parse(objstring);
-	let content = obj.contents.map(obj => {
-	  switch (obj.type) {
-	  case 'kicker': return (<h3> {obj.content} </h3>);
-	  case 'title': return (<h1> {obj.content} </h1>);
-	  case 'byline': return (<h3> {obj.content} </h3>);
-	  case 'date': return (<p> { new Date(obj.content).toDateString() } </p>);
-	  case 'sanitized_html': return (<div class="text-wrap article-text" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(obj.content)}} />);
+	let content = obj.contents.map(block => {
+	  switch (block.type) {
+	  case 'kicker': return (<h3> {block.content} </h3>);
+	  case 'title': return (<h1> {block.content} </h1>);
+	  case 'byline': return (<h3> {block.content} </h3>);
+	  case 'date': return (<p> { new Date(block.content).toDateString() } </p>);
+	  case 'sanitized_html': return (
+		<div class="text-wrap article-text"
+			 dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(block.content)}} />
+	  );
 	  case 'image': return (
 		<figure class="figure">
-		  <img src={obj.imageURL} class="figure-img img-fluid w-75"/>
-		  <figcaption class="figure-caption">{obj.fullcaption}</figcaption>
+		  <img src={block.imageURL} class="figure-img img-fluid w-75"/>
+		  <figcaption class="figure-caption">{block.fullcaption}</figcaption>
 		</figure>
 	  );
 	  case 'video': return (
-		<video controls src={obj.mediaURL} poster={obj.imageURL}>
+		<video controls src={block.mediaURL} poster={block.imageURL}>
 		  A video should appear here
 		</video>
 	  );
-	  case 'author_info': return (<p><i>{obj.bio}</i></p>);
-	  default: return (<i> {obj.type} not rendered</i>);
+	  case 'author_info': return (<p><i>{block.bio}</i></p>);
+	  default: return (<i> {block.type} not rendered</i>);
 	  };
 	});
 	let doc = ( <div>{content}</div> );
@@ -106,6 +113,7 @@ class SearchHit extends React.Component {
           <Card.Body>
             {doc.first_date} {this.props.hitkey} <p />
 			{people.values()} {orgs.values()} {gpes.values()} <p />
+			{/* don't need dangerouslySet and renderToStatic anymore, just doc, I think */}
             <div
               style={{ whiteSpace: "pre-wrap" }}
               dangerouslySetInnerHTML={{ __html: ReactDOMServer.renderToStaticMarkup(doc) }}
@@ -138,7 +146,7 @@ class SearchResults extends React.Component {
           title={hit._source.title}
           content={hit._source.orig}
           rel={!!qrels.has(hit._id)}
-          onRelevant={this.props.onRelevant}
+          on_relevant={this.props.on_relevant}
 		  people={hit._source.PERSON}
 		  orgs={hit._source.ORG}
 		  gpes={hit._source.GPE}
@@ -156,7 +164,7 @@ class SearchResults extends React.Component {
             <Pager
               page={this.props.page}
               num_pages={num_pages}
-              turnPage={this.props.turnPage}
+              turnPage={this.props.turn_page}
             />
           </div>
           <Accordion defaultActiveKey={hits[0]._source.uuid}>

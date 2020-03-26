@@ -8,7 +8,7 @@ class Pager extends React.Component {
   }
 
   turn_page(evt) {
-    this.props.turnPage(evt.target.id);
+    this.props.turn_page(evt.target.id);
   }
 
   render() {
