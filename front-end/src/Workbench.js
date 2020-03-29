@@ -106,10 +106,9 @@ class Workbench extends React.Component {
 	this.setState({ qrels: qrels });
   }
 
-  change_writeup(field, content) {
+  change_writeup(name, value) {
 	let writeup = this.state.writeup;
-	writeup = { ...writeup,
-				[field]: content };
+	writeup[name] = value;
 	this.setState({ writeup: writeup });
   }
 

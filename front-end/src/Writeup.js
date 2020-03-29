@@ -8,8 +8,6 @@ import Button from "react-bootstrap/Button";
 class Writeup extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { title: "", desc: "", narr: "", questions: [] };
-
     this.changeFields = this.changeFields.bind(this);
   }
 
@@ -48,7 +46,7 @@ class Writeup extends React.Component {
                 type="text"
                 placeholder="title"
                 name="title"
-				value={this.state.title}
+				value={this.props.writeup.title}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
@@ -62,7 +60,7 @@ class Writeup extends React.Component {
                 type="text"
                 placeholder="A sentence-length description of the analytic task."
                 name="desc"
-				value={this.state.desc}
+				value={this.props.writeup.desc}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
@@ -77,7 +75,7 @@ class Writeup extends React.Component {
                 rows="5"
                 placeholder="A narrative paragraph."
                 name="narr"
-				value={this.state.narr}
+				value={this.props.writeup.narr}
                 onChange={this.changeFields}
               />
               <Form.Text className="text-muted">
