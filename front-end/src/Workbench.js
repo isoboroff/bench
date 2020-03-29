@@ -47,18 +47,44 @@ class Workbench extends React.Component {
 	  }
 	});
   }
+
+  /*
+   * JSON.stringify serializes Maps as plain objects, so we need to handle their
+   * conversion in stringify and parse so when we restore them, we get maps.
+   */
+  JSON_stringify_maps(key, value) {
+	const original = this[key];
+	if (original instanceof Map) {
+	  /* Serialize the Map as an object with a type and an array for the values */
+	  return {
+		dataType: "Map",
+		value: [...original]
+	  };
+	} else {
+	  return value;
+	}
+  }
+
+  JSON_revive_maps(key, value) {
+	if (typeof value === "object" && value !== null) {
+	  if (value.dataType === "Map") {
+		return new Map(value.value);
+	  }
+	}
+	return value;
+  }
   
   restore_state() {
 	let bench_state = localStorage.getItem('bench_state');
 	if (bench_state) {
-	  let new_state = JSON.parse(bench_state);
+	  let new_state = JSON.parse(bench_state, this.JSON_revive_maps);
 	  new_state.state_is_live = true;
 	  this.setState(new_state);
 	}
   }
 
   save_state() {
-	let bench_state = JSON.stringify(this.state);
+	let bench_state = JSON.stringify(this.state, this.JSON_stringify_maps);
 	localStorage.setItem('bench_state', bench_state);
   }
 
@@ -87,7 +113,14 @@ class Workbench extends React.Component {
 	this.setState({ writeup: writeup });
   }
 
+  componentDidUpdate() {
+	this.save_state();
+  }
+  
   render() {
+	if (!this.state.hasOwnProperty('state_is_live')) {
+	  this.restore_state();
+	}
     return (
       <Tabs defaultActiveKey="search" id="workbench">
         <Tab eventKey="search" title="Search">
