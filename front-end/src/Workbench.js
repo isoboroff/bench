@@ -7,26 +7,23 @@ import SearchTab from "./SearchTab";
 import Writeup from "./Writeup";
 import TopicList from "./TopicList";
 
-let initial_bench_state = {
-  qrels: new Map(),
-  writeup: {
-	title: "",
-	desc: "",
-	narr: "",
-  }
+function initial_bench_state() {
+  return {
+	qrels: new Map(),
+	writeup: {
+	  title: "",
+	  desc: "",
+	  narr: "",
+	},
+	topics: [],
+	cur_topic: -1
+  };
 }
 
 class Workbench extends React.Component {
   constructor(props) {
 	super(props);
-	this.state = {
-	  qrels: new Map(),
-	  writeup: {
-		title: "",
-		desc: "",
-		narr: "",
-	  }
-	};
+	this.state = initial_bench_state();
 
 	this.add_relevant = this.add_relevant.bind(this);
 	this.remove_relevant = this.remove_relevant.bind(this);
@@ -34,14 +31,7 @@ class Workbench extends React.Component {
   }
 
   clear_state() {
-	this.setState({
-	  qrels: new Map(),
-	  writeup: {
-		title: "",
-		desc: "",
-		narr: "",
-	  }
-	});
+	this.setState(initial_bench_state());
   }
 
   /*
