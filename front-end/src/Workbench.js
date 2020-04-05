@@ -28,6 +28,9 @@ class Workbench extends React.Component {
 	this.add_relevant = this.add_relevant.bind(this);
 	this.remove_relevant = this.remove_relevant.bind(this);
 	this.change_writeup = this.change_writeup.bind(this);
+	this.save_topic = this.save_topic.bind(this);
+	this.load_topic = this.load_topic.bind(this);
+	this.delete_topic = this.delete_topic.bind(this);
   }
 
   clear_state() {
@@ -92,6 +95,39 @@ class Workbench extends React.Component {
 	this.setState({ writeup: writeup });
   }
 
+  save_topic() {
+	let cur_topic = this.state.cur_topic;
+	if (cur_topic == -1) {
+	  cur_topic = this.state.topics.length;
+	}
+	let topic_to_save = {
+	  writeup: JSON.stringify(this.state.writeup),
+	  qrels: JSON.stringify(this.state.qrels, this.JSON_stringify_maps)
+	};
+	this.setState({ topics: [...this.state.topics, topic_to_save],
+					cur_topic: cur_topic,
+				  });
+  }
+
+  load_topic(topic_num) {
+	if (topic_num < 0 || topic_num > this.state.topics.length)
+	  return;
+	let topic_to_load = this.state.topics[topic_num];
+	this.setState({ cur_topic: topic_num,
+					writeup: JSON.parse(topic_to_load.writeup, this.JSON_revive_maps),
+					qrels: JSON.parse(topic_to_load.qrels, this.JSON_revive_maps)
+				  });
+  }
+
+  delete_topic(topic_num) {
+	if (topic_num < 0 || topic_num > this.state.topics.length)
+	  return;
+	let topics = this.state.topics.splice(topic_num, 1);
+	this.setState({ cur_topic: -1,
+					topics: topics
+				  });
+  }
+  
   componentDidUpdate() {
 	this.save_state();
   }
@@ -110,10 +146,13 @@ class Workbench extends React.Component {
         <Tab eventKey="writeup" title="Write-Up">
           <Writeup qrels={this.state.qrels}
 				   writeup={this.state.writeup}
-				   change_writeup={this.change_writeup}/>
+				   change_writeup={this.change_writeup}
+				   save_topic={this.save_topic}/>
         </Tab>
 		<Tab eventKey="topics" title="My Topics">
-		  <TopicList bench_state={this.state} />
+		  <TopicList topics={this.state.topics}
+					 load_topic={this.load_topic}
+					 delete_topic={this.delete_topic}/>
 		</Tab>
       </Tabs>
     );
