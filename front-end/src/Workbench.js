@@ -97,14 +97,18 @@ class Workbench extends React.Component {
 
   save_topic() {
 	let cur_topic = this.state.cur_topic;
-	if (cur_topic == -1) {
-	  cur_topic = this.state.topics.length;
-	}
 	let topic_to_save = {
 	  writeup: JSON.stringify(this.state.writeup),
 	  qrels: JSON.stringify(this.state.qrels, this.JSON_stringify_maps)
 	};
-	this.setState({ topics: [...this.state.topics, topic_to_save],
+	let topics;
+	if (cur_topic == -1) {
+	  cur_topic = this.state.topics.length;
+	  topics = [...this.state.topics, topic_to_save];
+	} else {
+	  topics = this.state.topics.splice(cur_topic, 1, topic_to_save);
+	}
+	this.setState({ topics: topics,
 					cur_topic: cur_topic,
 				  });
   }
