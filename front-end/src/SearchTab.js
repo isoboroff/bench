@@ -26,7 +26,6 @@ class SearchTab extends React.Component {
   }
 
   update_search() {
-	this.props.add_query(this.state.query, this.state.facets);
 	this.do_search();
   }
 
