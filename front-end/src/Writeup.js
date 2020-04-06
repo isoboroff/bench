@@ -29,7 +29,7 @@ class Writeup extends React.Component {
       <Container>
         <Row className="justify-content-md-center mt-5">
           <Col md={10}>
-            <div class="mb-3 d-md-flex">
+            <div className="mb-3 d-md-flex">
               <Button variant="primary" className="mx-1" onClick={this.props.save_topic}>
                 Save
               </Button>
