@@ -63,7 +63,10 @@ class Workbench extends React.Component {
 	}
 	return value;
   }
-  
+
+  /*
+   * Restore app state from browser local-storage.
+   */
   restore_state() {
 	let bench_state = localStorage.getItem('bench_state');
 	if (bench_state) {
@@ -73,29 +76,36 @@ class Workbench extends React.Component {
 	}
   }
 
+  /*
+   * Save the app state to the browser local-storage.
+   */
   save_state() {
 	let bench_state = JSON.stringify(this.state, this.JSON_stringify_maps);
 	localStorage.setItem('bench_state', bench_state);
   }
 
+  /* Note a relevant document. */
   add_relevant(docno) {
 	let qrels = this.state.qrels;
 	qrels.set(docno, true);
 	this.setState({ qrels: qrels });
   }
 
+  /* Remove a relevant document */
   remove_relevant(docno) {
 	let qrels = this.state.qrels;
 	qrels.delete(docno);
 	this.setState({ qrels: qrels });
   }
 
+  /* Note a change to the topic writeup */
   change_writeup(name, value) {
 	let writeup = this.state.writeup;
 	writeup[name] = value;
 	this.setState({ writeup: writeup });
   }
 
+  /* Save the current writeup and qrels to the topics array. */
   save_topic() {
 	let cur_topic = this.state.cur_topic;
 	let topics = this.state.topics;
@@ -112,6 +122,7 @@ class Workbench extends React.Component {
 				  });
   }
 
+  /* Take a topic from the topics array and populate the writeup and qrels */
   load_topic(topic_num) {
 	if (topic_num < 0 || topic_num > this.state.topics.length)
 	  return;
@@ -122,15 +133,18 @@ class Workbench extends React.Component {
 				  });
   }
 
+  /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
   delete_topic(topic_num) {
 	if (topic_num < 0 || topic_num > this.state.topics.length)
 	  return;
-	let topics = this.state.topics.splice(topic_num, 1);
+	let topics = this.state.topics;
+	topics.splice(topic_num, 1);
 	this.setState({ cur_topic: -1,
 					topics: topics
 				  });
   }
 
+  /* Clear the writeup and qrels, and start a new topic. */
   new_topic() {
 	this.setState({cur_topic: -1,
 				   qrels: new Map(),
@@ -165,6 +179,7 @@ class Workbench extends React.Component {
         </Tab>
 		<Tab eventKey="topics" title="My Topics">
 		  <TopicList topics={this.state.topics}
+					 current_topic={this.state.cur_topic}
 					 load_topic={this.load_topic}
 					 delete_topic={this.delete_topic}/>
 		</Tab>
