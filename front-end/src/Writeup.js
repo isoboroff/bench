@@ -36,7 +36,7 @@ class Writeup extends React.Component {
               <Button variant="primary" className="mx-1">
                 Print
               </Button>
-              <Button variant="primary" className="mx-1">
+              <Button variant="primary" className="mx-1" onClick={this.props.new_topic}>
                 Clear
               </Button>
             </div>

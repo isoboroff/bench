@@ -31,6 +31,7 @@ class Workbench extends React.Component {
 	this.save_topic = this.save_topic.bind(this);
 	this.load_topic = this.load_topic.bind(this);
 	this.delete_topic = this.delete_topic.bind(this);
+	this.new_topic = this.new_topic.bind(this);
   }
 
   clear_state() {
@@ -97,17 +98,15 @@ class Workbench extends React.Component {
 
   save_topic() {
 	let cur_topic = this.state.cur_topic;
+	let topics = this.state.topics;
 	let topic_to_save = {
 	  writeup: JSON.stringify(this.state.writeup),
 	  qrels: JSON.stringify(this.state.qrels, this.JSON_stringify_maps)
 	};
-	let topics;
 	if (cur_topic == -1) {
 	  cur_topic = this.state.topics.length;
-	  topics = [...this.state.topics, topic_to_save];
-	} else {
-	  topics = this.state.topics.splice(cur_topic, 1, topic_to_save);
 	}
+	topics[cur_topic] = topic_to_save;
 	this.setState({ topics: topics,
 					cur_topic: cur_topic,
 				  });
@@ -131,6 +130,16 @@ class Workbench extends React.Component {
 					topics: topics
 				  });
   }
+
+  new_topic() {
+	this.setState({cur_topic: -1,
+				   qrels: new Map(),
+				   writeup: {
+					 title: "",
+					 desc: "",
+					 narr: ""
+				   }});
+  }
   
   componentDidUpdate() {
 	this.save_state();
@@ -151,7 +160,8 @@ class Workbench extends React.Component {
           <Writeup qrels={this.state.qrels}
 				   writeup={this.state.writeup}
 				   change_writeup={this.change_writeup}
-				   save_topic={this.save_topic}/>
+				   save_topic={this.save_topic}
+				   new_topic={this.new_topic}/>
         </Tab>
 		<Tab eventKey="topics" title="My Topics">
 		  <TopicList topics={this.state.topics}
