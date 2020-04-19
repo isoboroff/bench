@@ -53,7 +53,7 @@ def save():
             return('', 503)
 
         try:
-            with open(save_location, 'w') as fp:
+            with open(Path(args.save) / save_location, 'w') as fp:
                 print(json.dumps(data), file=fp)
         except Exception:
             app.logger.debug('Save failed: ' + sys.exc_info()[0])
@@ -72,7 +72,7 @@ def load():
         app.logger.debug('Load called with bad username: ' + username)
         return('', 404)
     try:
-        with open(username, 'r') as fp:
+        with open(Path(args.save) / username, 'r') as fp:
             data = fp.read()
             _ = json.loads(data)
             return(data, 200)
