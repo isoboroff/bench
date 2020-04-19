@@ -2,6 +2,10 @@ import React from "react";
 
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import Nav from "react-bootstrap/Nav";
+import Modal from "react-bootstrap/Modal";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button"; 
 
 import SearchTab from "./SearchTab";
 import Writeup from "./Writeup";
@@ -9,6 +13,8 @@ import TopicList from "./TopicList";
 
 function initial_bench_state() {
   return {
+	username: null,
+	login_required: true,
 	qrels: new Map(),
 	writeup: {
 	  title: "",
@@ -25,6 +31,8 @@ class Workbench extends React.Component {
 	super(props);
 	this.state = initial_bench_state();
 
+	this.set_username = this.set_username.bind(this);
+	this.login_complete = this.login_complete.bind(this);
 	this.add_relevant = this.add_relevant.bind(this);
 	this.remove_relevant = this.remove_relevant.bind(this);
 	this.change_writeup = this.change_writeup.bind(this);
@@ -72,6 +80,8 @@ class Workbench extends React.Component {
 	if (bench_state) {
 	  let new_state = JSON.parse(bench_state, this.JSON_revive_maps);
 	  new_state.state_is_live = true;
+	  if (new_state.username === null)
+		new_state.login_required = true;
 	  this.setState(new_state);
 	}
   }
@@ -84,6 +94,15 @@ class Workbench extends React.Component {
 	localStorage.setItem('bench_state', bench_state);
   }
 
+  set_username(event) {
+	this.setState({ username: event.target.value });
+  }
+
+  login_complete(event) {
+	if (this.state.username !== null)
+	  this.setState({ login_required: false });
+  }
+  
   /* Note a relevant document. */
   add_relevant(docno) {
 	let qrels = this.state.qrels;
@@ -158,12 +177,29 @@ class Workbench extends React.Component {
   componentDidUpdate() {
 	this.save_state();
   }
-  
-  render() {
+
+  componentDidMount() {
 	if (!this.state.hasOwnProperty('state_is_live')) {
 	  this.restore_state();
 	}
+  }
+
+  render() {
     return (
+	  <>
+	  <Modal show={this.state.login_required} onHide={this.login_complete}
+			 backdrop="static" keyboard={false}>
+		<Modal.Header>
+		  <Modal.Title>Please log in</Modal.Title>
+		</Modal.Header>
+		<Modal.Body>
+		  <Form.Control type="text"
+						value={this.state.username} onChange={this.set_username}/>
+		</Modal.Body>
+		<Modal.Footer>
+		  <Button variant="primary" onClick={this.login_complete}>Log in</Button>
+		</Modal.Footer>
+	  </Modal>
       <Tabs defaultActiveKey="search" id="workbench">
         <Tab eventKey="search" title="Search">
 		  <SearchTab qrels={this.state.qrels}
@@ -183,7 +219,9 @@ class Workbench extends React.Component {
 					 load_topic={this.load_topic}
 					 delete_topic={this.delete_topic}/>
 		</Tab>
+		<Tab title={"Logged in as " + this.state.username} disabled></Tab>
       </Tabs>
+	  </>
     );
   }
 }
