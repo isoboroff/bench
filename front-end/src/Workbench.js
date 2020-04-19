@@ -4,7 +4,6 @@ import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
-import NavItem from "react-bootstrap/NavItem";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
@@ -40,6 +39,8 @@ class Workbench extends React.Component {
 	   by calling it, you need to bind it.
 	*/
 	this.set_username = this.set_username.bind(this);
+	this.do_save = this.do_save.bind(this);
+	this.do_logout = this.do_logout.bind(this);
 	this.do_login = this.do_login.bind(this);
 	this.add_relevant = this.add_relevant.bind(this);
 	this.remove_relevant = this.remove_relevant.bind(this);
@@ -115,9 +116,10 @@ class Workbench extends React.Component {
 	  },
 	  body: data,
 	})
-	  .then((response) => response.json())
-	  .then((data) => {
-		console.log('Success:', data);
+	  .then((response) => {
+		if (!response.ok) {
+		  throw Error(response.statusText);
+		}
 	  })
 	  .catch((error) => {
 		alert('Error:', error);
@@ -131,14 +133,36 @@ class Workbench extends React.Component {
 	const url = window.location.href + 'load?u=' + this.state.username;
 
 	fetch(url)
-	  .then((response) => response.json())
+	  .then((response) => {
+		if (response.ok) {
+		  return response.text();
+		} else if (response.status === 404) {
+		  return null;
+		} else {
+		  throw Error(response.statusText);
+		}
+	  })
 	  .then((data) => {
-		let new_state = JSON.parse(data, this.JSON_revive_maps);
-		this.setState(new_state);
+		if (data !== null) {
+		  let new_state = JSON.parse(data, this.JSON_revive_maps);
+		  this.setState(new_state);
+		}
 	  })
 	  .catch((error) => {
 		alert('Error loading state from server', error);
 	  });
+  }
+
+  do_save(event) {
+	this.save_state_to_server();
+	event.preventDefault();
+  }
+  
+  do_logout(event) {
+	this.save_state_to_server();
+	this.clear_state();
+	this.setState({login_required: true});
+	event.preventDefault();
   }
   
   set_username(event) {
@@ -146,6 +170,7 @@ class Workbench extends React.Component {
   }
 
   do_login(event) {
+	this.load_state_from_server();
 	if (this.state.username !== null)
 	  this.setState({ login_required: false });
   }
@@ -255,9 +280,11 @@ class Workbench extends React.Component {
 			  <Nav.Item><Nav.Link eventKey="writeup">Write-Up</Nav.Link></Nav.Item>
 			  <Nav.Item><Nav.Link eventKey="topics">My Topics</Nav.Link></Nav.Item>
 			  <Nav.Item className="ml-auto">
-				<NavDropdown eventKey="user" title={"Logged in as " + this.state.username} id="nav-dropdown">
-				  <NavDropdown.Item eventKey="utils.save">Save</NavDropdown.Item>
-				  <NavDropdown.Item eventKey="utils.logout">Log out</NavDropdown.Item>
+				<NavDropdown eventKey="user"
+							 title={"Logged in as " + this.state.username}
+							 id="utils-dropdown">
+				  <NavDropdown.Item as="li" onClick={this.do_save}>Save</NavDropdown.Item>
+				  <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
 				</NavDropdown>
 			  </Nav.Item>
 			</Nav>
