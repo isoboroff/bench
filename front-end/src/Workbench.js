@@ -1,8 +1,11 @@
 import React from "react";
 
-import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Nav from "react-bootstrap/Nav";
+import NavItem from "react-bootstrap/NavItem";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button"; 
@@ -14,7 +17,6 @@ import TopicList from "./TopicList";
 function initial_bench_state() {
   return {
 	username: null,
-	login_required: true,
 	qrels: new Map(),
 	writeup: {
 	  title: "",
@@ -31,8 +33,14 @@ class Workbench extends React.Component {
 	super(props);
 	this.state = initial_bench_state();
 
+	/* JavaScript is not OO except by force of will.
+	   Remember you need to bind methods that will get called
+	   from browser events and React components.
+	   Thumb rule: if you refer to the method by name, rather than
+	   by calling it, you need to bind it.
+	*/
 	this.set_username = this.set_username.bind(this);
-	this.login_complete = this.login_complete.bind(this);
+	this.do_login = this.do_login.bind(this);
 	this.add_relevant = this.add_relevant.bind(this);
 	this.remove_relevant = this.remove_relevant.bind(this);
 	this.change_writeup = this.change_writeup.bind(this);
@@ -83,6 +91,8 @@ class Workbench extends React.Component {
 	  if (new_state.username === null)
 		new_state.login_required = true;
 	  this.setState(new_state);
+	} else {
+	  this.setState({login_required: true});
 	}
   }
 
@@ -94,11 +104,48 @@ class Workbench extends React.Component {
 	localStorage.setItem('bench_state', bench_state);
   }
 
+  save_state_to_server() {
+	const url = window.location.href + 'save';
+	const data = JSON.stringify(this.state, this.JSON_stringify_maps);
+
+	fetch(url, {
+	  method: 'POST',
+	  headers: {
+		'Content-Type': 'application/json',
+	  },
+	  body: data,
+	})
+	  .then((response) => response.json())
+	  .then((data) => {
+		console.log('Success:', data);
+	  })
+	  .catch((error) => {
+		alert('Error:', error);
+	  });
+  }
+
+  load_state_from_server() {
+	if (this.state.username === null)
+	  return;
+
+	const url = window.location.href + 'load?u=' + this.state.username;
+
+	fetch(url)
+	  .then((response) => response.json())
+	  .then((data) => {
+		let new_state = JSON.parse(data, this.JSON_revive_maps);
+		this.setState(new_state);
+	  })
+	  .catch((error) => {
+		alert('Error loading state from server', error);
+	  });
+  }
+  
   set_username(event) {
 	this.setState({ username: event.target.value });
   }
 
-  login_complete(event) {
+  do_login(event) {
 	if (this.state.username !== null)
 	  this.setState({ login_required: false });
   }
@@ -132,7 +179,7 @@ class Workbench extends React.Component {
 	  writeup: JSON.stringify(this.state.writeup),
 	  qrels: JSON.stringify(this.state.qrels, this.JSON_stringify_maps)
 	};
-	if (cur_topic == -1) {
+	if (cur_topic === -1) {
 	  cur_topic = this.state.topics.length;
 	}
 	topics[cur_topic] = topic_to_save;
@@ -187,7 +234,7 @@ class Workbench extends React.Component {
   render() {
     return (
 	  <>
-	  <Modal show={this.state.login_required} onHide={this.login_complete}
+	  <Modal show={this.state.login_required} onHide={this.do_login}
 			 backdrop="static" keyboard={false}>
 		<Modal.Header>
 		  <Modal.Title>Please log in</Modal.Title>
@@ -197,30 +244,48 @@ class Workbench extends React.Component {
 						value={this.state.username} onChange={this.set_username}/>
 		</Modal.Body>
 		<Modal.Footer>
-		  <Button variant="primary" onClick={this.login_complete}>Log in</Button>
+		  <Button variant="primary" onClick={this.do_login}>Log in</Button>
 		</Modal.Footer>
 	  </Modal>
-      <Tabs defaultActiveKey="search" id="workbench">
-        <Tab eventKey="search" title="Search">
-		  <SearchTab qrels={this.state.qrels}
-					 add_relevant={this.add_relevant}
-					 remove_relevant={this.remove_relevant}/>
-        </Tab>
-        <Tab eventKey="writeup" title="Write-Up">
-          <Writeup qrels={this.state.qrels}
-				   writeup={this.state.writeup}
-				   change_writeup={this.change_writeup}
-				   save_topic={this.save_topic}
-				   new_topic={this.new_topic}/>
-        </Tab>
-		<Tab eventKey="topics" title="My Topics">
-		  <TopicList topics={this.state.topics}
-					 current_topic={this.state.cur_topic}
-					 load_topic={this.load_topic}
-					 delete_topic={this.delete_topic}/>
-		</Tab>
-		<Tab title={"Logged in as " + this.state.username} disabled></Tab>
-      </Tabs>
+      <Tab.Container defaultActiveKey="search" id="workbench">
+		<Row className="clearfix">
+		  <Col sm={12}>
+			<Nav variant="tabs">
+			  <Nav.Item><Nav.Link eventKey="search">Search</Nav.Link></Nav.Item>
+			  <Nav.Item><Nav.Link eventKey="writeup">Write-Up</Nav.Link></Nav.Item>
+			  <Nav.Item><Nav.Link eventKey="topics">My Topics</Nav.Link></Nav.Item>
+			  <Nav.Item className="ml-auto">
+				<NavDropdown eventKey="user" title={"Logged in as " + this.state.username} id="nav-dropdown">
+				  <NavDropdown.Item eventKey="utils.save">Save</NavDropdown.Item>
+				  <NavDropdown.Item eventKey="utils.logout">Log out</NavDropdown.Item>
+				</NavDropdown>
+			  </Nav.Item>
+			</Nav>
+		  </Col>
+		  <Col sm={12}>
+			<Tab.Content animation>
+			  <Tab.Pane eventKey="search">
+				<SearchTab qrels={this.state.qrels}
+						   add_relevant={this.add_relevant}
+						   remove_relevant={this.remove_relevant}/>
+			  </Tab.Pane>
+			  <Tab.Pane eventKey="writeup">
+				<Writeup qrels={this.state.qrels}
+						 writeup={this.state.writeup}
+						 change_writeup={this.change_writeup}
+						 save_topic={this.save_topic}
+						 new_topic={this.new_topic}/>
+			  </Tab.Pane>
+			  <Tab.Pane eventKey="topics">
+				<TopicList topics={this.state.topics}
+						   current_topic={this.state.cur_topic}
+						   load_topic={this.load_topic}
+						   delete_topic={this.delete_topic}/>
+			  </Tab.Pane>
+			</Tab.Content>
+		  </Col>
+		</Row>
+      </Tab.Container>
 	  </>
     );
   }

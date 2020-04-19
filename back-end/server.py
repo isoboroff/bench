@@ -6,16 +6,20 @@ from elasticsearch_dsl.query import Q
 import argparse
 import json
 import sys
+import re
+from pathlib import Path
 
 if (__name__ == '__main__'):
     argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     argparser.add_argument('--host', help='ElasticSearch host', default='localhost')
     argparser.add_argument('--port', help='ElasticSearch port', default=9200)
+    argparser.add_argument('--save', help='Location for saved data', default='save_dir')
     argparser.add_argument('--index', help='Index to search against', default='wapo')
     args = argparser.parse_args()
 else:
     args = argparse.Namespace(**{'host': 'elastic',
                                  'port': 9200,
+                                 'save': 'save_dir',
                                  'index': 'wapo'})
 
 
@@ -29,6 +33,8 @@ agg2field = {
     'events': 'EVENT.keyword',
 }
 
+Path(args.save).mkdir(exist_ok=True)
+
 
 @app.route('/')
 def hello():
@@ -41,17 +47,44 @@ def save():
 
     if request.method == 'POST':
         data = request.get_json()
+        save_location = data['username']
+        if not re.match(r'[a-z]+', save_location):
+            app.logger.debug('Bad filename for save: ' + save_location)
+            return('', 503)
+
         try:
-            with open('save.log', 'a') as fp:
+            with open(save_location, 'w') as fp:
                 print(json.dumps(data), file=fp)
-        except:
-            app.logger.debug('Save log not available: ' + sys.exc_info()[0])
+        except Exception:
+            app.logger.debug('Save failed: ' + sys.exc_info()[0])
         finally:
             app.logger.debug('Got save: ' + json.dumps(data))
             return ('', 204)
     else:
-        app.logger.debug('Save error')
-        return ('', 204)
+        app.logger.debug('Save called without POST')
+        return('', 405)
+
+
+@app.route('/load')
+def load():
+    username = request.args['u']
+    if not re.match(r'[a-z]+', username):
+        app.logger.debug('Load called with bad username: ' + username)
+        return('', 404)
+    try:
+        with open(username, 'r') as fp:
+            data = fp.read()
+            _ = json.loads(data)
+            return(data, 200)
+    except FileNotFoundError:
+        app.logger.debug('No such user: ' + username)
+        return('', 404)
+    except IOError:
+        app.logger.debug('I/O error reading for ' + username)
+        return('', 503)
+    except json.JSONDecodeError:
+        app.logger.debug('Invalid JSON in save file: ' + data)
+        return('', 503)
 
 
 @app.route('/search')
