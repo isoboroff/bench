@@ -23,7 +23,8 @@ function initial_bench_state() {
 	  narr: "",
 	},
 	topics: [],
-	cur_topic: -1
+	cur_topic: -1,
+	last_save: 0,
   };
 }
 
@@ -109,18 +110,18 @@ class Workbench extends React.Component {
 	const url = window.location.href + 'save';
 	const data = JSON.stringify(this.state, this.JSON_stringify_maps);
 
-	fetch(url, {
-	  method: 'POST',
-	  headers: {
-		'Content-Type': 'application/json',
-	  },
-	  body: data,
-	})
+	fetch(url, { method: 'POST',
+				 headers: {
+				   'Content-Type': 'application/json',
+				 },
+				 body: data,
+			   })
 	  .then((response) => {
 		if (!response.ok) {
 		  throw Error(response.statusText);
 		}
 	  })
+	  .then(() => { this.setState({ last_save: Date.now() }); })
 	  .catch((error) => {
 		alert('Error:', error);
 	  });
@@ -194,6 +195,9 @@ class Workbench extends React.Component {
 	let writeup = this.state.writeup;
 	writeup[name] = value;
 	this.setState({ writeup: writeup });
+	if (this.state.cur_topic != -1) {
+	  this.save_topic();
+	}
   }
 
   /* Save the current writeup and qrels to the topics array. */
@@ -248,6 +252,10 @@ class Workbench extends React.Component {
   
   componentDidUpdate() {
 	this.save_state();
+	if ((this.state.last_save > 0) &&
+		((Date.now() - this.state.last_save) > 5000)) {
+	  this.save_state_to_server();
+	}
   }
 
   componentDidMount() {
@@ -283,6 +291,8 @@ class Workbench extends React.Component {
 				<NavDropdown eventKey="user"
 							 title={"Logged in as " + this.state.username}
 							 id="utils-dropdown">
+				  <NavDropdown.Item as="li" disabled>Last save: {this.state.last_save}</NavDropdown.Item>
+				  <NavDropdown.Divider/>
 				  <NavDropdown.Item as="li" onClick={this.do_save}>Save</NavDropdown.Item>
 				  <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
 				</NavDropdown>
