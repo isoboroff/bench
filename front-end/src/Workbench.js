@@ -10,8 +10,6 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button"; 
 
 import SearchTab from "./SearchTab";
-import Writeup from "./Writeup";
-import TopicList from "./TopicList";
 import Topics from "./Topics";
 
 function initial_bench_state() {
@@ -19,14 +17,13 @@ function initial_bench_state() {
 	username: null,
 	topics: [],
 	cur_topic: -1,
-	last_save: 0,
   };
 }
 
 function empty_topic() {
   return {
 	writeup: {
-	  title: "",
+	  title: "New topic",
 	  desc: "",
 	  narr: ""
 	},
@@ -39,6 +36,7 @@ class Workbench extends React.Component {
 	super(props);
 	this.state = initial_bench_state();
 
+	this.state.needs_save = false;
 	/* JavaScript is not OO except by force of will.
 	   Remember you need to bind methods that will get called
 	   from browser events and React components.
@@ -129,7 +127,9 @@ class Workbench extends React.Component {
 		  throw Error(response.statusText);
 		}
 	  })
-	  .then(() => { this.setState({ last_save: Date.now() }); })
+	  .then(() => {
+		this.setState({needs_save: false});
+	  })
 	  .catch((error) => {
 		alert('Error:', error);
 	  });
@@ -192,7 +192,7 @@ class Workbench extends React.Component {
 	let topics = this.state.topics;
 	let qrels = topics[this.state.cur_topic].qrels;
 	qrels.set(docno, true);
-	this.setState({ topics: topics });
+	this.setState({ topics: topics, needs_save: true });
   }
 
   /* Remove a relevant document */
@@ -203,7 +203,7 @@ class Workbench extends React.Component {
 	let topics = this.state.topics;
 	let qrels = topics[this.state.cur_topic].qrels;
 	qrels.delete(docno);
-	this.setState({ topics: topics });
+	this.setState({ topics: topics, needs_save: true });
   }
 
   /* Note a change to the topic writeup */
@@ -214,7 +214,7 @@ class Workbench extends React.Component {
 	let topics = this.state.topics;
 	let writeup = topics[this.state.cur_topic].writeup;
 	writeup[name] = value;
-	this.setState({ topics: topics });
+	this.setState({ topics: topics, needs_save: true });
   }
 
   new_topic() {
@@ -222,7 +222,8 @@ class Workbench extends React.Component {
 	let topics = this.state.topics;
 	topics.unshift(new_topic);
 	this.setState({ topics: topics,
-					cur_topic: 0 });
+					cur_topic: 0,
+					needs_save: true });
   }
   
   /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
@@ -232,7 +233,8 @@ class Workbench extends React.Component {
 	let topics = this.state.topics;
 	topics.splice(topic_num, 1);
 	this.setState({ cur_topic: -1,
-					topics: topics
+					topics: topics,
+					needs_save: true
 				  });
   }
 
@@ -244,18 +246,24 @@ class Workbench extends React.Component {
 
   componentDidUpdate() {
 	this.save_state();
-	if ((this.state.last_save > 0) &&
-		((Date.now() - this.state.last_save) > 5000)) {
-	  this.save_state_to_server();
-	}
   }
 
   componentDidMount() {
 	if (!this.state.hasOwnProperty('state_is_live')) {
 	  this.restore_state();
 	}
+	/* Every five seconds, if we need to save, trigger a save to the server. */
+	this.interval = setInterval(() => {
+	  if (this.state.needs_save) {
+		this.save_state_to_server();
+	  }
+	}, 5000);
   }
 
+  componentWillUnmount() {
+	clearInterval(this.interval);
+  }
+  
   render() {
     return (
 	  <>
@@ -281,10 +289,13 @@ class Workbench extends React.Component {
 			  <Nav.Item className="ml-auto">
 				<NavDropdown eventKey="user"
 							 title={"Logged in as " + this.state.username}
-							 id="utils-dropdown">
-				  <NavDropdown.Item as="li" disabled>Last save: {this.state.last_save}</NavDropdown.Item>
-				  <NavDropdown.Divider/>
-				  <NavDropdown.Item as="li" onClick={this.do_save}>Save</NavDropdown.Item>
+							 id="utils-dropdown"
+							 alignRight>
+				  <NavDropdown.Item as="li"
+									disabled={!this.state.needs_save}
+									onClick={this.do_save}>
+					{ this.state.needs_save ? 'Save' : 'Saved'}
+				  </NavDropdown.Item>
 				  <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
 				</NavDropdown>
 			  </Nav.Item>
