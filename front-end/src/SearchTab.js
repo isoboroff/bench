@@ -13,7 +13,6 @@ class SearchTab extends React.Component {
 	super(props);
 	this.state = {
 	  query: "",
-	  qrels: this.props.qrels,
 	  page: 1,
 	  facets: new Map(),
 	  results: "",
@@ -118,6 +117,10 @@ class SearchTab extends React.Component {
 
   
   render() {
+	let qrels = null;
+	if (this.props.cur_topic !== -1) {
+	  qrels = this.props.topics[this.props.cur_topic].qrels;
+	}
 	return (
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
@@ -136,7 +139,7 @@ class SearchTab extends React.Component {
           <Col sm="10">
             <SearchResults
               results={this.state.results}
-              qrels={this.props.qrels}
+              qrels={qrels}
               on_relevant={this.mark_relevant}
               page={this.state.page}
               turn_page={this.turn_page}

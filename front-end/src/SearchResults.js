@@ -141,7 +141,11 @@ class SearchResults extends React.Component {
    */
   render() {
     const hits = this.props.results.hits ? this.props.results.hits.hits : [];
-    const qrels = this.props.qrels;
+    let qrels = this.props.qrels;
+	if (qrels === null) {
+	  qrels = new Map();
+	}
+	
 
     if (hits.length > 0) {
       // This is a common React pattern: if you have an array of things to render,
