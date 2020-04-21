@@ -3,6 +3,9 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 
 /*
@@ -24,14 +27,18 @@ class TopicEditor extends React.Component {
 
   render() {
 	let event_key = "topic-" + this.props.topic_num;
+	const reldocs = [];
+	for (let docno of this.props.qrels.keys()) {
+	  reldocs.push(<li>{docno}</li>);
+	}
+	
 	return (
 	  <Card>
-		<Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key} onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
+		<Accordion.Toggle as={Card.Header}
+						  variant="link"
+						  eventKey={event_key}
+						  onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
 		  { this.props.writeup.title }
-		  <Button variant="light"
-				  onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
-			Delete
-		  </Button>
 		</Accordion.Toggle>
 		<Accordion.Collapse eventKey={event_key}>
 		  <Card.Body>
@@ -80,6 +87,19 @@ class TopicEditor extends React.Component {
               </Form.Text>
             </Form.Group>
 
+			<Row className="mt-3">
+			  <Col md={10}>
+				Relevant documents:
+				<ul>{reldocs}</ul>
+			  </Col>
+			</Row>
+
+			<Button variant="primary" className="mt-3"
+					onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
+			  Delete
+			</Button>
+
+
 		  </Card.Body>
 		</Accordion.Collapse>
 	  </Card>
@@ -98,18 +118,23 @@ class Topics extends React.Component {
 	const topiclist = topics.map((hit, index) => (
 	  <TopicEditor topic_num={index}
 				   writeup={hit.writeup}
+				   qrels={hit.qrels}
 				   set_current_topic={this.props.set_current_topic}
 				   change_writeup={this.props.change_writeup}
 				   delete_topic={this.props.delete_topic}/>
 	));
 
 	return (
-	  <>
-		<Button variant="primary" onClick={this.props.new_topic}>Create new topic</Button>
-		<Accordion defaultActiveKey={this.props.current_topic}>
-		  {topiclist}
-		</Accordion>
-	  </>
+	  <Container>
+		<Row className="justify-content-md-center mt-5">
+		  <Col md={10}>
+			<Button variant="primary" onClick={this.props.new_topic}>Create new topic</Button>
+			<Accordion defaultActiveKey={this.props.current_topic}>
+			  {topiclist}
+			</Accordion>
+		  </Col>
+		</Row>
+	  </Container>
 	);
   }
 }
