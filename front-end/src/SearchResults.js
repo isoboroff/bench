@@ -75,6 +75,7 @@ class SearchHit extends React.Component {
     const doc = this.display_doc(this.props.content);
     const event_key = this.props.hitkey;
     const rel_key = "rel." + this.props.hitkey;
+	const date = new Date(this.props.date).toDateString();
 
 	const people = new Map();
 	if (this.props.people) {
@@ -101,7 +102,7 @@ class SearchHit extends React.Component {
     return (
       <Card>
         <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
-          {this.props.seqno + 1}. {this.props.title}{" "}
+          {this.props.seqno + 1}. <strong>{this.props.title}</strong> ({date}){" "}
           <div class="custom-control custom-switch float-right">
             <input
               class="custom-control-input"
@@ -158,6 +159,7 @@ class SearchResults extends React.Component {
           hitkey={hit._id}
           title={hit._source.title}
           content={hit._source.orig}
+		  date={hit._source.date}
           rel={!!qrels.has(hit._id)}
           on_relevant={this.props.on_relevant}
 		  people={hit._source.PERSON}
