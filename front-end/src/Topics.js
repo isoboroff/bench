@@ -38,6 +38,10 @@ class TopicEditor extends React.Component {
 						  variant="link"
 						  eventKey={event_key}
 						  onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
+		  
+		  { this.props.current
+			? <strong>CURRENT TOPIC: </strong>
+		    : '' }
 		  { this.props.writeup.title }
 		</Accordion.Toggle>
 		<Accordion.Collapse eventKey={event_key}>
@@ -114,11 +118,13 @@ class TopicEditor extends React.Component {
 class Topics extends React.Component {
   render() {
 	let topics = this.props.topics;
-
+	let event_key = "topic-" + this.props.cur_topic;
+	
 	const topiclist = topics.map((hit, index) => (
 	  <TopicEditor topic_num={index}
 				   writeup={hit.writeup}
 				   qrels={hit.qrels}
+				   current={index === this.props.cur_topic}
 				   set_current_topic={this.props.set_current_topic}
 				   change_writeup={this.props.change_writeup}
 				   delete_topic={this.props.delete_topic}/>
@@ -129,7 +135,7 @@ class Topics extends React.Component {
 		<Row className="justify-content-md-center mt-5">
 		  <Col md={10}>
 			<Button variant="primary" onClick={this.props.new_topic}>Create new topic</Button>
-			<Accordion defaultActiveKey={this.props.current_topic}>
+			<Accordion defaultActiveKey={event_key}>
 			  {topiclist}
 			</Accordion>
 		  </Col>
