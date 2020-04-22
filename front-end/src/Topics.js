@@ -60,7 +60,7 @@ class TopicEditor extends React.Component {
               </Form.Text>
             </Form.Group>
 
-            <Form.Group controlId="task">
+            <Form.Group controlId="desc">
               <Form.Label>Description</Form.Label>
               <Form.Control
                 type="text"
@@ -71,6 +71,20 @@ class TopicEditor extends React.Component {
               />
               <Form.Text className="text-muted">
                 A single sentence describing the information need.
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group controlId="bglink">
+              <Form.Label>Background Linking task document id</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="The document identifier of the document to use for the BGL task."
+                name="bglink"
+				value={this.props.writeup.bglink}
+                onChange={this.change_fields}
+              />
+              <Form.Text className="text-muted">
+                A document id; cut and paste from the document please!
               </Form.Text>
             </Form.Group>
 

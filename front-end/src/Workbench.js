@@ -25,6 +25,7 @@ function empty_topic() {
 	writeup: {
 	  title: "New topic",
 	  desc: "",
+	  bglink: "",
 	  narr: ""
 	},
 	qrels: new Map()
