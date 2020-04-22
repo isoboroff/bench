@@ -3,6 +3,7 @@ import React from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 
 import SearchBox from "./SearchBox";
 import FacetView from "./Facet";
@@ -20,6 +21,7 @@ class SearchTab extends React.Component {
 
 	this.update_query = this.update_query.bind(this);
 	this.update_facets = this.update_facets.bind(this);
+	this.clear_facets = this.clear_facets.bind(this);
 	this.turn_page = this.turn_page.bind(this);
 	this.mark_relevant = this.mark_relevant.bind(this);
   }
@@ -45,6 +47,15 @@ class SearchTab extends React.Component {
       facetmap.delete(facetkey);
     }
     this.setState({ facets: facetmap }, /* then, do */ this.update_search);
+  }
+
+  /*
+   * If you have facets checked, then modify the query such that the results do not have
+   * that facet, then you can't clear it with the checkbox.  So here is a method
+   * to clear out the facets.
+   */
+  clear_facets() {
+	this.setState({ facets: new Map() }, /* then, do */ this.update_search);
   }
 
   mark_relevant(docid, checked) {
@@ -130,6 +141,7 @@ class SearchTab extends React.Component {
         </Row>
         <Row>
           <Col sm="2">
+			<Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
             <FacetView
               aggs={this.state.results ? this.state.results.aggregations : ""}
               checked={this.state.facets}
