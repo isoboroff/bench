@@ -24,7 +24,9 @@ class SearchHit extends React.Component {
    */
   display_doc(objstring) {
 	let obj = JSON.parse(objstring);
-	let content = obj.contents.map(block => {
+	let content = obj.contents.filter(block => {
+	  return block != null;
+	}).map(block => {
 	  switch (block.type) {
 	  case 'kicker': return (<h3> {block.content} </h3>);
 	  case 'title': return (<h1> {block.content} </h1>);
