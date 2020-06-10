@@ -31,7 +31,7 @@ class SearchTab extends React.Component {
   }
 
   update_query(query_box_contents) {
-	this.setState({ query: query_box_contents }, /* then, do */ this.update_search);
+	this.setState({ query: query_box_contents, page: 1 }, /* then, do */ this.update_search);
   }
   
   /**
@@ -46,7 +46,7 @@ class SearchTab extends React.Component {
     } else {
       facetmap.delete(facetkey);
     }
-    this.setState({ facets: facetmap }, /* then, do */ this.update_search);
+    this.setState({ facets: facetmap, page: 1 }, /* then, do */ this.update_search);
   }
 
   /*
@@ -55,7 +55,7 @@ class SearchTab extends React.Component {
    * to clear out the facets.
    */
   clear_facets() {
-	this.setState({ facets: new Map() }, /* then, do */ this.update_search);
+	this.setState({ facets: new Map(), page: 1 }, /* then, do */ this.update_search);
   }
 
   mark_relevant(docid, checked) {
