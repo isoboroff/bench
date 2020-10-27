@@ -1,0 +1,19 @@
+#+title: Notes and issues and plans for the Bench app
+
+* Updates needed for BETTER IR development
+
+  ** TODO Arabic search support
+  ** TODO Topic development template
+  ** TODO Highlights for relevance, rather than checkboxes
+
+* Improvements to the system
+
+  ** Make the different app components (like a search tab on a collection, a topic writeup, a review pane) composable in a top-level App, easily.
+
+  ** Retargetable search tab: just specify endpoint and collection, with optional facet fields
+
+  ** Specify the writeup tab setup with a JSON template
+
+  ** Each tab component should manage its own state and save/restore functionality
+  
+  
