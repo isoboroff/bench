@@ -11,6 +11,7 @@ import Button from "react-bootstrap/Button";
 
 import SearchTab from "./SearchTab";
 import Topics from "./Topics";
+import WaPoDocument from "./WaPoDocument";
 
 function initial_bench_state() {
   return {
@@ -306,6 +307,7 @@ class Workbench extends React.Component {
 	      <Tab.Content animation>
 		<Tab.Pane eventKey="search">
 		  <SearchTab index="wapo"
+                             display_doc={WaPoDocument}
                              search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
                                              "gpes": { "pos": 1, "field": "GPE.keyword" },
                                              "orgs": { "pos": 2, "field": "ORG.keyword" },

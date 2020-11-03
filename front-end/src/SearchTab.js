@@ -156,6 +156,7 @@ class SearchTab extends React.Component {
           </Col>
           <Col sm="10">
             <SearchResults
+              display_doc={this.props.display_doc}
               results={this.state.results}
               qrels={qrels}
               on_relevant={this.mark_relevant}
