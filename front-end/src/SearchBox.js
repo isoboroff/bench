@@ -1,6 +1,7 @@
 import React from "react";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 /** SearchBox class: takes a query from the user. */
 export default class SearchBox extends React.Component {
@@ -41,12 +42,15 @@ export default class SearchBox extends React.Component {
   render() {
     return (
       <Form onSubmit={this.handle_submit_event}>
-        <Form.Group as={Col} controlID="searchBox">
-          <Form.Control
-            placeholder="Enter your query here"
-            value={this.state.value}
-            onChange={this.handle_update_event}
-          />
+        <Form.Group as={Row} controlID="searchBox">
+          <Form.Label column sm={2}>Search {this.props.index}:</Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              placeholder="Enter your query here"
+              value={this.state.value}
+              onChange={this.handle_update_event}
+            />
+          </Col>
         </Form.Group>
       </Form>
     );

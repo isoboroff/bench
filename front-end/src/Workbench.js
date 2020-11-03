@@ -305,10 +305,11 @@ class Workbench extends React.Component {
 		  <Col sm={12}>
 			<Tab.Content animation>
 			  <Tab.Pane eventKey="search">
-				<SearchTab topics={this.state.topics}
-						   cur_topic={this.state.cur_topic}
-						   add_relevant={this.add_relevant}
-						   remove_relevant={this.remove_relevant}/>
+			      <SearchTab index="wapo"
+                                         topics={this.state.topics}
+					 cur_topic={this.state.cur_topic}
+					 add_relevant={this.add_relevant}
+					 remove_relevant={this.remove_relevant}/>
 			  </Tab.Pane>
 			  <Tab.Pane eventKey="topics">
 				<Topics topics={this.state.topics}

@@ -90,10 +90,11 @@ def load():
 @app.route('/search')
 def search():
     query = request.args['q']
+    index = request.args.get('index', args.index)
 
     # Build the query
     # This is the query from the search box
-    search = Search(using=es, index=args.index)
+    search = Search(using=es, index=index)
     search = search.query(Q('match', text=query))
 
     # Add in any checked facets.  These do not filter the results but

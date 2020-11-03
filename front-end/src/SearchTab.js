@@ -11,27 +11,27 @@ import SearchResults from "./SearchResults";
 
 class SearchTab extends React.Component {
   constructor(props) {
-	super(props);
-	this.state = {
-	  query: "",
-	  page: 1,
-	  facets: new Map(),
-	  results: "",
-	};
+    super(props);
+    this.state = {
+      query: "",
+      page: 1,
+      facets: new Map(),
+      results: "",
+    };
 
-	this.update_query = this.update_query.bind(this);
-	this.update_facets = this.update_facets.bind(this);
-	this.clear_facets = this.clear_facets.bind(this);
-	this.turn_page = this.turn_page.bind(this);
-	this.mark_relevant = this.mark_relevant.bind(this);
+    this.update_query = this.update_query.bind(this);
+    this.update_facets = this.update_facets.bind(this);
+    this.clear_facets = this.clear_facets.bind(this);
+    this.turn_page = this.turn_page.bind(this);
+    this.mark_relevant = this.mark_relevant.bind(this);
   }
 
   update_search() {
-	this.do_search();
+    this.do_search();
   }
 
   update_query(query_box_contents) {
-	this.setState({ query: query_box_contents, page: 1 }, /* then, do */ this.update_search);
+    this.setState({ query: query_box_contents, page: 1 }, /* then, do */ this.update_search);
   }
   
   /**
@@ -55,13 +55,13 @@ class SearchTab extends React.Component {
    * to clear out the facets.
    */
   clear_facets() {
-	this.setState({ facets: new Map(), page: 1 }, /* then, do */ this.update_search);
+    this.setState({ facets: new Map(), page: 1 }, /* then, do */ this.update_search);
   }
 
   mark_relevant(docid, checked) {
     let qrels = this.state.qrels;
     if (checked) {
-	  this.props.add_relevant(docid);
+      this.props.add_relevant(docid);
     } else {
       this.props.remove_relevant(docid);
     }
@@ -69,8 +69,8 @@ class SearchTab extends React.Component {
 
   turn_page(change) {
     const num_pages = this.state.results
-      ? Math.floor(this.state.results.hits.total.value / 10)
-      : 0;
+          ? Math.floor(this.state.results.hits.total.value / 10)
+          : 0;
     let this_page = this.state.page;
 
     if (change === "+1") {
@@ -98,7 +98,7 @@ class SearchTab extends React.Component {
    * builds this into the query for ElasticSearch.
    */
   build_query() {
-    let query_string = "q=" + this.state.query + "&page=" + this.state.page;
+    let query_string = "index=" + this.props.index + "&q=" + this.state.query + "&page=" + this.state.page;
     const facet_string = Array.from(this.state.facets.keys()).join(",");
     if (facet_string.length > 0) {
       query_string += "&facets=" + facet_string;
@@ -128,25 +128,25 @@ class SearchTab extends React.Component {
 
   
   render() {
-	let qrels = null;
-	if (this.props.cur_topic !== -1) {
-	  qrels = this.props.topics[this.props.cur_topic].qrels;
-	}
-	return (
+    let qrels = null;
+    if (this.props.cur_topic !== -1) {
+      qrels = this.props.topics[this.props.cur_topic].qrels;
+    }
+    return (
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
           <Col sm="8">
-            <SearchBox on_search={this.update_query} />
+            <SearchBox index={this.props.index} on_search={this.update_query} />
           </Col>
         </Row>
         <Row>
           <Col sm="2">
-			<Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
+	    <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
             <FacetView
               aggs={this.state.results ? this.state.results.aggregations : ""}
               checked={this.state.facets}
               onCheck={this.update_facets}
-              />
+            />
           </Col>
           <Col sm="10">
             <SearchResults
@@ -155,11 +155,11 @@ class SearchTab extends React.Component {
               on_relevant={this.mark_relevant}
               page={this.state.page}
               turn_page={this.turn_page}
-              />
+            />
           </Col>
         </Row>
       </Container>
-	);
+    );
   }
 }
 
