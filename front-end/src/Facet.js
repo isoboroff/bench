@@ -34,14 +34,8 @@ class Facet extends React.Component {
 class FacetView extends React.Component {
   render() {
     const aggs = this.props.aggs;
-    const forder = {
-      persons: 1,
-      gpes: 2,
-      orgs: 3,
-      events: 4
-    };
     let agglist = Object.entries(aggs).sort(
-      (a, b) => forder[a[0]] - forder[b[0]]
+      (a, b) => this.props.facets[a[0]].pos - this.props.facets[b[0]].pos
     );
     let facetlist = agglist.map(([key, data]) => (
       <Facet

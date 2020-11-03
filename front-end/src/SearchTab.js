@@ -143,6 +143,7 @@ class SearchTab extends React.Component {
           <Col sm="2">
 	    <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
             <FacetView
+              facets={this.props.search_facets}
               aggs={this.state.results ? this.state.results.aggregations : ""}
               checked={this.state.facets}
               onCheck={this.update_facets}
