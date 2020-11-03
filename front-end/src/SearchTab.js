@@ -99,6 +99,11 @@ class SearchTab extends React.Component {
    */
   build_query() {
     let query_string = "index=" + this.props.index + "&q=" + this.state.query + "&page=" + this.state.page;
+    if (this.props.search_facets) {
+      const aggs_string = Object.entries(this.props.search_facets)
+            .map(([agg, field]) => agg +":"+ field.field).join(",");
+      query_string += "&aggs=" + aggs_string;
+    }
     const facet_string = Array.from(this.state.facets.keys()).join(",");
     if (facet_string.length > 0) {
       query_string += "&facets=" + facet_string;

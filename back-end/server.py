@@ -26,13 +26,6 @@ else:
 app = Flask(__name__, static_folder='../front-end/build/static', template_folder='../front-end/build')
 es = Elasticsearch([{'host': args.host, 'port': args.port}])
 
-agg2field = {
-    'persons': 'PERSON.keyword',
-    'orgs': 'ORG.keyword',
-    'gpes': 'GPE.keyword',
-    'events': 'EVENT.keyword',
-}
-
 Path(args.save).mkdir(exist_ok=True)
 
 
@@ -91,7 +84,15 @@ def load():
 def search():
     query = request.args['q']
     index = request.args.get('index', args.index)
+    agg2field_str = request.args.get('aggs', None)
 
+    # Set up aggregation to field mapping
+    agg2field = {}
+    if agg2field_str:
+        for pair in agg2field_str.split(','):
+            agg, field = pair.split(':')
+            agg2field[agg] = field
+    
     # Build the query
     # This is the query from the search box
     search = Search(using=es, index=index)
