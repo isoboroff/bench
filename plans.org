@@ -2,9 +2,23 @@
 
 * Updates needed for BETTER IR development
 
-  ** TODO Arabic search support
-  ** TODO Topic development template
-  ** TODO Highlights for relevance, rather than checkboxes
+** TODO Arabic search support
+
+*** DONE Figure out Arabic indexing into ElasticSearch
+
+- Determined that there is a built-in Arabic analyzer
+- Investigated Farasa and MADAMIRA but integration looks to be quite challenging for both.
+
+*** TODO Can we do Spacy extractions for facets?
+
+- Spacy does not do Arabic.
+
+
+** TODO Multiple search tabs (one for English, one for Arabic)
+
+** TODO Topic development template
+
+** TODO Highlights for relevance, rather than checkboxes
 
 * Improvements to the system
 
