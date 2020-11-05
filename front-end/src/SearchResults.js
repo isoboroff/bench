@@ -33,25 +33,20 @@ class SearchHit extends React.Component {
     const rel_key = "rel." + this.props.hitkey;
     const date = new Date(this.props.date).toDateString();
 
-    const people = new Map();
+    const entities = new Map();
     if (this.props.people) {
       for (let p of this.props.people) {
-	people.set(p, (<span class="badge badge-info ml-1">{p}</span>
-		      ));
+	entities.set("p_"+p, (<span class="badge badge-info ml-1">{p}</span>));
       }
     }
-    const orgs = new Map();
     if (this.props.orgs) {
       for (let o of this.props.orgs) {
-	orgs.set(o, (<span class="badge badge-success ml-1">{o}</span>
-		    ));
+	entities.set("o_"+o, (<span class="badge badge-success ml-1">{o}</span>));
       }
     }
-    const gpes = new Map();
     if (this.props.gpes) {
       for (let g of this.props.gpes) {
-	gpes.set(g, (<span class="badge badge-warning ml-1">{g}</span>
-		    ));
+	entities.set("g_"+g, (<span class="badge badge-warning ml-1">{g}</span>));
       }
     }
     
@@ -78,7 +73,7 @@ class SearchHit extends React.Component {
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
             {this.props.hitkey} <p />
-	    {people.values()} {orgs.values()} {gpes.values()} <p />
+	    {entities.values()} <p />
 	    {/* don't need dangerouslySet and renderToStatic anymore, just doc, I think */}
             <div style={{ whiteSpace: "pre-wrap" }}>
               {doc}
