@@ -10,8 +10,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button"; 
 
 import SearchTab from "./SearchTab";
+import SimpleSearchTab from "./SimpleSearchTab";
 import Topics from "./Topics";
-import WaPoDocument from "./WaPoDocument";
+import BetterDocument from "./BetterDocument";
 
 function initial_bench_state() {
   return {
@@ -286,7 +287,8 @@ class Workbench extends React.Component {
 	  <Row className="clearfix">
 	    <Col sm={12}>
 	      <Nav variant="tabs">
-		<Nav.Item><Nav.Link eventKey="search">Search</Nav.Link></Nav.Item>
+		<Nav.Item><Nav.Link eventKey="search">Search English</Nav.Link></Nav.Item>
+		<Nav.Item><Nav.Link eventKey="arabic">Search Arabic</Nav.Link></Nav.Item>
 		<Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
 		<Nav.Item className="ml-auto">
 		  <NavDropdown eventKey="user"
@@ -306,8 +308,8 @@ class Workbench extends React.Component {
 	    <Col sm={12}>
 	      <Tab.Content animation>
 		<Tab.Pane eventKey="search">
-		  <SearchTab index="wapo"
-                             display_doc={WaPoDocument}
+		  <SearchTab index="better_eng"
+                             display_doc={BetterDocument}
                              search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
                                              "gpes": { "pos": 1, "field": "GPE.keyword" },
                                              "orgs": { "pos": 2, "field": "ORG.keyword" },
@@ -317,6 +319,14 @@ class Workbench extends React.Component {
 			     cur_topic={this.state.cur_topic}
 			     add_relevant={this.add_relevant}
 			     remove_relevant={this.remove_relevant}/>
+		</Tab.Pane>
+		<Tab.Pane eventKey="arabic">
+		  <SimpleSearchTab index="better_ar"
+                                   display_doc={BetterDocument}
+                                   topics={this.state.topics}
+			           cur_topic={this.state.cur_topic}
+			           add_relevant={this.add_relevant}
+			           remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
 		<Tab.Pane eventKey="topics">
 		  <Topics topics={this.state.topics}
