@@ -13,6 +13,7 @@ import SearchTab from "./SearchTab";
 import SimpleSearchTab from "./SimpleSearchTab";
 import Topics from "./Topics";
 import BetterDocument from "./BetterDocument";
+import BetterRTLDocument from "./BetterRTLDocument";
 
 function initial_bench_state() {
   return {
@@ -322,7 +323,7 @@ class Workbench extends React.Component {
 		</Tab.Pane>
 		<Tab.Pane eventKey="arabic">
 		  <SimpleSearchTab index="better_ar"
-                                   display_doc={BetterDocument}
+                                   display_doc={BetterRTLDocument}
                                    topics={this.state.topics}
 			           cur_topic={this.state.cur_topic}
 			           add_relevant={this.add_relevant}
