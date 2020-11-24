@@ -95,7 +95,7 @@ class TopicEditor extends React.Component {
               <Form.Label>In Scope</Form.Label>
               <Form.Control
                 as="textarea"
-                rows="5"
+                rows="2"
                 placeholder="Information that is in-scope."
                 name="inscope"
 		value={this.props.writeup.inscope}
@@ -110,7 +110,7 @@ class TopicEditor extends React.Component {
               <Form.Label>Out of Scope</Form.Label>
               <Form.Control
                 as="textarea"
-                rows="5"
+                rows="2"
                 placeholder="Information that is out of scope."
                 name="outscope"
 		value={this.props.writeup.outscope}
