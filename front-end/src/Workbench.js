@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 
 import SearchTab from "./SearchTab";
 import SimpleSearchTab from "./SimpleSearchTab";
-import Topics from "./Topics";
+import BetterTasks from "./BetterTasks";
 import BetterDocument from "./BetterDocument";
 import BetterRTLDocument from "./BetterRTLDocument";
 
@@ -28,8 +28,9 @@ function empty_topic() {
     writeup: {
       title: "New topic",
       desc: "",
-      bglink: "",
-      narr: ""
+      narr: "",
+      inscope: "",
+      outscope: "",
     },
     qrels: new Map()
   };
@@ -330,7 +331,7 @@ class Workbench extends React.Component {
 			           remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
 		<Tab.Pane eventKey="topics">
-		  <Topics topics={this.state.topics}
+		  <BetterTasks topics={this.state.topics}
 			  cur_topic={this.state.cur_topic}
 			  change_writeup={this.change_writeup}
 			  set_current_topic={this.set_current_topic}

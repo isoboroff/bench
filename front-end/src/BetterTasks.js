@@ -56,7 +56,7 @@ class TopicEditor extends React.Component {
                 onChange={this.change_fields}
               />
               <Form.Text className="text-muted">
-                A brief title for your topic, two to four key words.
+                A brief title for your analytic task.
               </Form.Text>
             </Form.Group>
 
@@ -70,7 +70,7 @@ class TopicEditor extends React.Component {
                 onChange={this.change_fields}
               />
               <Form.Text className="text-muted">
-                A single sentence describing the information need.
+                A single sentence describing the overarching information need.
               </Form.Text>
             </Form.Group>
 
@@ -86,12 +86,42 @@ class TopicEditor extends React.Component {
               />
               <Form.Text className="text-muted">
                 An expanded description of the information need, including gray
-                areas/areas of interpretation and scoping rules, and how you
-                interpreted them as the user.
+                areas/areas of interpretation and how you interpreted them as the
+                user.
               </Form.Text>
             </Form.Group>
 
-	    <Row className="mt-3">
+            <Form.Group controlId="inscope">
+              <Form.Label>In Scope</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows="5"
+                placeholder="Information that is in-scope."
+                name="inscope"
+		value={this.props.writeup.inscope}
+                onChange={this.change_fields}
+              />
+              <Form.Text className="text-muted">
+                Aspects of the information that you would consider in-scope.
+              </Form.Text>
+            </Form.Group>
+
+	    <Form.Group controlId="outscope">
+              <Form.Label>Out of Scope</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows="5"
+                placeholder="Information that is out of scope."
+                name="outscope"
+		value={this.props.writeup.outscope}
+                onChange={this.change_fields}
+              />
+              <Form.Text className="text-muted">
+                Aspects of the information need that you woule consider to be out of scope.
+              </Form.Text>
+            </Form.Group>
+
+            <Row className="mt-3">
 	      <Col md={10}>
 		Relevant documents:
 		<ul>{reldocs}</ul>
@@ -115,7 +145,7 @@ class TopicEditor extends React.Component {
  * <Topics topics=(list of topics) current_topic=n 
  *  save_topic=(fn) delete_topic=(fn) new_topic=(fn)/>
  */
-class Topics extends React.Component {
+class BetterTasks extends React.Component {
   render() {
     let topics = this.props.topics;
     let event_key = "topic-" + this.props.cur_topic;
@@ -134,7 +164,7 @@ class Topics extends React.Component {
       <Container>
 	<Row className="justify-content-md-center mt-5">
 	  <Col md={10}>
-	    <Button variant="primary" onClick={this.props.new_topic}>Create new topic</Button>
+	    <Button variant="primary" onClick={this.props.new_topic}>Create new task</Button>
 	    <Accordion defaultActiveKey={event_key}>
 	      {topiclist}
 	    </Accordion>
@@ -145,5 +175,5 @@ class Topics extends React.Component {
   }
 }
 
-export { Topics as default };
+export { BetterTasks as default };
 
