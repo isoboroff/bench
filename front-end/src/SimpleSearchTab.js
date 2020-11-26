@@ -98,7 +98,13 @@ class SimpleSearchTab extends React.Component {
   render() {
     let qrels = null;
     if (this.props.cur_topic !== -1) {
-      qrels = this.props.topics[this.props.cur_topic].qrels;
+      const topic = this.props.topics[this.props.cur_topic];
+      
+      if (this.props.cur_req !== -1) {
+        qrels = topic.requests[this.props.cur_req].qrels;
+      } else {
+        qrels = topic.qrels;
+      }
     }
     return (
       <Container fluid="true">
