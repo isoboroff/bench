@@ -71,6 +71,7 @@ class Workbench extends React.Component {
     this.new_request = this.new_request.bind(this);
     this.set_current_topic = this.set_current_topic.bind(this);
     this.set_current_request = this.set_current_request.bind(this);
+    this.handle_selection = this.handle_selection.bind(this);
   }
 
   clear_state() {
@@ -319,11 +320,34 @@ class Workbench extends React.Component {
     this.setState({ cur_req: req_num });
   }
 
+  handle_selection(event) {
+    const sel = document.getSelection();
+    if (sel.anchorNode.nodeType !== Node.TEXT_NODE) {
+      console.log("not in a text node");
+      sel.collapse(sel.focusNode, 0);
+      return;
+    }
+    if (sel.anchorNode !== sel.focusNode) {
+      console.log("selection crossed nodes");
+      sel.collapse(sel.focusNode, 0);
+      return;
+    }
+    
+    if (sel.isCollapsed) {
+      console.log("Selection cancel");
+    } else {
+      console.log(sel.toString());
+    }
+      
+  }
+
   componentDidUpdate() {
     this.save_state();
   }
 
   componentDidMount() {
+    document.addEventListener('selectionchange', this.handle_selection, true);
+    
     if (!this.state.hasOwnProperty('state_is_live')) {
       this.restore_state();
     }
@@ -336,6 +360,7 @@ class Workbench extends React.Component {
   }
 
   componentWillUnmount() {
+    document.removeEventListener('selectionchange', this.handle_selection, true);
     clearInterval(this.interval);
   }
   
@@ -389,6 +414,7 @@ class Workbench extends React.Component {
                                             }}
                              topics={this.state.topics}
 			     cur_topic={this.state.cur_topic}
+                             cur_req={this.state.cur_req}
 			     add_relevant={this.add_relevant}
 			     remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
@@ -397,6 +423,7 @@ class Workbench extends React.Component {
                                    display_doc={BetterRTLDocument}
                                    topics={this.state.topics}
 			           cur_topic={this.state.cur_topic}
+                                   cur_req={this.state.cur_req}
 			           add_relevant={this.add_relevant}
 			           remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
