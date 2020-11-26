@@ -20,6 +20,7 @@ function initial_bench_state() {
     username: null,
     topics: [],
     cur_topic: -1,
+    cur_req: -1,
   };
 }
 
@@ -32,6 +33,14 @@ function empty_topic() {
       inscope: "",
       outscope: "",
     },
+    qrels: new Map(),
+    requests: [],
+  };
+}
+
+function empty_request() {
+  return {
+    req_text: "",
     qrels: new Map()
   };
 }
@@ -55,9 +64,13 @@ class Workbench extends React.Component {
     this.add_relevant = this.add_relevant.bind(this);
     this.remove_relevant = this.remove_relevant.bind(this);
     this.change_writeup = this.change_writeup.bind(this);
+    this.change_reqtext = this.change_reqtext.bind(this);
     this.delete_topic = this.delete_topic.bind(this);
+    this.delete_request = this.delete_request.bind(this);
     this.new_topic = this.new_topic.bind(this);
+    this.new_request = this.new_request.bind(this);
     this.set_current_topic = this.set_current_topic.bind(this);
+    this.set_current_request = this.set_current_request.bind(this);
   }
 
   clear_state() {
@@ -195,8 +208,15 @@ class Workbench extends React.Component {
       return;
     }
     let topics = this.state.topics;
-    let qrels = topics[this.state.cur_topic].qrels;
-    qrels.set(docno, true);
+    if (this.state.cur_req === -1) {
+      /* Task-level relevant doc */
+      let qrels = topics[this.state.cur_topic].qrels;
+      qrels.set(docno, true);
+    } else {
+      /* Request-level relevant doc */
+      let qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
+      qrels.set(docno, true);
+    }
     this.setState({ topics: topics, needs_save: true });
   }
 
@@ -206,8 +226,15 @@ class Workbench extends React.Component {
       return;
     }
     let topics = this.state.topics;
-    let qrels = topics[this.state.cur_topic].qrels;
-    qrels.delete(docno);
+    if (this.state.cur_req === -1) {
+      /* remove task-level relevant doc */
+      let qrels = topics[this.state.cur_topic].qrels;
+      qrels.delete(docno);
+    } else {
+      /* remove request-level relevant doc */
+      let qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
+      qrels.delete(docno);
+    }
     this.setState({ topics: topics, needs_save: true });
   }
 
@@ -222,14 +249,34 @@ class Workbench extends React.Component {
     this.setState({ topics: topics, needs_save: true });
   }
 
+  change_reqtext(topic, request, value) {
+    let topics = this.state.topics;
+    let req = topics[topic].requests[request];
+    req.req_text = value;
+    this.setState({ topics: topics, needs_save: true });
+  }
+  
   new_topic() {
     let new_topic = empty_topic();
     let topics = this.state.topics;
-    topics.unshift(new_topic);
+    let num_topics = topics.push(new_topic);
     this.setState({ topics: topics,
-		    cur_topic: 0,
+		    cur_topic: num_topics - 1,
 		    needs_save: true });
   }
+
+  new_request() {
+    if (this.state.cur_topic === -1) {
+      return;
+    }
+    let new_request = empty_request();
+    let topics = this.state.topics;
+    let num_reqs = topics[this.state.cur_topic].requests.push(new_request);
+    this.setState({ topics: topics,
+                    cur_req: num_reqs - 1,
+                    needs_save: true });
+  }
+    
   
   /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
   delete_topic(topic_num) {
@@ -243,10 +290,33 @@ class Workbench extends React.Component {
 		  });
   }
 
+  /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
+  delete_request(topic_num, req_num) {
+    if (topic_num < 0 || topic_num > this.state.topics.length)
+      return;
+    if (req_num < 0 || req_num > this.state.topics[topic_num].requests.length)
+      return;
+    let topics = this.state.topics;
+    let reqs = topics[topic_num].requests;
+    reqs.splice(req_num, 1);
+    this.setState({ cur_req: -1,
+		    topics: topics,
+		    needs_save: true
+		  });
+  }
+
   set_current_topic(topic_num) {
     if (topic_num < 0 || topic_num > this.state.topics.length)
       return;
     this.setState({ cur_topic: topic_num });
+  }
+
+  set_current_request(topic_num, req_num) {
+    if (topic_num < 0 || topic_num > this.state.topics.length)
+      return;
+    if (req_num < 0 || req_num > this.state.topics[topic_num].requests.length)
+      return;
+    this.setState({ cur_req: req_num });
   }
 
   componentDidUpdate() {
@@ -332,11 +402,16 @@ class Workbench extends React.Component {
 		</Tab.Pane>
 		<Tab.Pane eventKey="topics">
 		  <BetterTasks topics={this.state.topics}
-			  cur_topic={this.state.cur_topic}
-			  change_writeup={this.change_writeup}
-			  set_current_topic={this.set_current_topic}
-			  delete_topic={this.delete_topic}
-			  new_topic={this.new_topic}/>
+			       cur_topic={this.state.cur_topic}
+                               cur_req={this.state.cur_req}
+			       change_writeup={this.change_writeup}
+			       set_current_topic={this.set_current_topic}
+			       delete_topic={this.delete_topic}
+			       new_topic={this.new_topic}
+			       change_reqtext={this.change_reqtext}
+			       set_current_request={this.set_current_request}
+			       delete_request={this.delete_request}
+			       new_request={this.new_request}/>
 		</Tab.Pane>
 	      </Tab.Content>
 	    </Col>

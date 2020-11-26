@@ -25,12 +25,71 @@ class TopicEditor extends React.Component {
     this.props.change_writeup(name, value);
   }
 
+  update_request(index, event) {
+    this.props.change_reqtext(this.props.topic_num, index, event.target.value);
+  }
+
+  delete_request(index, event) {
+    this.props.delete_request(this.props.topic_num, index);
+  }
+
+  add_request(event) {
+    this.props.new_request();
+  }
+  
   render() {
     let event_key = "topic-" + this.props.topic_num;
     const reldocs = [];
     for (let docno of this.props.qrels.keys()) {
       reldocs.push(<li>{docno}</li>);
     }
+
+    let requests = this.props.requests.map((req, index) => {
+      const req_reldocs = [];
+      for (let docno of req.qrels.keys()) {
+        req_reldocs.push(<li>{docno}</li>);
+      }
+      return (
+        <Form.Group controlId="request-{index}">
+        <Form.Label>
+          { (index === this.props.cur_req)
+            ? <strong>CURRENT: </strong>
+            : ''
+          }
+        Analytic request {index + 1}</Form.Label>
+        <div class="d-flex">
+          <Form.Control
+            className="mr-1"
+            type="text"
+            value={req.req_text}
+            placeholder="An analytic request."
+            onFocus={this.props.set_current_request.bind(this, this.props.topic_num, index)}
+            onChange={this.update_request.bind(this, index)}
+          />
+          <Button
+            variant="primary"
+            onClick={this.delete_request.bind(this, index)}
+          >
+            delete
+          </Button>
+        </div>
+        <Form.Text className="text-muted">
+          Enter a sentence-length information request related to the analytic task.
+        </Form.Text>
+        <div>
+          Request-level relevant documents:
+          <ul>{req_reldocs}</ul>
+        </div>
+        </Form.Group>
+      );
+    });
+
+    requests.push(
+      <Button variant="primary" onClick={this.add_request.bind(this)}>
+        Add a request
+      </Button>
+    );
+
     
     return (
       <Card>
@@ -123,14 +182,20 @@ class TopicEditor extends React.Component {
 
             <Row className="mt-3">
 	      <Col md={10}>
-		Relevant documents:
+		Task-level Relevant documents:
 		<ul>{reldocs}</ul>
 	      </Col>
 	    </Row>
 
+            <Row className="mt-3">
+              <Col md={10}>
+                {requests}
+              </Col>
+            </Row>
+            
 	    <Button variant="primary" className="mt-3"
 		    onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
-	      Delete
+	      Delete task
 	    </Button>
 
 
@@ -154,10 +219,16 @@ class BetterTasks extends React.Component {
       <TopicEditor topic_num={index}
 		   writeup={hit.writeup}
 		   qrels={hit.qrels}
+                   requests={hit.requests}
 		   current={index === this.props.cur_topic}
+                   cur_req={(index === this.props.cur_topic) ? this.props.cur_req : -1}
 		   set_current_topic={this.props.set_current_topic}
 		   change_writeup={this.props.change_writeup}
-		   delete_topic={this.props.delete_topic}/>
+		   delete_topic={this.props.delete_topic}
+      		   change_reqtext={this.props.change_reqtext}
+		   set_current_request={this.props.set_current_request}
+		   delete_request={this.props.delete_request}
+		   new_request={this.props.new_request}/>
     ));
 
     return (
