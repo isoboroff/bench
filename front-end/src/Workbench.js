@@ -224,15 +224,12 @@ class Workbench extends React.Component {
       return;
     }
     let topics = this.state.topics;
-    if (this.state.cur_req === -1) {
-      /* remove task-level relevant doc */
-      let qrels = topics[this.state.cur_topic].qrels;
-      qrels.delete(docno);
-    } else {
+    let qrels = topics[this.state.cur_topic].qrels;
+    if (this.state.cur_req !== -1) {
       /* remove request-level relevant doc */
-      let qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
-      qrels.delete(docno);
+      qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
     }
+    qrels.delete(docno);
     this.setState({ topics: topics, needs_save: true });
   }
 
@@ -346,10 +343,14 @@ class Workbench extends React.Component {
 
     const docid = this.search_parents(sel.anchorNode, 'docid');
     if (docid !== null && this.state.cur_topic !== -1) {
-      const start = Math.min(sel.anchorOffset, sel.focusOffset);
-      const length = Math.abs(sel.focusOffset - sel.anchorOffset);
-      const extent = {"start": start, "length": length, "text": sel.toString()};
-      this.add_relevant(docid, extent);
+      if (sel.isCollapsed) {
+        this.remove_relevant(docid);
+      } else {
+        const start = Math.min(sel.anchorOffset, sel.focusOffset);
+        const length = Math.abs(sel.focusOffset - sel.anchorOffset);
+        const extent = {"start": start, "length": length, "text": sel.toString()};
+        this.add_relevant(docid, extent);
+      }
     }
   }
 
