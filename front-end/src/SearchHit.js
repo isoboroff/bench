@@ -2,6 +2,9 @@ import React from "react";
 
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
 class SearchHit extends React.Component {
@@ -49,22 +52,16 @@ class SearchHit extends React.Component {
     return (
       <Card docid={this.props.hitkey}>
         <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
-          {this.props.seqno + 1}. <strong>{this.props.title}</strong> ({date}){" "}
-          <div class="custom-control custom-switch float-right">
-            <input
-              class="custom-control-input"
-              type="checkbox"
-              id={rel_key}
-              checked={this.props.rel}
-              onClick={this.on_relevant}
-              data-toggle="button"
-              aria-pressed={this.props.rel}
-            />
-            <label class="custom-control-label" for={rel_key}>
-              Rel
-            </label>
-          </div>{" "}
-          <br />
+          <Container fluid>
+            <Row className="d-flex justify-content-between">
+              <Col>
+                {this.props.seqno + 1}. <strong>{this.props.title}</strong> ({date}){" "}
+              </Col>
+              <Col>
+                {this.props.rel ? <strong>Relevant</strong> : ""}
+              </Col>
+            </Row>
+          </Container>
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
