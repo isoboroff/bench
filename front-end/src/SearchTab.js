@@ -168,6 +168,8 @@ class SearchTab extends React.Component {
               on_relevant={this.mark_relevant}
               page={this.state.page}
               turn_page={this.turn_page}
+              cur_topic={this.props.cur_topic}
+              cur_req={this.props.cur_req}
             />
           </Col>
         </Row>

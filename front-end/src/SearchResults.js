@@ -44,6 +44,12 @@ class SearchResults extends React.Component {
       if (this.props.results.hits.total.relation === "gte") {
         count = "At least " + count;
       }
+      if (this.props.cur_topic !== -1) {
+        count += "  Highlight passages to mark a document relevant for topic " + this.props.cur_topic;
+        if (this.props.cur_req !== -1) {
+          count += ", request " + this.props.cur_req;
+        }
+      }
       let num_pages = Math.floor(this.props.results.hits.total.value / 10);
       return (
         <div>
