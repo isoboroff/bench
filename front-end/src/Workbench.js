@@ -204,20 +204,17 @@ class Workbench extends React.Component {
   }
   
   /* Note a relevant document. */
-  add_relevant(docno) {
+  add_relevant(docno, extent = true) {
     if (this.state.cur_topic === -1) {
       return;
     }
     let topics = this.state.topics;
-    if (this.state.cur_req === -1) {
-      /* Task-level relevant doc */
-      let qrels = topics[this.state.cur_topic].qrels;
-      qrels.set(docno, true);
-    } else {
+    let qrels = topics[this.state.cur_topic].qrels;
+    if (this.state.cur_req !== -1) {
       /* Request-level relevant doc */
       let qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
-      qrels.set(docno, true);
     }
+    qrels.set(docno, extent);
     this.setState({ topics: topics, needs_save: true });
   }
 
@@ -348,13 +345,12 @@ class Workbench extends React.Component {
     }
 
     const docid = this.search_parents(sel.anchorNode, 'docid');
-    
-    if (sel.isCollapsed) {
-      console.log("Selection cancel");
-    } else {
-      console.log(docid + ":" + sel.toString());
+    if (docid !== null && this.state.cur_topic !== -1) {
+      const start = Math.min(sel.anchorOffset, sel.focusOffset);
+      const length = Math.abs(sel.focusOffset - sel.anchorOffset);
+      const extent = {"start": start, "length": length, "text": sel.toString()};
+      this.add_relevant(docid, extent);
     }
-      
   }
 
   componentDidUpdate() {

@@ -40,15 +40,16 @@ class TopicEditor extends React.Component {
   render() {
     let event_key = "topic-" + this.props.topic_num;
     const reldocs = [];
-    for (let docno of this.props.qrels.keys()) {
-      reldocs.push(<li>{docno}</li>);
+    for (let [docid, extent] of this.props.qrels.entries()) {
+      reldocs.push(<li>{docid}: {extent.text}</li>);
     }
 
     let requests = this.props.requests.map((req, index) => {
-      const req_reldocs = [];
-      for (let docno of req.qrels.keys()) {
-        req_reldocs.push(<li>{docno}</li>);
+      const req_reldocs  = [];
+      for (let [docid, extent] of req.qrels.entries()) {
+        req_reldocs.push(<li>{docid}: {extent.text}</li>);
       }
+      
       return (
         <Form.Group controlId="request-{index}">
         <Form.Label>
