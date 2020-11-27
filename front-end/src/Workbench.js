@@ -212,7 +212,7 @@ class Workbench extends React.Component {
     let qrels = topics[this.state.cur_topic].qrels;
     if (this.state.cur_req !== -1) {
       /* Request-level relevant doc */
-      let qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
+      qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
     }
     qrels.set(docno, extent);
     this.setState({ topics: topics, needs_save: true });
