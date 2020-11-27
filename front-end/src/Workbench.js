@@ -320,6 +320,20 @@ class Workbench extends React.Component {
     this.setState({ cur_req: req_num });
   }
 
+  /* Search up the element hierarchy for an element with the given attribute,
+     and return the value of that attribute, or null.
+  */
+  search_parents(node_or_elem, attr) {
+    while (node_or_elem != null) {
+      if (node_or_elem instanceof Element && node_or_elem.hasAttribute(attr)) {
+        return node_or_elem.getAttribute(attr);
+      } else {
+        node_or_elem = node_or_elem.parentElement;
+      }
+    }
+    return null;
+  }
+  
   handle_selection(event) {
     const sel = document.getSelection();
     if (sel.anchorNode.nodeType !== Node.TEXT_NODE) {
@@ -327,16 +341,18 @@ class Workbench extends React.Component {
       sel.collapse(sel.focusNode, 0);
       return;
     }
-    if (sel.anchorNode !== sel.focusNode) {
+    if (!sel.anchorNode.isSameNode(sel.focusNode)) {
       console.log("selection crossed nodes");
       sel.collapse(sel.focusNode, 0);
       return;
     }
+
+    const docid = this.search_parents(sel.anchorNode, 'docid');
     
     if (sel.isCollapsed) {
       console.log("Selection cancel");
     } else {
-      console.log(sel.toString());
+      console.log(docid + ":" + sel.toString());
     }
       
   }

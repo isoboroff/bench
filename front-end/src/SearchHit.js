@@ -47,7 +47,7 @@ class SearchHit extends React.Component {
     }
         
     return (
-      <Card>
+      <Card docid={this.props.hitkey}>
         <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
           {this.props.seqno + 1}. <strong>{this.props.title}</strong> ({date}){" "}
           <div class="custom-control custom-switch float-right">
