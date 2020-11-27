@@ -67,8 +67,7 @@ class SearchHit extends React.Component {
           <Card.Body>
             {this.props.hitkey} <p />
 	    {entities.values()} <p />
-	    {/* don't need dangerouslySet and renderToStatic anymore, just doc, I think */}
-            <div style={{ whiteSpace: "pre-wrap" }}>
+            <div style={{ whiteSpace: "pre-wrap" }} markable="true">
               {doc}
             </div>
           </Card.Body>

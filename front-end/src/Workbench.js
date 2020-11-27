@@ -330,6 +330,7 @@ class Workbench extends React.Component {
   
   handle_selection(event) {
     const sel = document.getSelection();
+    console.log(sel);
     if (sel.anchorNode.nodeType !== Node.TEXT_NODE) {
       console.log("not in a text node");
       sel.collapse(sel.focusNode, 0);
@@ -341,6 +342,11 @@ class Workbench extends React.Component {
       return;
     }
 
+    if (!this.search_parents(sel.anchorNode, 'markable')) {
+      console.log('not in a markable location');
+      return;
+    }
+    
     const docid = this.search_parents(sel.anchorNode, 'docid');
     if (docid !== null && this.state.cur_topic !== -1) {
       if (sel.isCollapsed) {
