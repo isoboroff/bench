@@ -365,7 +365,7 @@ class Workbench extends React.Component {
   }
 
   componentDidMount() {
-    document.addEventListener('selectionchange', this.handle_selection, true);
+    /* document.addEventListener('selectionchange', this.handle_selection, true); */
     
     if (!this.state.hasOwnProperty('state_is_live')) {
       this.restore_state();
@@ -379,7 +379,7 @@ class Workbench extends React.Component {
   }
 
   componentWillUnmount() {
-    document.removeEventListener('selectionchange', this.handle_selection, true);
+    /* document.removeEventListener('selectionchange', this.handle_selection, true); */
     clearInterval(this.interval);
   }
   

@@ -33,7 +33,7 @@ class SearchResults extends React.Component {
           title={hit._source.title}
           content={hit._source.orig}
 	  date={hit._source.date}
-          rel={!!qrels.has(hit._id)}
+          rel={qrels.has(hit._id) ? qrels.get(hit._id) : null}
           on_relevant={this.props.on_relevant}
 	  people={hit._source.PERSON}
 	  orgs={hit._source.ORG}

@@ -5,6 +5,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import MarkableText from "./MarkableText";
 
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
 class SearchHit extends React.Component {
@@ -67,9 +68,7 @@ class SearchHit extends React.Component {
           <Card.Body>
             {this.props.hitkey} <p />
 	    {entities.values()} <p />
-            <div style={{ whiteSpace: "pre-wrap" }} markable="true">
-              {doc}
-            </div>
+            <MarkableText content={doc} rel={this.props.rel}/>
           </Card.Body>
         </Accordion.Collapse>
       </Card>
