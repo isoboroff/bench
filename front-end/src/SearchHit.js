@@ -114,7 +114,7 @@ function SearchHit(props) {
           <p />
 	  {entities.values()} <p />
           <div onMouseUp={(e) => {
-                 if (!props.rel && hasSelection()) {
+                 if (props.on_relevant && !props.rel && hasSelection()) {
                    setHighlight(getSelectedText());
                    setMarked(true);
                  }
