@@ -32,7 +32,7 @@ class SearchResults extends React.Component {
           hitkey={hit._id}
           title={hit._source.title}
           content={hit._source.orig}
-	  date={hit._source.date}
+	  date={hit._source['guess-publish-date']}
           rel={qrels.has(hit._id) ? qrels.get(hit._id) : null}
           on_relevant={this.props.on_relevant}
 	  people={hit._source.PERSON}
@@ -44,7 +44,7 @@ class SearchResults extends React.Component {
       if (this.props.results.hits.total.relation === "gte") {
         count = "At least " + count;
       }
-      if (this.props.cur_topic !== -1) {
+      if (!isNaN(this.props.cur_topic) && this.props.cur_topic !== -1) {
         count += "  Highlight passages to mark a document relevant for topic "
           + (this.props.cur_topic + 1);
         if (this.props.cur_req !== -1) {

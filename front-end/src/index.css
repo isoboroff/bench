@@ -3,6 +3,7 @@
     font-family: georgia,Times New Roman,serif;
     line-height: 1.75;
     padding-bottom: 24px;
+    white-space: pre-wrap;
 }
 
 mark, .mark {
