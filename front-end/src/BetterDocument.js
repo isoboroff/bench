@@ -28,7 +28,7 @@ function BetterDocument(props) {
         <h1> {props.title}... </h1>
         <p> (best guess on publication date is '{props.date}')</p>
         <p><strong> {obj['WARC-Target-URI']} </strong></p>
-        <p> {doctext} </p>
+        <p className="article-text"> {doctext} </p>
         <p><strong> ({meta['warc-file']})</strong></p>
       </div>
     );

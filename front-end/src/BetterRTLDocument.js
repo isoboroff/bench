@@ -15,7 +15,7 @@ function BetterRTLDocument(props) {
         <h1 dir="rtl" className="text-right"> {props.title}... </h1>
         <p> (best guess on publication date is '{props.date}')</p>
         <p><strong> {obj['WARC-Target-URI']} </strong></p>
-        <p dir="rtl" className="text-right"> {meta.text} </p>
+        <p dir="rtl" className="text-right article-text"> {meta.text} </p>
         <p><strong> ({meta['warc-file']})</strong></p>
       </div>
     );
