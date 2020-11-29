@@ -15,7 +15,6 @@ function SearchHit(props) {
 
   const [highlight, setHighlight] = useState(null);
   const [marked, setMarked] = useState(false);
-  const thisHit = useRef(null);
   
   function on_relevant(extent) {
     if (extent) {
@@ -116,8 +115,7 @@ function SearchHit(props) {
                                onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
           <p />
 	  {entities.values()} <p />
-          <div ref={thisHit}
-               onMouseUp={(e) => {
+          <div onMouseUp={(e) => {
                  if (!props.rel && hasSelection()) {
                    setHighlight(getSelectedText());
                    setMarked(true);
