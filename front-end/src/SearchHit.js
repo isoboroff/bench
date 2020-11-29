@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState } from "react";
 
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
-import AccordionContext from "react-bootstrap/AccordionContext";
-import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
