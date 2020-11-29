@@ -45,9 +45,10 @@ class SearchResults extends React.Component {
         count = "At least " + count;
       }
       if (this.props.cur_topic !== -1) {
-        count += "  Highlight passages to mark a document relevant for topic " + this.props.cur_topic;
+        count += "  Highlight passages to mark a document relevant for topic "
+          + (this.props.cur_topic + 1);
         if (this.props.cur_req !== -1) {
-          count += ", request " + this.props.cur_req;
+          count += ", request " + (this.props.cur_req + 1);
         }
       }
       let num_pages = Math.floor(this.props.results.hits.total.value / 10);

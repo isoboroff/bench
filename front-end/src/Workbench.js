@@ -350,7 +350,7 @@ class Workbench extends React.Component {
 	  </Modal.Footer>
 	</Modal>
         <Tab.Container defaultActiveKey="search" id="workbench">
-	  <Row className="clearfix">
+	  <Row className="m-2">
 	    <Col sm={12}>
 	      <Nav variant="tabs">
 		<Nav.Item><Nav.Link eventKey="search">Search English</Nav.Link></Nav.Item>
