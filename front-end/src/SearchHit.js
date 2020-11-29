@@ -141,7 +141,9 @@ function SearchHit(props) {
                 {props.seqno + 1}. <strong>{props.title}</strong>{" "}
               </Col>
               <Col>
-                {props.rel ? <strong>Relevant</strong> : ""}
+                {props.rel
+                 ? <span className="badge badge-primary">Relevant</span>
+                 : ""}
               </Col>
             </Row>
           </Container>
@@ -149,7 +151,10 @@ function SearchHit(props) {
       </Card.Header>
       <Accordion.Collapse eventKey={event_key}>
         <Card.Body>
-          {props.hitkey} <p />
+          {props.hitkey}
+          {props.rel ? <Button className="ml-2"
+                               onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
+          <p />
 	  {entities.values()} <p />
           <div ref={thisHit}>{doc}</div>
         </Card.Body>
