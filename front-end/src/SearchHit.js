@@ -1,86 +1,162 @@
-import React from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
+import AccordionContext from "react-bootstrap/AccordionContext";
+import { useAccordionToggle } from "react-bootstrap/AccordionToggle";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import MarkableText from "./MarkableText";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 /** SearchHit: an individual search result.  We render this in a Bootstrap Card. */
-class SearchHit extends React.Component {
-  constructor(props) {
-    super(props);
-    this.on_relevant = this.on_relevant.bind(this);
-  }
+function SearchHit(props) {
 
-  on_relevant(extent) {
+  const [highlight, setHighlight] = useState(null);
+  const [marked, setMarked] = useState(false);
+  const thisHit = useRef(null);
+  
+  function on_relevant(extent) {
     if (extent) {
-      this.props.on_relevant(this.props.hitkey, extent);
+      props.on_relevant(props.hitkey, extent);
     } else {
       /* clear relevance judgment */
-      this.props.on_relevant(this.props.hitkey);
+      props.on_relevant(props.hitkey);
     }
   }
 
+  function hasSelection() {
+    return (window.getSelection && !window.getSelection().isCollapsed)
+  }
+
+  function getSelectedText() {
+    if (window.getSelection) {
+      const sel = window.getSelection();
+      if (!sel.isCollapsed) {
+        const start = Math.min(sel.anchorOffset, sel.focusOffset);
+        const end = Math.max(sel.anchorOffset, sel.focusOffset);
+        return { "start": start,
+                 "length": end - start,
+                 "text": sel.toString() };
+      }
+    }
+    return null;
+  }
+  
+  function onMouseDown(event) {
+    console.log("Got mousedown, setting mouseup handler");
+    if (event.which !== 3) {
+      thisHit.current.addEventListener('mouseup', onMouseUp, false);
+    }
+  }
+
+  function onMouseUp(event) {
+    console.log("Got mouseup");
+    thisHit.current.removeEventListener('mouseup', onMouseUp, false);
+    if (hasSelection()) {
+      console.log("setting selection");
+      setHighlight(getSelectedText());
+      setMarked(true);
+    }
+  } 
+
+  function setHandlers() {
+    console.log("setHanders");
+    thisHit.current.addEventListener('mousedown', onMouseDown, false);
+    /* Returns a cleanup function for when the toggle is shrunk */
+    return (() => { thisHit.current.removeEventListener('mousedown', onMouseDown, false); });
+  }
+  
+  function SearchHitToggle({ children, eventKey }) {
+    const currentEventKey = useContext(AccordionContext);
+    const isCurrentEventKey = currentEventKey === eventKey;
+    console.log('currentEventKey is ' + currentEventKey);
+    const decoratedOnClick = useAccordionToggle(
+      eventKey, setHandlers);
+    
+    return (
+      <div onClick={decoratedOnClick}>
+        {children}
+      </div>
+    );
+  }
+  
   /**
    * render function
    * @param {Object} this,props.content a JSON object representing a search hit.
-   * @param {String} this.props.hitkey  the docid of the search result.
-   * @param {String} this.props.title   the title of the result.
+   * @param {String} props.hitkey  the docid of the search result.
+   * @param {String} props.title   the title of the result.
    *
    * Note use of 'hitkey'.  In React-Bootstrap, the 'key' attribute is special.  Don't
    * use it.
    */
-  render() {
-    const doc = this.props.display_doc(this.props);
-    const event_key = this.props.hitkey;
-    const rel_key = "rel." + this.props.hitkey;
-    const date = new Date(this.props.date).toDateString();
 
-    const entities = new Map();
-    if (this.props.people) {
-      for (let p of this.props.people) {
-	entities.set("p_"+p, (<span class="badge badge-info ml-1">{p}</span>));
-      }
+  const doc = props.display_doc(props);
+  const event_key = props.hitkey;
+  const rel_key = "rel." + props.hitkey;
+  
+  const entities = new Map();
+  if (props.people) {
+    for (let p of props.people) {
+      entities.set("p_"+p, (<span class="badge badge-info ml-1">{p}</span>));
     }
-    if (this.props.orgs) {
-      for (let o of this.props.orgs) {
-	entities.set("o_"+o, (<span class="badge badge-success ml-1">{o}</span>));
-      }
+  }
+  if (props.orgs) {
+    for (let o of props.orgs) {
+      entities.set("o_"+o, (<span class="badge badge-success ml-1">{o}</span>));
     }
-    if (this.props.gpes) {
-      for (let g of this.props.gpes) {
-	entities.set("g_"+g, (<span class="badge badge-warning ml-1">{g}</span>));
-      }
+  }
+  if (props.gpes) {
+    for (let g of props.gpes) {
+      entities.set("g_"+g, (<span class="badge badge-warning ml-1">{g}</span>));
     }
-        
-    return (
-      <Card docid={this.props.hitkey}>
-        <Accordion.Toggle as={Card.Header} variant="link" eventKey={event_key}>
+  }
+  
+  return (
+    <Card docid={props.hitkey}>
+      <Modal show={marked} onHide={() => setMarked(false)} backgroup="static" keyboard={false}>
+        <Modal.Header>
+          <Modal.Title>Mark relevant?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Do you want to mark this document as relevant with the current highlight?</p>
+          {highlight && highlight.text}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setMarked(false)}>Cancel</Button>
+          <Button variant="primary"
+                  onClick={() => {
+                    on_relevant(highlight);
+                    setMarked(false)
+                  }}>Mark relevant</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Card.Header>
+        <SearchHitToggle eventKey={event_key}>
           <Container fluid>
             <Row className="d-flex justify-content-between">
               <Col>
-                {this.props.seqno + 1}. <strong>{this.props.title}</strong> ({date}){" "}
+                {props.seqno + 1}. <strong>{props.title}</strong>{" "}
               </Col>
               <Col>
-                {this.props.rel ? <strong>Relevant</strong> : ""}
+                {props.rel ? <strong>Relevant</strong> : ""}
               </Col>
             </Row>
           </Container>
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey={event_key}>
-          <Card.Body>
-            {this.props.hitkey} <p />
-	    {entities.values()} <p />
-            <MarkableText content={doc}
-                          rel={this.props.rel}
-                          on_relevant={this.on_relevant}/>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card>
-    );
-  }
+        </SearchHitToggle>
+      </Card.Header>
+      <Accordion.Collapse eventKey={event_key}>
+        <Card.Body>
+          {props.hitkey} <p />
+	  {entities.values()} <p />
+          <div ref={thisHit}>{doc}</div>
+        </Card.Body>
+      </Accordion.Collapse>
+    </Card>
+  );
 }
+
 
 export { SearchHit as default };
