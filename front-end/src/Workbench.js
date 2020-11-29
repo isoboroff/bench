@@ -71,7 +71,6 @@ class Workbench extends React.Component {
     this.new_request = this.new_request.bind(this);
     this.set_current_topic = this.set_current_topic.bind(this);
     this.set_current_request = this.set_current_request.bind(this);
-    this.handle_selection = this.handle_selection.bind(this);
   }
 
   clear_state() {
@@ -314,59 +313,11 @@ class Workbench extends React.Component {
     this.setState({ cur_req: req_num });
   }
 
-  /* Search up the element hierarchy for an element with the given attribute,
-     and return the value of that attribute, or null.
-  */
-  search_parents(node_or_elem, attr) {
-    while (node_or_elem != null) {
-      if (node_or_elem instanceof Element && node_or_elem.hasAttribute(attr)) {
-        return node_or_elem.getAttribute(attr);
-      } else {
-        node_or_elem = node_or_elem.parentElement;
-      }
-    }
-    return null;
-  }
-  
-  handle_selection(event) {
-    const sel = document.getSelection();
-    console.log(sel);
-    if (sel.anchorNode.nodeType !== Node.TEXT_NODE) {
-      console.log("not in a text node");
-      sel.collapse(sel.focusNode, 0);
-      return;
-    }
-    if (!sel.anchorNode.isSameNode(sel.focusNode)) {
-      console.log("selection crossed nodes");
-      sel.collapse(sel.focusNode, 0);
-      return;
-    }
-
-    if (!this.search_parents(sel.anchorNode, 'markable')) {
-      console.log('not in a markable location');
-      return;
-    }
-    
-    const docid = this.search_parents(sel.anchorNode, 'docid');
-    if (docid !== null && this.state.cur_topic !== -1) {
-      if (sel.isCollapsed) {
-        this.remove_relevant(docid);
-      } else {
-        const start = Math.min(sel.anchorOffset, sel.focusOffset);
-        const length = Math.abs(sel.focusOffset - sel.anchorOffset);
-        const extent = {"start": start, "length": length, "text": sel.toString()};
-        this.add_relevant(docid, extent);
-      }
-    }
-  }
-
   componentDidUpdate() {
     this.save_state();
   }
 
   componentDidMount() {
-    /* document.addEventListener('selectionchange', this.handle_selection, true); */
-    
     if (!this.state.hasOwnProperty('state_is_live')) {
       this.restore_state();
     }
@@ -379,7 +330,6 @@ class Workbench extends React.Component {
   }
 
   componentWillUnmount() {
-    /* document.removeEventListener('selectionchange', this.handle_selection, true); */
     clearInterval(this.interval);
   }
   

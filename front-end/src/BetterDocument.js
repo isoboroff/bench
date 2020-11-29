@@ -16,7 +16,7 @@ function BetterDocument(props) {
     
     if (props.rel) {
       const start = props.rel.start;
-      const end = start + props.rel.end;
+      const end = start + props.rel.length;
       const prefix = doctext.slice(0, start);
       const span = doctext.slice(start, end);
       const suffix = doctext.slice(end);

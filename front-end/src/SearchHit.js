@@ -14,8 +14,13 @@ class SearchHit extends React.Component {
     this.on_relevant = this.on_relevant.bind(this);
   }
 
-  on_relevant(event) {
-    this.props.on_relevant(this.props.hitkey, event.target.checked);
+  on_relevant(extent) {
+    if (extent) {
+      this.props.on_relevant(this.props.hitkey, extent);
+    } else {
+      /* clear relevance judgment */
+      this.props.on_relevant(this.props.hitkey);
+    }
   }
 
   /**
@@ -68,7 +73,9 @@ class SearchHit extends React.Component {
           <Card.Body>
             {this.props.hitkey} <p />
 	    {entities.values()} <p />
-            <MarkableText content={doc} rel={this.props.rel}/>
+            <MarkableText content={doc}
+                          rel={this.props.rel}
+                          on_relevant={this.on_relevant}/>
           </Card.Body>
         </Accordion.Collapse>
       </Card>

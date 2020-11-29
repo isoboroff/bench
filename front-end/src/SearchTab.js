@@ -58,10 +58,9 @@ class SearchTab extends React.Component {
     this.setState({ facets: new Map(), page: 1 }, /* then, do */ this.update_search);
   }
 
-  mark_relevant(docid, checked) {
-    let qrels = this.state.qrels;
-    if (checked) {
-      this.props.add_relevant(docid);
+  mark_relevant(docid, extent) {
+    if (extent) {
+      this.props.add_relevant(docid, extent);
     } else {
       this.props.remove_relevant(docid);
     }

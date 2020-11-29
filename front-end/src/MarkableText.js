@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from "react";
 
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
+
 function MarkableText(props) {
+
+  /* The core implementation is Fokus (see just below).  
+   * I embedded it in React, and linked it into the app
+   * for relevant marking.
+   */
+
+  const [marked, setMarked] = useState(false);
+  const [highlight, setHighlight] = useState('');
 
   /*!
    * Fokus 0.5
@@ -236,6 +247,11 @@ function MarkableText(props) {
     document.removeEventListener( 'mousemove', onMouseMove, false );
     document.removeEventListener( 'mouseup', onMouseUp, false );
 
+    if (hasSelection()) {
+      setHighlight(getSelectedText());
+      setMarked(true);
+    }
+    
     setTimeout( updateSelection, 1 );
 
   }
@@ -267,6 +283,21 @@ function MarkableText(props) {
 
   }
 
+  function getSelectedText() {
+
+    if (window.getSelection) {
+      const sel = window.getSelection();
+      if (!sel.isCollapsed) {
+        const start = Math.min(sel.anchorOffset, sel.focusOffset);
+        const end = Math.max(sel.anchorOffset, sel.focusOffset);
+        return { "start": start,
+                 "length": end - start,
+                 "text": sel.toString() };
+      }
+    }
+    return null;
+  }
+  
   /**
    * Helper methods for getting selected nodes, source:
    * http://stackoverflow.com/questions/7781963/js-get-array-of-all-selected-nodes-in-contenteditable-div
@@ -373,13 +404,38 @@ function MarkableText(props) {
       };
   }());
 
+  function send_relevant() {
+    props.on_relevant(highlight);
+    setMarked(false);
+  }
+
   useEffect(() => {
-    initialize();
+    if (props.rel == null) {
+      initialize();
+    }
   });
   
-  return (<div style={{ whiteSpace: "pre-wrap" }} markable="true">
-            { props.content }
-          </div>);
+  return (
+    <>
+      <Modal show={marked} onHide={() => setMarked(false)} backgroup="static" keyboard={false}>
+        <Modal.Header>
+          <Modal.Title>Mark relevant?</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Do you want to mark this document as relevant with the current highlight?</p>
+          {highlight.text}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setMarked(false)}>Cancel</Button>
+          <Button variant="primary" onClick={send_relevant}>Mark relevant</Button>
+        </Modal.Footer>
+      </Modal>
+         
+      <div style={{ whiteSpace: "pre-wrap" }} markable="true">
+        { props.content }
+      </div>
+    </>
+  );
 }
 
 export { MarkableText as default };
