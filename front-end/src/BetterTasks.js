@@ -237,7 +237,7 @@ class BetterTasks extends React.Component {
 	<Row className="justify-content-md-center mt-5">
 	  <Col md={10}>
 	    <Button variant="primary" onClick={this.props.new_topic}>Create new task</Button>
-	    <Accordion defaultActiveKey={event_key}>
+	    <Accordion defaultActiveKey={"topic-" + this.props.cur_topic}>
 	      {topiclist}
 	    </Accordion>
 	  </Col>

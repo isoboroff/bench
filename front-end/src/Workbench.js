@@ -256,6 +256,7 @@ class Workbench extends React.Component {
     let num_topics = topics.push(new_topic);
     this.setState({ topics: topics,
 		    cur_topic: num_topics - 1,
+                    cur_req: -1,
 		    needs_save: true });
   }
 
@@ -302,7 +303,9 @@ class Workbench extends React.Component {
   set_current_topic(topic_num) {
     if (topic_num < 0 || topic_num > this.state.topics.length)
       return;
-    this.setState({ cur_topic: topic_num });
+    this.setState({ cur_topic: topic_num,
+                    cur_req: -1
+                  });
   }
 
   set_current_request(topic_num, req_num) {
