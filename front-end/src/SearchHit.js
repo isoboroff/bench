@@ -43,45 +43,7 @@ function SearchHit(props) {
     }
     return null;
   }
-  
-  function onMouseDown(event) {
-    console.log("Got mousedown, setting mouseup handler");
-    if (event.which !== 3) {
-      thisHit.current.addEventListener('mouseup', onMouseUp, false);
-    }
-  }
 
-  function onMouseUp(event) {
-    console.log("Got mouseup");
-    thisHit.current.removeEventListener('mouseup', onMouseUp, false);
-    if (hasSelection()) {
-      console.log("setting selection");
-      setHighlight(getSelectedText());
-      setMarked(true);
-    }
-  } 
-
-  function setHandlers() {
-    console.log("setHanders");
-    thisHit.current.addEventListener('mousedown', onMouseDown, false);
-    /* Returns a cleanup function for when the toggle is shrunk */
-    return (() => { thisHit.current.removeEventListener('mousedown', onMouseDown, false); });
-  }
-  
-  function SearchHitToggle({ children, eventKey }) {
-    const currentEventKey = useContext(AccordionContext);
-    const isCurrentEventKey = currentEventKey === eventKey;
-    console.log('currentEventKey is ' + currentEventKey);
-    const decoratedOnClick = useAccordionToggle(
-      eventKey, setHandlers);
-    
-    return (
-      <div onClick={decoratedOnClick}>
-        {children}
-      </div>
-    );
-  }
-  
   /**
    * render function
    * @param {Object} this,props.content a JSON object representing a search hit.
@@ -133,8 +95,7 @@ function SearchHit(props) {
         </Modal.Footer>
       </Modal>
 
-      <Card.Header>
-        <SearchHitToggle eventKey={event_key}>
+      <Accordion.Toggle as={Card.Header} eventKey={event_key}>
           <Container fluid>
             <Row className="d-flex justify-content-between">
               <Col>
@@ -147,8 +108,7 @@ function SearchHit(props) {
               </Col>
             </Row>
           </Container>
-        </SearchHitToggle>
-      </Card.Header>
+        </Accordion.Toggle>
       <Accordion.Collapse eventKey={event_key}>
         <Card.Body>
           {props.hitkey}
@@ -156,7 +116,15 @@ function SearchHit(props) {
                                onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
           <p />
 	  {entities.values()} <p />
-          <div ref={thisHit}>{doc}</div>
+          <div ref={thisHit}
+               onMouseUp={(e) => {
+                 if (!props.rel && hasSelection()) {
+                   setHighlight(getSelectedText());
+                   setMarked(true);
+                 }
+               }}>
+            {doc}
+          </div>
         </Card.Body>
       </Accordion.Collapse>
     </Card>
