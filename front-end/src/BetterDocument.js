@@ -1,5 +1,4 @@
 import React from 'react';
-import Markup from 'interweave';
 
 function BetterDocument(props) {
   const display_doc = (content_string) => {

@@ -53,7 +53,6 @@ function SearchHit(props) {
 
   const doc = props.display_doc(props);
   const event_key = props.hitkey;
-  const rel_key = "rel." + props.hitkey;
   
   const entities = new Map();
   if (props.people) {

@@ -1,7 +1,5 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
 
-import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 
 import SearchHit from "./SearchHit.js";

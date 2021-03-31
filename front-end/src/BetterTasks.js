@@ -214,7 +214,6 @@ class TopicEditor extends React.Component {
 class BetterTasks extends React.Component {
   render() {
     let topics = this.props.topics;
-    let event_key = "topic-" + this.props.cur_topic;
     
     const topiclist = topics.map((hit, index) => (
       <TopicEditor topic_num={index}
