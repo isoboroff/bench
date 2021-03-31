@@ -1,32 +1,10 @@
 #+title: Notes and issues and plans for the Bench app
 
-* Updates needed for BETTER IR development
+* Needed for News Track 2021:
 
-** DONE Arabic search support
-
-*** DONE Figure out Arabic indexing into ElasticSearch
-
-- Determined that there is a built-in Arabic analyzer
-- Investigated Farasa and MADAMIRA but integration looks to be quite challenging for both.
-
-*** DONE Can we do Spacy extractions for facets?
-
-- Spacy does not do Arabic.
-
-
-** TODO Multiple search tabs (one for English, one for Arabic)
-
-*** DONE make the search index a parameter setting
-*** TODO make the facets specified at the search tab
-    - Almost there, entity rendering in the card is the last thing.
-
-** TODO Topic development template
-
-   - The application should specify the template as a JS object and
-     give it to the Topic editor's props.
-
-** TODO Highlights for relevance, rather than checkboxes
-
+** TODO Two tabs: search and topic dev
+** TODO Topic dev template modifications for task
+** TODO Check WaPo document rendering
 
 * Improvements to the system
 
