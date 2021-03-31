@@ -8,6 +8,7 @@ import json
 import sys
 import re
 from pathlib import Path
+from datetime import datetime
 
 if (__name__ == '__main__'):
     argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -28,6 +29,9 @@ es = Elasticsearch([{'host': args.host, 'port': args.port}])
 
 Path(args.save).mkdir(exist_ok=True)
 
+def log(user, event):
+    with open(Path(args.save) / f'{user}.log', 'a') as fp:
+        print(datetime.now(), event, file=fp)
 
 @app.route('/')
 def hello():
@@ -68,6 +72,7 @@ def load():
         with open(Path(args.save) / username, 'r') as fp:
             data = fp.read()
             _ = json.loads(data)
+            log(username, 'Load')
             return(data, 200)
     except FileNotFoundError:
         app.logger.debug('No such user: ' + username)
@@ -82,6 +87,7 @@ def load():
 
 @app.route('/search')
 def search():
+    user = request.args['u']
     query = request.args['q']
     index = request.args.get('index', args.index)
     agg2field_str = request.args.get('aggs', None)
@@ -129,11 +135,14 @@ def search():
         search = search[s_from:s_from + 10]
 
     # I like reading the query in the logs, but that might just be me.
-    app.logger.debug(json.dumps(search.to_dict()))
+    with json.dumps(search.to_dict()) as action:
+        app.logger.debug(action)
+        log(user, action)
 
     response = search.execute()
 
     app.logger.debug(response)
+    log(user, response)
     return response.to_dict()
 
 if __name__ == '__main__':
