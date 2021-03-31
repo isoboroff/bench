@@ -2,7 +2,7 @@
 
 * Needed for News Track 2021:
 
-** TODO Two tabs: search and topic dev
+** DONE Two tabs: search and topic dev
 ** TODO Topic dev template modifications for task
 ** TODO Check WaPo document rendering
 
