@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 
 import SearchTab from "./SearchTab";
 import BetterTasks from "./BetterTasks";
-import BetterDocument from "./BetterDocument";
+import WaPoDocument from "./WaPoDocument";
 
 function initial_bench_state() {
   return {
@@ -354,7 +354,7 @@ class Workbench extends React.Component {
 	  <Row className="m-2">
 	    <Col sm={12}>
 	      <Nav variant="tabs">
-		<Nav.Item><Nav.Link eventKey="search">Search English</Nav.Link></Nav.Item>
+		<Nav.Item><Nav.Link eventKey="search">Search WaPo</Nav.Link></Nav.Item>
 		<Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
 		<Nav.Item className="ml-auto">
 		  <NavDropdown eventKey="user"
@@ -374,9 +374,9 @@ class Workbench extends React.Component {
 	    <Col sm={12}>
 	      <Tab.Content animation>
 		<Tab.Pane eventKey="search">
-		  <SearchTab index="better_eng"
+		  <SearchTab index="wapo"
                              username={this.state.username}
-                             display_doc={BetterDocument}
+                             display_doc={WaPoDocument}
                              search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
                                              "gpes": { "pos": 1, "field": "GPE.keyword" },
                                              "orgs": { "pos": 2, "field": "ORG.keyword" },

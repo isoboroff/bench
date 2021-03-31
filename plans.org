@@ -4,7 +4,7 @@
 
 ** DONE Two tabs: search and topic dev
 ** TODO Topic dev template modifications for task
-** TODO Check WaPo document rendering
+** DONE Check WaPo document rendering
 
 * Improvements to the system
 
