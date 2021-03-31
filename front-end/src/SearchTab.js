@@ -97,7 +97,10 @@ class SearchTab extends React.Component {
    * builds this into the query for ElasticSearch.
    */
   build_query() {
-    let query_string = "index=" + this.props.index + "&q=" + this.state.query + "&page=" + this.state.page;
+    let query_string = "u=" + this.props.username +
+        "&index=" + this.props.index +
+        "&q=" + this.state.query +
+        "&page=" + this.state.page;
     if (this.props.search_facets) {
       const aggs_string = Object.entries(this.props.search_facets)
             .map(([agg, field]) => agg +":"+ field.field).join(",");

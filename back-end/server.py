@@ -135,9 +135,9 @@ def search():
         search = search[s_from:s_from + 10]
 
     # I like reading the query in the logs, but that might just be me.
-    with json.dumps(search.to_dict()) as action:
-        app.logger.debug(action)
-        log(user, action)
+    action = json.dumps(search.to_dict())
+    app.logger.debug(action)
+    log(user, action)
 
     response = search.execute()
 

@@ -10,10 +10,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button"; 
 
 import SearchTab from "./SearchTab";
-import SimpleSearchTab from "./SimpleSearchTab";
 import BetterTasks from "./BetterTasks";
 import BetterDocument from "./BetterDocument";
-import BetterRTLDocument from "./BetterRTLDocument";
 
 function initial_bench_state() {
   return {
@@ -357,7 +355,6 @@ class Workbench extends React.Component {
 	    <Col sm={12}>
 	      <Nav variant="tabs">
 		<Nav.Item><Nav.Link eventKey="search">Search English</Nav.Link></Nav.Item>
-		<Nav.Item><Nav.Link eventKey="arabic">Search Arabic</Nav.Link></Nav.Item>
 		<Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
 		<Nav.Item className="ml-auto">
 		  <NavDropdown eventKey="user"
@@ -378,6 +375,7 @@ class Workbench extends React.Component {
 	      <Tab.Content animation>
 		<Tab.Pane eventKey="search">
 		  <SearchTab index="better_eng"
+                             username={this.state.username}
                              display_doc={BetterDocument}
                              search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
                                              "gpes": { "pos": 1, "field": "GPE.keyword" },
@@ -389,15 +387,6 @@ class Workbench extends React.Component {
                              cur_req={this.state.cur_req}
 			     add_relevant={this.add_relevant}
 			     remove_relevant={this.remove_relevant}/>
-		</Tab.Pane>
-		<Tab.Pane eventKey="arabic">
-		  <SimpleSearchTab index="better_ar"
-                                   display_doc={BetterRTLDocument}
-                                   topics={this.state.topics}
-			           cur_topic={this.state.cur_topic}
-                                   cur_req={this.state.cur_req}
-			           add_relevant={this.add_relevant}
-			           remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
 		<Tab.Pane eventKey="topics">
 		  <BetterTasks topics={this.state.topics}
