@@ -120,6 +120,20 @@ class NewsTopicEditor extends React.Component {
               </Form.Text>
             </Form.Group>
 
+            <Form.Group controlId="link">
+              <Form.Label>Starting document</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="A document identifier."
+                name="link"
+		value={this.props.writeup.link}
+                onChange={this.change_fields}
+              />
+              <Form.Text className="text-muted">
+                The identifier for a document in the collection.
+              </Form.Text>
+            </Form.Group>
+
             <Form.Group controlId="desc">
               <Form.Label>Description</Form.Label>
               <Form.Control

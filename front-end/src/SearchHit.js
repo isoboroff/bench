@@ -24,7 +24,7 @@ function SearchHit(props) {
   }
 
   function hasSelection() {
-    return (window.getSelection && !window.getSelection().isCollapsed)
+    return (window.getSelection && !window.getSelection().isCollapsed);
   }
 
   function getSelectedText() {
@@ -86,7 +86,7 @@ function SearchHit(props) {
           <Button variant="primary"
                   onClick={() => {
                     on_relevant(highlight);
-                    setMarked(false)
+                    setMarked(false);
                   }}>Mark relevant</Button>
         </Modal.Footer>
       </Modal>
