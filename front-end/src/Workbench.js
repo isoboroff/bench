@@ -25,7 +25,8 @@ function initial_bench_state() {
 function empty_topic() {
   return {
     writeup: {
-      title: "New topic",
+      title: "",
+      link: "",
       desc: "",
       narr: "",
     },

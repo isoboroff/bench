@@ -110,7 +110,7 @@ class NewsTopicEditor extends React.Component {
               <Form.Label>Topic title</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="title"
+                placeholder="Topic title"
                 name="title"
 		value={this.props.writeup.title}
                 onChange={this.change_fields}
