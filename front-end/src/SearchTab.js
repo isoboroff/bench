@@ -139,8 +139,8 @@ class SearchTab extends React.Component {
     if (this.props.cur_topic !== -1) {
       const topic = this.props.topics[this.props.cur_topic];
       
-      if (this.props.cur_req !== -1) {
-        qrels = topic.requests[this.props.cur_req].qrels;
+      if (this.props.cur_sub !== -1) {
+        qrels = topic.subtopics[this.props.cur_sub].qrels;
       } else {
         qrels = topic.qrels;
       }
@@ -171,7 +171,7 @@ class SearchTab extends React.Component {
               page={this.state.page}
               turn_page={this.turn_page}
               cur_topic={this.props.cur_topic}
-              cur_req={this.props.cur_req}
+              cur_sub={this.props.cur_sub}
             />
           </Col>
         </Row>

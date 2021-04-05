@@ -10,7 +10,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button"; 
 
 import SearchTab from "./SearchTab";
-import BetterTasks from "./BetterTasks";
+import NewsTopics from "./NewsTopics";
 import WaPoDocument from "./WaPoDocument";
 
 function initial_bench_state() {
@@ -18,7 +18,7 @@ function initial_bench_state() {
     username: null,
     topics: [],
     cur_topic: -1,
-    cur_req: -1,
+    cur_sub: -1,
   };
 }
 
@@ -28,17 +28,15 @@ function empty_topic() {
       title: "New topic",
       desc: "",
       narr: "",
-      inscope: "",
-      outscope: "",
     },
     qrels: new Map(),
-    requests: [],
+    subtopics: [],
   };
 }
 
-function empty_request() {
+function empty_subtopic() {
   return {
-    req_text: "",
+    sub_text: "",
     qrels: new Map()
   };
 }
@@ -62,13 +60,13 @@ class Workbench extends React.Component {
     this.add_relevant = this.add_relevant.bind(this);
     this.remove_relevant = this.remove_relevant.bind(this);
     this.change_writeup = this.change_writeup.bind(this);
-    this.change_reqtext = this.change_reqtext.bind(this);
+    this.change_subtext = this.change_subtext.bind(this);
     this.delete_topic = this.delete_topic.bind(this);
-    this.delete_request = this.delete_request.bind(this);
+    this.delete_subtopic = this.delete_subtopic.bind(this);
     this.new_topic = this.new_topic.bind(this);
-    this.new_request = this.new_request.bind(this);
+    this.new_subtopic = this.new_subtopic.bind(this);
     this.set_current_topic = this.set_current_topic.bind(this);
-    this.set_current_request = this.set_current_request.bind(this);
+    this.set_current_subtopic = this.set_current_subtopic.bind(this);
   }
 
   clear_state() {
@@ -207,9 +205,9 @@ class Workbench extends React.Component {
     }
     let topics = this.state.topics;
     let qrels = topics[this.state.cur_topic].qrels;
-    if (this.state.cur_req !== -1) {
-      /* Request-level relevant doc */
-      qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
+    if (this.state.cur_sub !== -1) {
+      /* Subtopic-level relevant doc */
+      qrels = topics[this.state.cur_topic].subtopics[this.state.cur_sub].qrels;
     }
     qrels.set(docno, extent);
     this.setState({ topics: topics, needs_save: true });
@@ -222,9 +220,9 @@ class Workbench extends React.Component {
     }
     let topics = this.state.topics;
     let qrels = topics[this.state.cur_topic].qrels;
-    if (this.state.cur_req !== -1) {
-      /* remove request-level relevant doc */
-      qrels = topics[this.state.cur_topic].requests[this.state.cur_req].qrels;
+    if (this.state.cur_sub !== -1) {
+      /* remove subtopic-level relevant doc */
+      qrels = topics[this.state.cur_topic].subtopics[this.state.cur_sub].qrels;
     }
     qrels.delete(docno);
     this.setState({ topics: topics, needs_save: true });
@@ -241,10 +239,10 @@ class Workbench extends React.Component {
     this.setState({ topics: topics, needs_save: true });
   }
 
-  change_reqtext(topic, request, value) {
+  change_subtext(topic, subtopic, value) {
     let topics = this.state.topics;
-    let req = topics[topic].requests[request];
-    req.req_text = value;
+    let sub = topics[topic].subtopics[subtopic];
+    sub.sub_text = value;
     this.setState({ topics: topics, needs_save: true });
   }
   
@@ -254,19 +252,19 @@ class Workbench extends React.Component {
     let num_topics = topics.push(new_topic);
     this.setState({ topics: topics,
 		    cur_topic: num_topics - 1,
-                    cur_req: -1,
+                    cur_sub: -1,
 		    needs_save: true });
   }
 
-  new_request() {
+  new_subtopic() {
     if (this.state.cur_topic === -1) {
       return;
     }
-    let new_request = empty_request();
+    let new_sub = empty_subtopic();
     let topics = this.state.topics;
-    let num_reqs = topics[this.state.cur_topic].requests.push(new_request);
+    let num_subs = topics[this.state.cur_topic].subtopics.push(new_sub);
     this.setState({ topics: topics,
-                    cur_req: num_reqs - 1,
+                    cur_sub: num_subs - 1,
                     needs_save: true });
   }
     
@@ -284,15 +282,15 @@ class Workbench extends React.Component {
   }
 
   /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
-  delete_request(topic_num, req_num) {
+  delete_subtopic(topic_num, sub_num) {
     if (topic_num < 0 || topic_num > this.state.topics.length)
       return;
-    if (req_num < 0 || req_num > this.state.topics[topic_num].requests.length)
+    if (sub_num < 0 || sub_num > this.state.topics[topic_num].subtopics.length)
       return;
     let topics = this.state.topics;
-    let reqs = topics[topic_num].requests;
-    reqs.splice(req_num, 1);
-    this.setState({ cur_req: -1,
+    let subs = topics[topic_num].subtopics;
+    subs.splice(sub_num, 1);
+    this.setState({ cur_sub: -1,
 		    topics: topics,
 		    needs_save: true
 		  });
@@ -302,16 +300,16 @@ class Workbench extends React.Component {
     if (topic_num < 0 || topic_num > this.state.topics.length)
       return;
     this.setState({ cur_topic: topic_num,
-                    cur_req: -1
+                    cur_sub: -1
                   });
   }
 
-  set_current_request(topic_num, req_num) {
+  set_current_subtopic(topic_num, sub_num) {
     if (topic_num < 0 || topic_num > this.state.topics.length)
       return;
-    if (req_num < 0 || req_num > this.state.topics[topic_num].requests.length)
+    if (sub_num < 0 || sub_num > this.state.topics[topic_num].subtopics.length)
       return;
-    this.setState({ cur_req: req_num });
+    this.setState({ cur_sub: sub_num });
   }
 
   componentDidUpdate() {
@@ -384,22 +382,22 @@ class Workbench extends React.Component {
                                             }}
                              topics={this.state.topics}
 			     cur_topic={this.state.cur_topic}
-                             cur_req={this.state.cur_req}
+                             cur_sub={this.state.cur_sub}
 			     add_relevant={this.add_relevant}
 			     remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
 		<Tab.Pane eventKey="topics">
-		  <BetterTasks topics={this.state.topics}
-			       cur_topic={this.state.cur_topic}
-                               cur_req={this.state.cur_req}
-			       change_writeup={this.change_writeup}
-			       set_current_topic={this.set_current_topic}
-			       delete_topic={this.delete_topic}
-			       new_topic={this.new_topic}
-			       change_reqtext={this.change_reqtext}
-			       set_current_request={this.set_current_request}
-			       delete_request={this.delete_request}
-			       new_request={this.new_request}/>
+		  <NewsTopics topics={this.state.topics}
+			      cur_topic={this.state.cur_topic}
+                              cur_sub={this.state.cur_sub}
+			      change_writeup={this.change_writeup}
+			      set_current_topic={this.set_current_topic}
+			      delete_topic={this.delete_topic}
+			      new_topic={this.new_topic}
+			      change_subtext={this.change_subtext}
+			      set_current_subtopic={this.set_current_subtopic}
+			      delete_subtopic={this.delete_subtopic}
+			      new_subtopic={this.new_subtopic}/>
 		</Tab.Pane>
 	      </Tab.Content>
 	    </Col>
