@@ -1,9 +1,9 @@
 import React from "react";
 
 import Accordion from "react-bootstrap/Accordion";
-
 import SearchHit from "./SearchHit.js";
 import Pager from "./Pager.js";
+import { TextAnnotator } from "react-text-annotate";
 
 /** SearchResults this is the list of search hits.  Using a Bootstrap Accordion. */
 class SearchResults extends React.Component {
