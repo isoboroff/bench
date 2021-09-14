@@ -97,7 +97,7 @@ class Workbench extends React.Component {
   JSON_revive_maps(key, value) {
     if (typeof value === "object" && value !== null) {
       if (value.dataType === "Map") {
-	return new Map(value.value);
+	      return new Map(value.value);
       }
     }
     return value;
@@ -327,7 +327,7 @@ class Workbench extends React.Component {
     /* Every five seconds, if we need to save, trigger a save to the server. */
     this.interval = setInterval(() => {
       if (this.state.needs_save) {
-	this.save_state_to_server();
+	      this.save_state_to_server();
       }
     }, 5000);
   }

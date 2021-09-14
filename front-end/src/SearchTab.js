@@ -126,6 +126,7 @@ class SearchTab extends React.Component {
         this.setState({ results: data }); // Update the search results
       })
       .catch(err => {
+        console.log('Something went wrong with the search')
         // do something on an error here.
       });
   }
@@ -151,7 +152,7 @@ class SearchTab extends React.Component {
         </Row>
         <Row>
           <Col sm="2">
-	    <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
+	          <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
             <FacetView
               facets={this.props.search_facets}
               aggs={this.state.results ? this.state.results.aggregations : ""}

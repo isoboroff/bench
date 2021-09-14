@@ -87,18 +87,23 @@ def load():
 
 @app.route('/search')
 def search():
-    user = request.args['u']
+    '''
+    Plevium: parts involving in username are all disabled
+    since the front end doesn't provide such argument
+    '''
+    #user = request.args['u']
     query = request.args['q']
     index = request.args.get('index', args.index)
     agg2field_str = request.args.get('aggs', None)
 
+    #app.logger.debug(index)
     # Set up aggregation to field mapping
     agg2field = {}
     if agg2field_str:
         for pair in agg2field_str.split(','):
             agg, field = pair.split(':')
             agg2field[agg] = field
-    
+    #app.logger.debug(agg2field)
     # Build the query
     # This is the query from the search box
     search = Search(using=es, index=index)
@@ -135,14 +140,13 @@ def search():
         search = search[s_from:s_from + 10]
 
     # I like reading the query in the logs, but that might just be me.
-    with json.dumps(search.to_dict()) as action:
-        app.logger.debug(action)
-        log(user, action)
-
+    #with json.dumps(search.to_dict()) as action:
+    #    app.logger.debug(action)
+    #    log(user, action)
     response = search.execute()
 
     app.logger.debug(response)
-    log(user, response)
+    #log(user, response)
     return response.to_dict()
 
 if __name__ == '__main__':

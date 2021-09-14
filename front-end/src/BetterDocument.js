@@ -4,7 +4,7 @@ function BetterDocument(props) {
   const display_doc = (content_string) => {
     let obj = null;
     try {
-      obj = JSON.parse(content_string);
+      obj = JSON.parse(JSON.stringify(content_string));
     } catch (error) {
       console.error(error);
       return '';
