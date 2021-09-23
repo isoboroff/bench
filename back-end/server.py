@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, make_response
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Q
+from elasticsearch_dsl.query import Q, QueryString
 
 import argparse
 import json
@@ -102,7 +102,8 @@ def search():
     # Build the query
     # This is the query from the search box
     search = Search(using=es, index=index)
-    search = search.query(Q('match', text=query))
+    # search = search.query(Q('match', text=query))
+    search = search.query(QueryString(query=query))
 
     # Add in any checked facets.  These do not filter the results but
     # influence the ranking.
@@ -135,9 +136,9 @@ def search():
         search = search[s_from:s_from + 10]
 
     # I like reading the query in the logs, but that might just be me.
-    with json.dumps(search.to_dict()) as action:
-        app.logger.debug(action)
-        log(user, action)
+    action = json.dumps(search.to_dict())
+    app.logger.debug(action)
+    log(user, action)
 
     response = search.execute()
 
