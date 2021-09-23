@@ -378,6 +378,7 @@ class Workbench extends React.Component {
 	      <Tab.Content animation>
 		<Tab.Pane eventKey="search">
 		  <SearchTab index="better_eng"
+                             username={this.state.username}
                              display_doc={BetterDocument}
                              search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
                                              "gpes": { "pos": 1, "field": "GPE.keyword" },
@@ -392,6 +393,7 @@ class Workbench extends React.Component {
 		</Tab.Pane>
 		<Tab.Pane eventKey="arabic">
 		  <SimpleSearchTab index="better_ar"
+                                   username={this.state.username}
                                    display_doc={BetterRTLDocument}
                                    topics={this.state.topics}
 			           cur_topic={this.state.cur_topic}

@@ -69,7 +69,10 @@ class SimpleSearchTab extends React.Component {
    * builds this into the query for ElasticSearch.
    */
   build_query() {
-    let query_string = "index=" + this.props.index + "&q=" + this.state.query + "&page=" + this.state.page;
+    let query_string = "u=" + this.props.username +
+        "&index=" + this.props.index +
+        "&q=" + this.state.query +
+        "&page=" + this.state.page;
 
     // The query needs to be escaped before fetching.
     query_string = encodeURI(query_string);
