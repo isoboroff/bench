@@ -357,7 +357,7 @@ class Workbench extends React.Component {
 	    <Col sm={12}>
 	      <Nav variant="tabs">
 		<Nav.Item><Nav.Link eventKey="search">Search English</Nav.Link></Nav.Item>
-		<Nav.Item><Nav.Link eventKey="arabic">Search Arabic</Nav.Link></Nav.Item>
+		<Nav.Item><Nav.Link eventKey="farsi">Search Farsi</Nav.Link></Nav.Item>
 		<Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
 		<Nav.Item className="ml-auto">
 		  <NavDropdown eventKey="user"
@@ -391,8 +391,8 @@ class Workbench extends React.Component {
 			     add_relevant={this.add_relevant}
 			     remove_relevant={this.remove_relevant}/>
 		</Tab.Pane>
-		<Tab.Pane eventKey="arabic">
-		  <SimpleSearchTab index="better_ar"
+		<Tab.Pane eventKey="farsi">
+		  <SimpleSearchTab index="better_fa"
                                    username={this.state.username}
                                    display_doc={BetterRTLDocument}
                                    topics={this.state.topics}
