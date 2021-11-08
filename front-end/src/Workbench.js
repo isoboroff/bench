@@ -377,7 +377,7 @@ class Workbench extends React.Component {
 	    <Col sm={12}>
 	      <Tab.Content animation>
 		<Tab.Pane eventKey="search">
-		  <SearchTab index="better_eng"
+		  <SearchTab index="better_en2"
                              username={this.state.username}
                              display_doc={BetterDocument}
                              search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
