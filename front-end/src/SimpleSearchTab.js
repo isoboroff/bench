@@ -113,7 +113,7 @@ class SimpleSearchTab extends React.Component {
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
           <Col sm="8">
-            <SearchBox index={this.props.index} on_search={this.update_query} />
+            <SearchBox index={this.props.index} on_search={this.update_query} direction="rtl"/>
           </Col>
         </Row>
         <Row>
