@@ -20,12 +20,14 @@
 *** TODO make the facets specified at the search tab
     - Almost there, entity rendering in the card is the last thing.
 
-** TODO Topic development template
+** DONE Topic development template
+CLOSED: [2021-11-23 Tue 12:56]
 
    - The application should specify the template as a JS object and
      give it to the Topic editor's props.
 
-** TODO Highlights for relevance, rather than checkboxes
+** DONE Highlights for relevance, rather than checkboxes
+CLOSED: [2021-11-23 Tue 12:56]
 
 
 * Improvements to the system
@@ -38,4 +40,12 @@
 
   ** Each tab component should manage its own state and save/restore functionality
   
+  
+  ** Support complex Lucene queries.  Have a popup with query syntax, and report erroneous queries.
+
+  ** Spin a wheel while waiting for the query to come back
+
+  ** Change the search layout from an accordion to a blue-link list with snippets, and open documents in a new tab
+
+  ** Allow clicking on documents in the topic editor.  This should bring up a tab in the context for that document, that is, for its topic and request.  This document view should be the same as the ones that come off the search results list.
   
