@@ -1,7 +1,5 @@
-from flask import Flask, render_template, request, make_response
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
-from elasticsearch_dsl.query import Q, QueryString
+from flask import Flask, render_template, request, make_response, jsonify
+from patapsco import ConfigHelper, DocumentDatabase, Query, QueryProcessor, RetrieverFactory
 
 import argparse
 import json
@@ -12,21 +10,55 @@ from datetime import datetime
 
 if (__name__ == '__main__'):
     argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    argparser.add_argument('--host', help='ElasticSearch host', default='localhost')
-    argparser.add_argument('--port', help='ElasticSearch port', default=9200)
+    argparser.add_argument('--conf', help='Config for Patapsco run locations', default='patapsco.json')
     argparser.add_argument('--save', help='Location for saved data', default='save_dir')
-    argparser.add_argument('--index', help='Index to search against', default='wapo')
     args = argparser.parse_args()
 else:
-    args = argparse.Namespace(**{'host': 'elastic',
-                                 'port': 9200,
-                                 'save': 'save_dir',
-                                 'index': 'wapo'})
-
+    args = argparse.Namespace(**{'save': 'save_dir',
+                                 'conf': 'patapsco.json',
+                                 })
 
 app = Flask(__name__, static_folder='../front-end/build/static', template_folder='../front-end/build')
-es = Elasticsearch([{'host': args.host, 'port': args.port}])
 
+
+
+class Pat:
+    def __init__(self, runpath):
+        # This setup is adapted from patapsco/bin/web.py
+        app.logger.debug(f'Initializing {runpath}')
+        self.runpath = Path(runpath).absolute()
+        self.config_path = self.runpath / 'config.yml'
+        self.config = ConfigHelper.load(str(self.config_path))
+
+        self.db = DocumentDatabase(str(self.runpath), self.config.database.output, True)
+        self.lang = self.config.topics.input.lang
+        self.qproc = QueryProcessor(str(self.runpath), self.config.queries, self.lang)
+        self.qproc.begin()
+        self.retriever = RetrieverFactory.create(str(self.runpath), self.config.retrieve)
+        self.retriever.begin()
+
+    def doc(self, id):
+        if id in self.db:
+            return self.db[id]
+        else:
+            return None
+
+    def search(self, query_str):
+        query = Query(id='web',
+                      lang=self.lang,
+                      query=query_str,
+                      text=query_str,
+                      report=None)
+        query = self.qproc.process(query)
+        return self.retriever.process(query)
+
+patconf = json.load(open(args.conf, 'r'))
+indexes = {}
+for lang, runpath in patconf['indexes'].items():
+    indexes[lang] = Pat(runpath)
+
+print(indexes)
+    
 Path(args.save).mkdir(exist_ok=True)
 
 def log(user, event):
@@ -89,62 +121,19 @@ def load():
 def search():
     user = request.args['u']
     query = request.args['q']
-    index = request.args.get('index', args.index)
-    agg2field_str = request.args.get('aggs', None)
+    index = request.args['index']
 
-    # Set up aggregation to field mapping
-    agg2field = {}
-    if agg2field_str:
-        for pair in agg2field_str.split(','):
-            agg, field = pair.split(':')
-            agg2field[agg] = field
-    
-    # Build the query
-    # This is the query from the search box
-    search = Search(using=es, index=index)
-    # search = search.query(Q('match', text=query))
-    search = search.query(QueryString(query=query))
+    if index not in indexes:
+        return('', 404)
 
-    # Add in any checked facets.  These do not filter the results but
-    # influence the ranking.
-    if 'facets' in request.args:
-        qlist = []
-        facets = request.args['facets'].split(",")
-        for f in facets:
-            (cat, key) = f.split('-', 1)
-            qlist.append(Q('match', **{agg2field[cat]: key}))
-        search.query = Q('bool',
-                         must=search.query,
-                         should=qlist,
-                         minimum_should_match=1)
+    app.logger.debug(f'{user}: {query}')
+    log(user, query)
 
-    # Add search term highlighting.  The <mark> tag is a Bootstrap-ism.
-    search = search.highlight('text')
-    search = search.highlight_options(pre_tags='<mark>',
-                                      post_tags='</mark>',
-                                      number_of_fragments=0)
-
-    # Add in aggregations for the facet fields
-    for (agg, field) in agg2field.items():
-        search.aggs.bucket(agg, 'terms', field=field)
-
-    # Add in what page we are fetching.  If not specified, the first 10 results.
-    if 'page' in request.args:
-        s_from = 10 * (int(request.args['page']) - 1)
-        if s_from < 0 or s_from > 9999:
-            s_from = 0
-        search = search[s_from:s_from + 10]
-
-    # I like reading the query in the logs, but that might just be me.
-    action = json.dumps(search.to_dict())
-    app.logger.debug(action)
-    log(user, action)
-
-    response = search.execute()
+    response = indexes[index].search(query)
 
     app.logger.debug(response)
     log(user, response)
-    return response.to_dict()
+    return jsonify(response)
 
 if __name__ == '__main__':
     print('Starting Flask...')
