@@ -29,7 +29,7 @@ class SimpleSearchTab extends React.Component {
   update_query(query_box_contents) {
     this.setState({ query: query_box_contents, page: 1 }, /* then, do */ this.update_search);
   }
-  
+
   mark_relevant(docid, checked) {
     if (checked) {
       this.props.add_relevant(docid);
@@ -97,12 +97,12 @@ class SimpleSearchTab extends React.Component {
       });
   }
 
-  
+
   render() {
     let qrels = null;
     if (this.props.cur_topic !== -1) {
       const topic = this.props.topics[this.props.cur_topic];
-      
+
       if (this.props.cur_req !== -1) {
         qrels = topic.requests[this.props.cur_req].qrels;
       } else {

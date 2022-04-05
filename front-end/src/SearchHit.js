@@ -13,7 +13,7 @@ function SearchHit(props) {
 
   const [highlight, setHighlight] = useState(null);
   const [marked, setMarked] = useState(false);
-  
+
   function on_relevant(extent) {
     if (extent) {
       props.on_relevant(props.hitkey, extent);
@@ -54,7 +54,7 @@ function SearchHit(props) {
   const doc = props.display_doc(props);
   const event_key = props.hitkey;
   const rel_key = "rel." + props.hitkey;
-  
+
   const entities = new Map();
   if (props.people) {
     for (let p of props.people) {
@@ -71,7 +71,7 @@ function SearchHit(props) {
       entities.set("g_"+g, (<span class="badge badge-warning ml-1">{g}</span>));
     }
   }
-  
+
   return (
     <Card docid={props.hitkey}>
       <Modal show={marked} onHide={() => setMarked(false)} backgroup="static" keyboard={false}>
@@ -112,7 +112,7 @@ function SearchHit(props) {
           {props.rel ? <Button className="ml-2"
                                onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
           <p />
-	  {entities.values()} <p />
+          {entities.values()} <p />
           <div onMouseUp={(e) => {
                  if (props.on_relevant && !props.rel && hasSelection()) {
                    setHighlight(getSelectedText());

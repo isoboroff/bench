@@ -130,10 +130,13 @@ def search():
     log(user, query)
 
     response = indexes[index].search(query)
+    docs = {}
+    for hit in response.results:
+        docs[hit.doc_id] = indexes[index].doc(hit.doc_id)
 
     app.logger.debug(response)
     log(user, response)
-    return jsonify(response)
+    return jsonify(hits=response, docs=docs)
 
 if __name__ == '__main__':
     print('Starting Flask...')

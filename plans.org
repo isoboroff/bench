@@ -1,5 +1,13 @@
 #+title: Notes and issues and plans for the Bench app
 
+* Updates for NeuCLIR
+
+** TODO Change the search layout from an accordion to a blue-link list with snippets, and open documents in a new tab
+
+** TODO Port to run on Patapsco instead of ElasticSearch
+- backend changes done
+  
+
 * Updates needed for BETTER IR development
 
 ** DONE Arabic search support
@@ -44,8 +52,6 @@ CLOSED: [2021-11-23 Tue 12:56]
   ** Support complex Lucene queries.  Have a popup with query syntax, and report erroneous queries.
 
   ** Spin a wheel while waiting for the query to come back
-
-  ** Change the search layout from an accordion to a blue-link list with snippets, and open documents in a new tab
 
   ** Allow clicking on documents in the topic editor.  This should bring up a tab in the context for that document, that is, for its topic and request.  This document view should be the same as the ones that come off the search results list.
   

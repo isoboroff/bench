@@ -86,8 +86,8 @@ class Workbench extends React.Component {
     if (original instanceof Map) {
       /* Serialize the Map as an object with a type and an array for the values */
       return {
-	dataType: "Map",
-	value: [...original]
+        dataType: "Map",
+        value: [...original]
       };
     } else {
       return value;
@@ -97,7 +97,7 @@ class Workbench extends React.Component {
   JSON_revive_maps(key, value) {
     if (typeof value === "object" && value !== null) {
       if (value.dataType === "Map") {
-	return new Map(value.value);
+        return new Map(value.value);
       }
     }
     return value;
@@ -112,7 +112,7 @@ class Workbench extends React.Component {
       let new_state = JSON.parse(bench_state, this.JSON_revive_maps);
       new_state.state_is_live = true;
       if (new_state.username === null)
-	new_state.login_required = true;
+        new_state.login_required = true;
       this.setState(new_state);
     } else {
       this.setState({login_required: true});
@@ -135,21 +135,21 @@ class Workbench extends React.Component {
     const data = JSON.stringify(this.state, this.JSON_stringify_maps);
 
     fetch(url, { method: 'POST',
-		 headers: {
-		   'Content-Type': 'application/json',
-		 },
-		 body: data,
-	       })
+                 headers: {
+                   'Content-Type': 'application/json',
+                 },
+                 body: data,
+               })
       .then((response) => {
-	if (!response.ok) {
-	  throw Error(response.statusText);
-	}
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
       })
       .then(() => {
-	this.setState({needs_save: false});
+        this.setState({needs_save: false});
       })
       .catch((error) => {
-	alert('Error:', error);
+        alert('Error:', error);
       });
   }
 
@@ -161,22 +161,22 @@ class Workbench extends React.Component {
 
     fetch(url)
       .then((response) => {
-	if (response.ok) {
-	  return response.text();
-	} else if (response.status === 404) {
-	  return null;
-	} else {
-	  throw Error(response.statusText);
-	}
+        if (response.ok) {
+          return response.text();
+        } else if (response.status === 404) {
+          return null;
+        } else {
+          throw Error(response.statusText);
+        }
       })
       .then((data) => {
-	if (data !== null) {
-	  let new_state = JSON.parse(data, this.JSON_revive_maps);
-	  this.setState(new_state);
-	}
+        if (data !== null) {
+          let new_state = JSON.parse(data, this.JSON_revive_maps);
+          this.setState(new_state);
+        }
       })
       .catch((error) => {
-	alert('Error loading state from server', error);
+        alert('Error loading state from server', error);
       });
   }
 
@@ -184,14 +184,14 @@ class Workbench extends React.Component {
     this.save_state_to_server();
     event.preventDefault();
   }
-  
+
   do_logout(event) {
     this.save_state_to_server();
     this.clear_state();
     this.setState({login_required: true});
     event.preventDefault();
   }
-  
+
   set_username(event) {
     this.setState({ username: event.target.value });
   }
@@ -201,7 +201,7 @@ class Workbench extends React.Component {
     if (this.state.username !== null)
       this.setState({ login_required: false });
   }
-  
+
   /* Note a relevant document. */
   add_relevant(docno, extent = true) {
     if (this.state.cur_topic === -1) {
@@ -249,15 +249,15 @@ class Workbench extends React.Component {
     req.req_text = value;
     this.setState({ topics: topics, needs_save: true });
   }
-  
+
   new_topic() {
     let new_topic = empty_topic();
     let topics = this.state.topics;
     let num_topics = topics.push(new_topic);
     this.setState({ topics: topics,
-		    cur_topic: num_topics - 1,
+                    cur_topic: num_topics - 1,
                     cur_req: -1,
-		    needs_save: true });
+                    needs_save: true });
   }
 
   new_request() {
@@ -271,8 +271,8 @@ class Workbench extends React.Component {
                     cur_req: num_reqs - 1,
                     needs_save: true });
   }
-    
-  
+
+
   /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
   delete_topic(topic_num) {
     if (topic_num < 0 || topic_num > this.state.topics.length)
@@ -280,9 +280,9 @@ class Workbench extends React.Component {
     let topics = this.state.topics;
     topics.splice(topic_num, 1);
     this.setState({ cur_topic: -1,
-		    topics: topics,
-		    needs_save: true
-		  });
+                    topics: topics,
+                    needs_save: true
+                  });
   }
 
   /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
@@ -295,9 +295,9 @@ class Workbench extends React.Component {
     let reqs = topics[topic_num].requests;
     reqs.splice(req_num, 1);
     this.setState({ cur_req: -1,
-		    topics: topics,
-		    needs_save: true
-		  });
+                    topics: topics,
+                    needs_save: true
+                  });
   }
 
   set_current_topic(topic_num) {
@@ -327,7 +327,7 @@ class Workbench extends React.Component {
     /* Every five seconds, if we need to save, trigger a save to the server. */
     this.interval = setInterval(() => {
       if (this.state.needs_save) {
-	this.save_state_to_server();
+        this.save_state_to_server();
       }
     }, 5000);
   }
@@ -335,88 +335,72 @@ class Workbench extends React.Component {
   componentWillUnmount() {
     clearInterval(this.interval);
   }
-  
+
   render() {
     return (
       <>
-	<Modal show={this.state.login_required} onHide={this.do_login}
-	       backdrop="static" keyboard={false}>
-	  <Modal.Header>
-	    <Modal.Title>Please log in</Modal.Title>
-	  </Modal.Header>
-	  <Modal.Body>
-	    <Form.Control type="text"
-			  value={this.state.username} onChange={this.set_username}/>
-	  </Modal.Body>
-	  <Modal.Footer>
-	    <Button variant="primary" onClick={this.do_login}>Log in</Button>
-	  </Modal.Footer>
-	</Modal>
+        <Modal show={this.state.login_required} onHide={this.do_login}
+               backdrop="static" keyboard={false}>
+          <Modal.Header>
+            <Modal.Title>Please log in</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Form.Control type="text"
+                          value={this.state.username} onChange={this.set_username}/>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary" onClick={this.do_login}>Log in</Button>
+          </Modal.Footer>
+        </Modal>
         <Tab.Container defaultActiveKey="search" id="workbench">
-	  <Row className="m-2">
-	    <Col sm={12}>
-	      <Nav variant="tabs">
-		<Nav.Item><Nav.Link eventKey="search">Search English</Nav.Link></Nav.Item>
-		<Nav.Item><Nav.Link eventKey="farsi">Search Farsi</Nav.Link></Nav.Item>
-		<Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
-		<Nav.Item className="ml-auto">
-		  <NavDropdown eventKey="user"
-			       title={"Logged in as " + this.state.username}
-			       id="utils-dropdown"
-			       alignRight>
-		    <NavDropdown.Item as="li"
-				      disabled={!this.state.needs_save}
-				      onClick={this.do_save}>
-		      { this.state.needs_save ? 'Save' : 'Saved'}
-		    </NavDropdown.Item>
-		    <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
-		  </NavDropdown>
-		</Nav.Item>
-	      </Nav>
-	    </Col>
-	    <Col sm={12}>
-	      <Tab.Content animation>
-		<Tab.Pane eventKey="search">
-		  <SearchTab index="better_en2"
-                             username={this.state.username}
-                             display_doc={BetterDocument}
-                             search_facets={{"persons": { "pos": 0, "field": "PERSON.keyword" },
-                                             "gpes": { "pos": 1, "field": "GPE.keyword" },
-                                             "orgs": { "pos": 2, "field": "ORG.keyword" },
-                                             "events": { "pos": 3, "field": "EVENT.keyword" }
-                                            }}
-                             topics={this.state.topics}
-			     cur_topic={this.state.cur_topic}
-                             cur_req={this.state.cur_req}
-			     add_relevant={this.add_relevant}
-			     remove_relevant={this.remove_relevant}/>
-		</Tab.Pane>
-		<Tab.Pane eventKey="farsi">
-		  <SimpleSearchTab index="better_fa"
+          <Row className="m-2">
+            <Col sm={12}>
+              <Nav variant="tabs">
+                <Nav.Item><Nav.Link eventKey="farsi">Search Farsi</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
+                <Nav.Item className="ml-auto">
+                  <NavDropdown eventKey="user"
+                               title={"Logged in as " + this.state.username}
+                               id="utils-dropdown"
+                               alignRight>
+                    <NavDropdown.Item as="li"
+                                      disabled={!this.state.needs_save}
+                                      onClick={this.do_save}>
+                      { this.state.needs_save ? 'Save' : 'Saved'}
+                    </NavDropdown.Item>
+                    <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
+                  </NavDropdown>
+                </Nav.Item>
+              </Nav>
+            </Col>
+            <Col sm={12}>
+              <Tab.Content animation>
+                <Tab.Pane eventKey="farsi">
+                  <SimpleSearchTab index="fas"
                                    username={this.state.username}
                                    display_doc={BetterRTLDocument}
                                    topics={this.state.topics}
-			           cur_topic={this.state.cur_topic}
+                                   cur_topic={this.state.cur_topic}
                                    cur_req={this.state.cur_req}
-			           add_relevant={this.add_relevant}
-			           remove_relevant={this.remove_relevant}/>
-		</Tab.Pane>
-		<Tab.Pane eventKey="topics">
-		  <BetterTasks topics={this.state.topics}
-			       cur_topic={this.state.cur_topic}
+                                   add_relevant={this.add_relevant}
+                                   remove_relevant={this.remove_relevant}/>
+                </Tab.Pane>
+                <Tab.Pane eventKey="topics">
+                  <BetterTasks topics={this.state.topics}
+                               cur_topic={this.state.cur_topic}
                                cur_req={this.state.cur_req}
-			       change_writeup={this.change_writeup}
-			       set_current_topic={this.set_current_topic}
-			       delete_topic={this.delete_topic}
-			       new_topic={this.new_topic}
-			       change_reqtext={this.change_reqtext}
-			       set_current_request={this.set_current_request}
-			       delete_request={this.delete_request}
-			       new_request={this.new_request}/>
-		</Tab.Pane>
-	      </Tab.Content>
-	    </Col>
-	  </Row>
+                               change_writeup={this.change_writeup}
+                               set_current_topic={this.set_current_topic}
+                               delete_topic={this.delete_topic}
+                               new_topic={this.new_topic}
+                               change_reqtext={this.change_reqtext}
+                               set_current_request={this.set_current_request}
+                               delete_request={this.delete_request}
+                               new_request={this.new_request}/>
+                </Tab.Pane>
+              </Tab.Content>
+            </Col>
+          </Row>
         </Tab.Container>
       </>
     );
