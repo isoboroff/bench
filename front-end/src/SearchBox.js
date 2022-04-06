@@ -42,11 +42,11 @@ export default class SearchBox extends React.Component {
   render() {
     let add_class = '';
     let add_dir = '';
-    if (this.props.direction && this.props.direction == 'rtl') {
+    if (this.props.direction && this.props.direction === 'rtl') {
       add_dir = 'rtl';
       add_class = 'text-right';
     }
-      
+ 
     return (
       <Form onSubmit={this.handle_submit_event}>
         <Form.Group as={Row} controlID="searchBox">

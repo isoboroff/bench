@@ -12,8 +12,7 @@ import Button from "react-bootstrap/Button";
 import SearchTab from "./SearchTab";
 import SimpleSearchTab from "./SimpleSearchTab";
 import BetterTasks from "./BetterTasks";
-import BetterDocument from "./BetterDocument";
-import BetterRTLDocument from "./BetterRTLDocument";
+import NeuCLIRDocument from "./NeuCLIRDocument";
 
 function initial_bench_state() {
   return {
@@ -352,11 +351,13 @@ class Workbench extends React.Component {
             <Button variant="primary" onClick={this.do_login}>Log in</Button>
           </Modal.Footer>
         </Modal>
-        <Tab.Container defaultActiveKey="search" id="workbench">
+        <Tab.Container defaultActiveKey="farsi" id="workbench">
           <Row className="m-2">
             <Col sm={12}>
               <Nav variant="tabs">
                 <Nav.Item><Nav.Link eventKey="farsi">Search Farsi</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link eventKey="russian">Search Russian</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link eventKey="chinese">Search Chinese</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
                 <Nav.Item className="ml-auto">
                   <NavDropdown eventKey="user"
@@ -377,8 +378,29 @@ class Workbench extends React.Component {
               <Tab.Content animation>
                 <Tab.Pane eventKey="farsi">
                   <SimpleSearchTab index="fas"
+                                   direction="rtl"
                                    username={this.state.username}
-                                   display_doc={BetterRTLDocument}
+                                   display_doc={NeuCLIRDocument}
+                                   topics={this.state.topics}
+                                   cur_topic={this.state.cur_topic}
+                                   cur_req={this.state.cur_req}
+                                   add_relevant={this.add_relevant}
+                                   remove_relevant={this.remove_relevant}/>
+                </Tab.Pane>
+                <Tab.Pane eventKey="russian">
+                  <SimpleSearchTab index="rus"
+                                   username={this.state.username}
+                                   display_doc={NeuCLIRDocument}
+                                   topics={this.state.topics}
+                                   cur_topic={this.state.cur_topic}
+                                   cur_req={this.state.cur_req}
+                                   add_relevant={this.add_relevant}
+                                   remove_relevant={this.remove_relevant}/>
+                </Tab.Pane>
+                <Tab.Pane eventKey="chinese">
+                  <SimpleSearchTab index="zho"
+                                   username={this.state.username}
+                                   display_doc={NeuCLIRDocument}
                                    topics={this.state.topics}
                                    cur_topic={this.state.cur_topic}
                                    cur_req={this.state.cur_req}
