@@ -122,7 +122,7 @@ class SimpleSearchTab extends React.Component {
               display_doc={this.props.display_doc}
               results={this.state.results}
               qrels={qrels}
-              /* on_relevant={this.mark_relevant} */
+              on_relevant={this.mark_relevant}
               page={this.state.page}
               turn_page={this.turn_page}
             />

@@ -72,6 +72,11 @@ function SearchHit(props) {
     }
   }
 
+  let title = props.title;
+  if (!title) {
+    title = props.content.text.substring(0,60) + "...";
+  }
+
   return (
     <Card docid={props.hitkey}>
       <Modal show={marked} onHide={() => setMarked(false)} backgroup="static" keyboard={false}>
@@ -96,7 +101,7 @@ function SearchHit(props) {
           <Container fluid>
             <Row className="d-flex justify-content-between">
               <Col>
-                {props.seqno + 1}. <strong>{props.title}</strong>{" "}
+                {props.seqno + 1}. <strong>{title}</strong>{" "}
               </Col>
               <Col>
                 {props.rel
