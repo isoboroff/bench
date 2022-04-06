@@ -30,6 +30,7 @@ class SearchResults extends React.Component {
         const doc = docs[hit.doc_id];
         return (<SearchHit
                   display_doc={this.props.display_doc}
+                  direction={this.props.direction}
                   seqno={index + (this.props.page - 1) * 10}
                   hitkey={hit.doc_id}
                   title={doc.title}

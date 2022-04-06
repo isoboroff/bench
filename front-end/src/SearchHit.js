@@ -41,6 +41,20 @@ function SearchHit(props) {
     return null;
   }
 
+  function cardHeader(seqno, title, direction) {
+    let dir='';
+    let cname='';
+
+    if (direction && direction === 'rtl') {
+      dir='rtl';
+      cname='text-right';
+    }
+
+    return <span dir={dir} className={cname}>
+             {seqno + 1}. <strong>{title}</strong>{" "}
+           </span>
+  }
+
   /**
    * render function
    * @param {Object} this,props.content a JSON object representing a search hit.
@@ -77,6 +91,10 @@ function SearchHit(props) {
     title = props.content.text.substring(0,60) + "...";
   }
 
+  let hdr_class = 'd-flex justify-content-between';
+  if (props.direction && props.direction === 'rtl') {
+    hdr_class += ' flex-row-reverse';
+  }
   return (
     <Card docid={props.hitkey}>
       <Modal show={marked} onHide={() => setMarked(false)} backgroup="static" keyboard={false}>
@@ -99,9 +117,9 @@ function SearchHit(props) {
 
       <Accordion.Toggle as={Card.Header} eventKey={event_key}>
           <Container fluid>
-            <Row className="d-flex justify-content-between">
-              <Col>
-                {props.seqno + 1}. <strong>{title}</strong>{" "}
+            <Row className={hdr_class}>
+              <Col className="d-flex justify-content-end">
+                {cardHeader(props.seqno, title, props.direction)}
               </Col>
               <Col>
                 {props.rel
