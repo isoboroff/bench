@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 
 import SearchTab from "./SearchTab";
 import SimpleSearchTab from "./SimpleSearchTab";
-import BetterTasks from "./BetterTasks";
+import Topics from "./Topics";
 import NeuCLIRDocument from "./NeuCLIRDocument";
 
 function initial_bench_state() {
@@ -19,7 +19,6 @@ function initial_bench_state() {
     username: null,
     topics: [],
     cur_topic: -1,
-    cur_req: -1,
   };
 }
 
@@ -29,19 +28,13 @@ function empty_topic() {
       title: "New topic",
       desc: "",
       narr: "",
-      inscope: "",
-      outscope: "",
     },
     qrels: new Map(),
-    requests: [],
   };
 }
 
 function empty_request() {
-  return {
-    req_text: "",
-    qrels: new Map()
-  };
+  return null;
 }
 
 class Workbench extends React.Component {
@@ -408,18 +401,13 @@ class Workbench extends React.Component {
                                    remove_relevant={this.remove_relevant}/>
                 </Tab.Pane>
                 <Tab.Pane eventKey="topics">
-                  <BetterTasks topics={this.state.topics}
-                               cur_topic={this.state.cur_topic}
-                               cur_req={this.state.cur_req}
-                               change_writeup={this.change_writeup}
-                               set_current_topic={this.set_current_topic}
-                               delete_topic={this.delete_topic}
-                               new_topic={this.new_topic}
-                               change_reqtext={this.change_reqtext}
-                               set_current_request={this.set_current_request}
-                               delete_request={this.delete_request}
-                               new_request={this.new_request}/>
-                </Tab.Pane>
+                  <Topics topics={this.state.topics}
+                          cur_topic={this.state.cur_topic}
+                          change_writeup={this.change_writeup}
+                          set_current_topic={this.set_current_topic}
+                          delete_topic={this.delete_topic}
+                          new_topic={this.new_topic}/>
+                  </Tab.Pane>
               </Tab.Content>
             </Col>
           </Row>
