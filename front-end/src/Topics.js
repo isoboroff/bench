@@ -21,6 +21,7 @@ class TopicEditor extends React.Component {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
+    console.log('change_fields', name, ' ', value);
 
     this.props.change_writeup(name, value);
   }
@@ -31,28 +32,28 @@ class TopicEditor extends React.Component {
     for (let docno of this.props.qrels.keys()) {
       reldocs.push(<li>{docno}</li>);
     }
-    
+
     return (
       <Card>
-	<Accordion.Toggle as={Card.Header}
-			  variant="link"
-			  eventKey={event_key}
-			  onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
-	  
-	  { this.props.current
-	    ? <strong>CURRENT TOPIC: </strong>
-	    : '' }
-	  { this.props.writeup.title }
-	</Accordion.Toggle>
-	<Accordion.Collapse eventKey={event_key}>
-	  <Card.Body>
-	    <Form.Group controlId="title">
+        <Accordion.Toggle as={Card.Header}
+                          variant="link"
+                          eventKey={event_key}
+                          onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
+
+          { this.props.current
+            ? <strong>CURRENT TOPIC: </strong>
+            : '' }
+          { this.props.writeup.title }
+        </Accordion.Toggle>
+        <Accordion.Collapse eventKey={event_key}>
+          <Card.Body>
+            <Form.Group controlId="title">
               <Form.Label>Task title</Form.Label>
               <Form.Control
                 type="text"
                 placeholder="title"
                 name="title"
-		value={this.props.writeup.title}
+                value={this.props.writeup.title}
                 onChange={this.change_fields}
               />
               <Form.Text className="text-muted">
@@ -60,13 +61,43 @@ class TopicEditor extends React.Component {
               </Form.Text>
             </Form.Group>
 
+            <Form.Group controlId="langs">
+              <Form.Label>Languages</Form.Label>
+              <Form.Row><Col>
+                <Form.Check inline
+                            type="checkbox"
+                            name="fas"
+                            id="fas-check"
+                            label="Farsi"
+                            value={this.props.writeup.fas}
+                            onChange={this.change_fields}
+                />
+                <Form.Check inline
+                            type="checkbox"
+                            name="zho"
+                            id="zho-check"
+                            label="Chinese"
+                            value={this.props.writeup.zho}
+                            onChange={this.change_fields}
+                />
+                <Form.Check inline
+                            type="checkbox"
+                            name="rus"
+                            id="rus-check"
+                            label="Russian"
+                            value={this.props.writeup.rus}
+                            onChange={this.change_fields}
+                />
+              </Col></Form.Row>
+            </Form.Group>
+            
             <Form.Group controlId="desc">
               <Form.Label>Description</Form.Label>
               <Form.Control
                 type="text"
-                placeholder="A sentence-length description of the analytic task."
+                placeholder="A sentence-length description of the information need."
                 name="desc"
-		value={this.props.writeup.desc}
+                value={this.props.writeup.desc}
                 onChange={this.change_fields}
               />
               <Form.Text className="text-muted">
@@ -81,7 +112,7 @@ class TopicEditor extends React.Component {
                 rows="5"
                 placeholder="A narrative paragraph."
                 name="narr"
-		value={this.props.writeup.narr}
+                value={this.props.writeup.narr}
                 onChange={this.change_fields}
               />
               <Form.Text className="text-muted">
@@ -91,21 +122,21 @@ class TopicEditor extends React.Component {
               </Form.Text>
             </Form.Group>
 
-	    <Row className="mt-3">
-	      <Col md={10}>
-		Relevant documents:
-		<ul>{reldocs}</ul>
-	      </Col>
-	    </Row>
+            <Row className="mt-3">
+              <Col md={10}>
+                Relevant documents:
+                <ul>{reldocs}</ul>
+              </Col>
+            </Row>
 
-	    <Button variant="primary" className="mt-3"
-		    onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
-	      Delete
-	    </Button>
+            <Button variant="primary" className="mt-3"
+                    onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
+              Delete
+            </Button>
 
 
-	  </Card.Body>
-	</Accordion.Collapse>
+          </Card.Body>
+        </Accordion.Collapse>
       </Card>
     );
   }
@@ -119,27 +150,27 @@ class Topics extends React.Component {
   render() {
     let topics = this.props.topics;
     let event_key = "topic-" + this.props.cur_topic;
-    
+
     const topiclist = topics.map((hit, index) => (
       <TopicEditor topic_num={index}
-		   writeup={hit.writeup}
-		   qrels={hit.qrels}
-		   current={index === this.props.cur_topic}
-		   set_current_topic={this.props.set_current_topic}
-		   change_writeup={this.props.change_writeup}
-		   delete_topic={this.props.delete_topic}/>
+                   writeup={hit.writeup}
+                   qrels={hit.qrels}
+                   current={index === this.props.cur_topic}
+                   set_current_topic={this.props.set_current_topic}
+                   change_writeup={this.props.change_writeup}
+                   delete_topic={this.props.delete_topic}/>
     ));
 
     return (
       <Container>
-	<Row className="justify-content-md-center mt-5">
-	  <Col md={10}>
-	    <Button variant="primary" onClick={this.props.new_topic}>Create new topic</Button>
-	    <Accordion defaultActiveKey={event_key}>
-	      {topiclist}
-	    </Accordion>
-	  </Col>
-	</Row>
+        <Row className="justify-content-md-center mt-5">
+          <Col md={10}>
+            <Button variant="primary" onClick={this.props.new_topic}>Create new topic</Button>
+            <Accordion defaultActiveKey={event_key}>
+              {topiclist}
+            </Accordion>
+          </Col>
+        </Row>
       </Container>
     );
   }

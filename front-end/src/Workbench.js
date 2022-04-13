@@ -28,6 +28,9 @@ function empty_topic() {
       title: "New topic",
       desc: "",
       narr: "",
+      zho: false,
+      fas: false,
+      rus: false
     },
     qrels: new Map(),
   };
