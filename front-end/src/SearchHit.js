@@ -91,9 +91,11 @@ function SearchHit(props) {
     title = props.content.text.substring(0,60) + "...";
   }
 
-  let hdr_class = 'd-flex justify-content-between';
+  let row_class = 'd-flex';
+  let hdr_class = 'd-flex';
   if (props.direction && props.direction === 'rtl') {
-    hdr_class += ' flex-row-reverse';
+    row_class += ' flex-row-reverse';
+    hdr_class += ' justify-content-end';
   }
   return (
     <Card docid={props.hitkey}>
@@ -117,8 +119,8 @@ function SearchHit(props) {
 
       <Accordion.Toggle as={Card.Header} eventKey={event_key}>
           <Container fluid>
-            <Row className={hdr_class}>
-              <Col className="d-flex justify-content-end">
+            <Row className={row_class}>
+              <Col className={hdr_class}>
                 {cardHeader(props.seqno, title, props.direction)}
               </Col>
               <Col>
