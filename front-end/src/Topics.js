@@ -29,21 +29,21 @@ class TopicEditor extends React.Component {
   render() {
     let event_key = "topic-" + this.props.topic_num;
     const reldocs = [];
-    for (let docno of this.props.qrels.keys()) {
-      reldocs.push(<li>{docno}</li>);
-    }
+    this.props.qrels.forEach((value, key) => {
+      reldocs.push(<li>[{value.index}] {key}</li>);
+    });
 
     return (
       <Card>
         <Accordion.Toggle as={Card.Header}
-                          variant="link"
-                          eventKey={event_key}
-                          onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
+          variant="link"
+          eventKey={event_key}
+          onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
 
-          { this.props.current
+          {this.props.current
             ? <strong>CURRENT TOPIC: </strong>
-            : '' }
-          { this.props.writeup.title }
+            : ''}
+          {this.props.writeup.title}
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
@@ -65,32 +65,32 @@ class TopicEditor extends React.Component {
               <Form.Label>Languages</Form.Label>
               <Form.Row><Col>
                 <Form.Check inline
-                            type="checkbox"
-                            name="fas"
-                            id="fas-check"
-                            label="Farsi"
-                            value={this.props.writeup.fas}
-                            onChange={this.change_fields}
+                  type="checkbox"
+                  name="fas"
+                  id="fas-check"
+                  label="Farsi"
+                  value={this.props.writeup.fas}
+                  onChange={this.change_fields}
                 />
                 <Form.Check inline
-                            type="checkbox"
-                            name="zho"
-                            id="zho-check"
-                            label="Chinese"
-                            value={this.props.writeup.zho}
-                            onChange={this.change_fields}
+                  type="checkbox"
+                  name="zho"
+                  id="zho-check"
+                  label="Chinese"
+                  value={this.props.writeup.zho}
+                  onChange={this.change_fields}
                 />
                 <Form.Check inline
-                            type="checkbox"
-                            name="rus"
-                            id="rus-check"
-                            label="Russian"
-                            value={this.props.writeup.rus}
-                            onChange={this.change_fields}
+                  type="checkbox"
+                  name="rus"
+                  id="rus-check"
+                  label="Russian"
+                  value={this.props.writeup.rus}
+                  onChange={this.change_fields}
                 />
               </Col></Form.Row>
             </Form.Group>
-            
+
             <Form.Group controlId="desc">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -130,7 +130,7 @@ class TopicEditor extends React.Component {
             </Row>
 
             <Button variant="primary" className="mt-3"
-                    onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
+              onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
               Delete
             </Button>
 
@@ -153,12 +153,12 @@ class Topics extends React.Component {
 
     const topiclist = topics.map((hit, index) => (
       <TopicEditor topic_num={index}
-                   writeup={hit.writeup}
-                   qrels={hit.qrels}
-                   current={index === this.props.cur_topic}
-                   set_current_topic={this.props.set_current_topic}
-                   change_writeup={this.props.change_writeup}
-                   delete_topic={this.props.delete_topic}/>
+        writeup={hit.writeup}
+        qrels={hit.qrels}
+        current={index === this.props.cur_topic}
+        set_current_topic={this.props.set_current_topic}
+        change_writeup={this.props.change_writeup}
+        delete_topic={this.props.delete_topic} />
     ));
 
     return (

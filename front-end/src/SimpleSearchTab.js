@@ -32,6 +32,7 @@ class SimpleSearchTab extends React.Component {
 
   mark_relevant(docid, extent) {
     if (extent) {
+      extent.index = this.props.index;
       this.props.add_relevant(docid, extent);
     } else {
       this.props.remove_relevant(docid);
