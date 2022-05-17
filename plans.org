@@ -4,9 +4,13 @@
 
 ** TODO Change the search layout from an accordion to a blue-link list with snippets, and open documents in a new tab
 
-** TODO Port to run on Patapsco instead of ElasticSearch
+** DONE Port to run on Patapsco instead of ElasticSearch
+CLOSED: [2022-05-17 Tue 17:04]
 - backend changes done
-  
+
+** TODO note language of relevant documents labeled
+
+** TODO add an inventory tab that lists all topics with title and count of reldocs by lang
 
 * Updates needed for BETTER IR development
 
