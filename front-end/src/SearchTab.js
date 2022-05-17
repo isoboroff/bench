@@ -33,7 +33,7 @@ class SearchTab extends React.Component {
   update_query(query_box_contents) {
     this.setState({ query: query_box_contents, page: 1 }, /* then, do */ this.update_search);
   }
-  
+
   /**
    * update_facets
    * When the user checks or unchecks the radio buttons, this callback updates
@@ -68,8 +68,8 @@ class SearchTab extends React.Component {
 
   turn_page(change) {
     const num_pages = this.state.results
-          ? Math.floor(this.state.results.hits.total.value / 10)
-          : 0;
+      ? Math.floor(this.state.results.hits.total.value / 10)
+      : 0;
     let this_page = this.state.page;
 
     if (change === "+1") {
@@ -98,12 +98,12 @@ class SearchTab extends React.Component {
    */
   build_query() {
     let query_string = "u=" + this.props.username +
-        "&index=" + this.props.index +
-        "&q=" + this.state.query +
-        "&page=" + this.state.page;
+      "&index=" + this.props.index +
+      "&q=" + this.state.query +
+      "&page=" + this.state.page;
     if (this.props.search_facets) {
       const aggs_string = Object.entries(this.props.search_facets)
-            .map(([agg, field]) => agg +":"+ field.field).join(",");
+        .map(([agg, field]) => agg + ":" + field.field).join(",");
       query_string += "&aggs=" + aggs_string;
     }
     const facet_string = Array.from(this.state.facets.keys()).join(",");
@@ -133,12 +133,12 @@ class SearchTab extends React.Component {
       });
   }
 
-  
+
   render() {
     let qrels = null;
     if (this.props.cur_topic !== -1) {
       const topic = this.props.topics[this.props.cur_topic];
-      
+
       if (this.props.cur_req !== -1) {
         qrels = topic.requests[this.props.cur_req].qrels;
       } else {
@@ -154,7 +154,7 @@ class SearchTab extends React.Component {
         </Row>
         <Row>
           <Col sm="2">
-	    <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
+            <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
             <FacetView
               facets={this.props.search_facets}
               aggs={this.state.results ? this.state.results.aggregations : ""}
@@ -165,6 +165,7 @@ class SearchTab extends React.Component {
           <Col sm="10">
             <SearchResults
               display_doc={this.props.display_doc}
+              direction={this.props.direction}
               results={this.state.results}
               qrels={qrels}
               on_relevant={this.mark_relevant}

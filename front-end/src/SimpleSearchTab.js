@@ -30,9 +30,9 @@ class SimpleSearchTab extends React.Component {
     this.setState({ query: query_box_contents, page: 1 }, /* then, do */ this.update_search);
   }
 
-  mark_relevant(docid, checked) {
-    if (checked) {
-      this.props.add_relevant(docid);
+  mark_relevant(docid, extent) {
+    if (extent) {
+      this.props.add_relevant(docid, extent);
     } else {
       this.props.remove_relevant(docid);
     }
@@ -40,8 +40,8 @@ class SimpleSearchTab extends React.Component {
 
   turn_page(change) {
     const num_pages = this.state.results
-          ? Math.floor(this.state.results.hits.total.value / 10)
-          : 0;
+      ? Math.floor(this.state.results.hits.total.value / 10)
+      : 0;
     let this_page = this.state.page;
 
     if (change === "+1") {
@@ -70,9 +70,9 @@ class SimpleSearchTab extends React.Component {
    */
   build_query() {
     let query_string = "u=" + this.props.username +
-        "&index=" + this.props.index +
-        "&q=" + this.state.query +
-        "&page=" + this.state.page;
+      "&index=" + this.props.index +
+      "&q=" + this.state.query +
+      "&page=" + this.state.page;
 
     // The query needs to be escaped before fetching.
     query_string = encodeURI(query_string);
@@ -113,7 +113,7 @@ class SimpleSearchTab extends React.Component {
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
           <Col sm="8">
-            <SearchBox index={this.props.index} on_search={this.update_query} direction={this.props.direction}/>
+            <SearchBox index={this.props.index} on_search={this.update_query} direction={this.props.direction} />
           </Col>
         </Row>
         <Row>
@@ -126,6 +126,8 @@ class SimpleSearchTab extends React.Component {
               on_relevant={this.mark_relevant}
               page={this.state.page}
               turn_page={this.turn_page}
+              cur_topic={this.props.cur_topic}
+              cur_req={this.props.cur_req}
             />
           </Col>
         </Row>
