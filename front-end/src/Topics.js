@@ -7,6 +7,7 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
+import Modal from "react-bootstrap/Modal";
 
 /*
  * <TopicEditor topic_num="1" writeup=(writeup) change_writeup=(fn)/>
@@ -14,16 +15,46 @@ import Form from "react-bootstrap/Form";
 class TopicEditor extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { copied_to_clipboard: false };
     this.change_fields = this.change_fields.bind(this);
+    this.copy_to_clipboard = this.copy_to_clipboard.bind(this);
   }
 
   change_fields(event) {
     const target = event.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
     const name = target.name;
-    console.log('change_fields', name, ' ', value);
 
     this.props.change_writeup(name, value);
+  }
+
+  /* Copy the current event to the clipboard, in a way that makes it easy for
+     the user to paste it into the Google Sheet. */
+  copy_to_clipboard() {
+    const counts = { 'fas': 0, 'rus': 0, 'zho': 0 };
+    this.props.qrels.forEach((value, key) => {
+      counts[value.index]++;
+    });
+
+    const pasteup = [
+      this.props.username,
+      this.props.writeup.title,
+      this.props.writeup.desc,
+      this.props.writeup.narr,
+      (counts['fas'] > 0) ? counts['fas'] : '',
+      (counts['fas'] > 0) ? this.props.username : '',
+      (counts['rus'] > 0) ? counts['rus'] : '',
+      (counts['rus'] > 0) ? this.props.username : '',
+      (counts['zho'] > 0) ? counts['zho'] : '',
+      (counts['zho'] > 0) ? this.props.username : ''
+    ].join('\t');
+
+    navigator.clipboard.writeText(pasteup)
+      .then(() => {
+        this.setState({ copied_to_clipboard: true });
+      }, () => {
+        alert('Could not write to clipboard.');
+      });
   }
 
   render() {
@@ -35,6 +66,23 @@ class TopicEditor extends React.Component {
 
     return (
       <Card>
+        <Modal show={this.state.copied_to_clipboard}
+          backdrop="static" keyboard={false}>
+          <Modal.Header>
+            <Modal.Title>Topic Copied!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>The topic has been copied to the clipboard.</p>
+            <p>Click this link to <a target="_blank" rel="noreferrer noopener" href="https://docs.google.com/spreadsheets/d/1213dNsCxTwuYcLDgsS1wQI6iwirawiqRVKzoA7fX3mo/edit#gid=0">open the topic spreadsheet</a> in a new tab.</p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="primary"
+              onClick={() => { this.setState({ copied_to_clipboard: false }) }}>
+              Ok
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
         <Accordion.Toggle as={Card.Header}
           variant="link"
           eventKey={event_key}
@@ -70,14 +118,7 @@ class TopicEditor extends React.Component {
                   id="fas-check"
                   label="Farsi"
                   value={this.props.writeup.fas}
-                  onChange={this.change_fields}
-                />
-                <Form.Check inline
-                  type="checkbox"
-                  name="zho"
-                  id="zho-check"
-                  label="Chinese"
-                  value={this.props.writeup.zho}
+                  checked={this.props.writeup.fas}
                   onChange={this.change_fields}
                 />
                 <Form.Check inline
@@ -86,6 +127,16 @@ class TopicEditor extends React.Component {
                   id="rus-check"
                   label="Russian"
                   value={this.props.writeup.rus}
+                  checked={this.props.writeup.rus}
+                  onChange={this.change_fields}
+                />
+                <Form.Check inline
+                  type="checkbox"
+                  name="zho"
+                  id="zho-check"
+                  label="Chinese"
+                  value={this.props.writeup.zho}
+                  checked={this.props.writeup.zho}
                   onChange={this.change_fields}
                 />
               </Col></Form.Row>
@@ -129,10 +180,16 @@ class TopicEditor extends React.Component {
               </Col>
             </Row>
 
-            <Button variant="primary" className="mt-3"
-              onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
-              Delete
-            </Button>
+            <Row>
+              <Button variant="primary" className="mt-3 mx-2"
+                onClick={this.copy_to_clipboard}>
+                Copy to Clipboard
+              </Button>
+              <Button variant="primary" className="mt-3 mx-2"
+                onClick={this.props.delete_topic.bind(this, this.props.topic_num)}>
+                Delete
+              </Button>
+            </Row>
 
 
           </Card.Body>
@@ -153,6 +210,7 @@ class Topics extends React.Component {
 
     const topiclist = topics.map((hit, index) => (
       <TopicEditor topic_num={index}
+        username={this.props.username}
         writeup={hit.writeup}
         qrels={hit.qrels}
         current={index === this.props.cur_topic}

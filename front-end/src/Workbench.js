@@ -7,7 +7,7 @@ import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button"; 
+import Button from "react-bootstrap/Button";
 
 import SearchTab from "./SearchTab";
 import SimpleSearchTab from "./SimpleSearchTab";
@@ -110,7 +110,7 @@ class Workbench extends React.Component {
         new_state.login_required = true;
       this.setState(new_state);
     } else {
-      this.setState({login_required: true});
+      this.setState({ login_required: true });
     }
   }
 
@@ -129,19 +129,20 @@ class Workbench extends React.Component {
     const url = window.location.href + 'save';
     const data = JSON.stringify(this.state, this.JSON_stringify_maps);
 
-    fetch(url, { method: 'POST',
-                 headers: {
-                   'Content-Type': 'application/json',
-                 },
-                 body: data,
-               })
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: data,
+    })
       .then((response) => {
         if (!response.ok) {
           throw Error(response.statusText);
         }
       })
       .then(() => {
-        this.setState({needs_save: false});
+        this.setState({ needs_save: false });
       })
       .catch((error) => {
         alert('Error:', error);
@@ -183,7 +184,7 @@ class Workbench extends React.Component {
   do_logout(event) {
     this.save_state_to_server();
     this.clear_state();
-    this.setState({login_required: true});
+    this.setState({ login_required: true });
     event.preventDefault();
   }
 
@@ -249,10 +250,12 @@ class Workbench extends React.Component {
     let new_topic = empty_topic();
     let topics = this.state.topics;
     let num_topics = topics.push(new_topic);
-    this.setState({ topics: topics,
-                    cur_topic: num_topics - 1,
-                    cur_req: -1,
-                    needs_save: true });
+    this.setState({
+      topics: topics,
+      cur_topic: num_topics - 1,
+      cur_req: -1,
+      needs_save: true
+    });
   }
 
   new_request() {
@@ -262,9 +265,11 @@ class Workbench extends React.Component {
     let new_request = empty_request();
     let topics = this.state.topics;
     let num_reqs = topics[this.state.cur_topic].requests.push(new_request);
-    this.setState({ topics: topics,
-                    cur_req: num_reqs - 1,
-                    needs_save: true });
+    this.setState({
+      topics: topics,
+      cur_req: num_reqs - 1,
+      needs_save: true
+    });
   }
 
 
@@ -274,10 +279,11 @@ class Workbench extends React.Component {
       return;
     let topics = this.state.topics;
     topics.splice(topic_num, 1);
-    this.setState({ cur_topic: -1,
-                    topics: topics,
-                    needs_save: true
-                  });
+    this.setState({
+      cur_topic: -1,
+      topics: topics,
+      needs_save: true
+    });
   }
 
   /* Remove a topic from the topics array.  This is a function from the topic browser tab. */
@@ -289,18 +295,20 @@ class Workbench extends React.Component {
     let topics = this.state.topics;
     let reqs = topics[topic_num].requests;
     reqs.splice(req_num, 1);
-    this.setState({ cur_req: -1,
-                    topics: topics,
-                    needs_save: true
-                  });
+    this.setState({
+      cur_req: -1,
+      topics: topics,
+      needs_save: true
+    });
   }
 
   set_current_topic(topic_num) {
     if (topic_num < 0 || topic_num > this.state.topics.length)
       return;
-    this.setState({ cur_topic: topic_num,
-                    cur_req: -1
-                  });
+    this.setState({
+      cur_topic: topic_num,
+      cur_req: -1
+    });
   }
 
   set_current_request(topic_num, req_num) {
@@ -335,13 +343,13 @@ class Workbench extends React.Component {
     return (
       <>
         <Modal show={this.state.login_required} onHide={this.do_login}
-               backdrop="static" keyboard={false}>
+          backdrop="static" keyboard={false}>
           <Modal.Header>
             <Modal.Title>Please log in</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <Form.Control type="text"
-                          value={this.state.username} onChange={this.set_username}/>
+              value={this.state.username} onChange={this.set_username} />
           </Modal.Body>
           <Modal.Footer>
             <Button variant="primary" onClick={this.do_login}>Log in</Button>
@@ -357,13 +365,13 @@ class Workbench extends React.Component {
                 <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
                 <Nav.Item className="ml-auto">
                   <NavDropdown eventKey="user"
-                               title={"Logged in as " + this.state.username}
-                               id="utils-dropdown"
-                               alignRight>
+                    title={"Logged in as " + this.state.username}
+                    id="utils-dropdown"
+                    alignRight>
                     <NavDropdown.Item as="li"
-                                      disabled={!this.state.needs_save}
-                                      onClick={this.do_save}>
-                      { this.state.needs_save ? 'Save' : 'Saved'}
+                      disabled={!this.state.needs_save}
+                      onClick={this.do_save}>
+                      {this.state.needs_save ? 'Save' : 'Saved'}
                     </NavDropdown.Item>
                     <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
                   </NavDropdown>
@@ -374,43 +382,44 @@ class Workbench extends React.Component {
               <Tab.Content animation>
                 <Tab.Pane eventKey="farsi">
                   <SimpleSearchTab index="fas"
-                                   direction="rtl"
-                                   username={this.state.username}
-                                   display_doc={NeuCLIRDocument}
-                                   topics={this.state.topics}
-                                   cur_topic={this.state.cur_topic}
-                                   cur_req={this.state.cur_req}
-                                   add_relevant={this.add_relevant}
-                                   remove_relevant={this.remove_relevant}/>
+                    direction="rtl"
+                    username={this.state.username}
+                    display_doc={NeuCLIRDocument}
+                    topics={this.state.topics}
+                    cur_topic={this.state.cur_topic}
+                    cur_req={this.state.cur_req}
+                    add_relevant={this.add_relevant}
+                    remove_relevant={this.remove_relevant} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="russian">
                   <SimpleSearchTab index="rus"
-                                   username={this.state.username}
-                                   display_doc={NeuCLIRDocument}
-                                   topics={this.state.topics}
-                                   cur_topic={this.state.cur_topic}
-                                   cur_req={this.state.cur_req}
-                                   add_relevant={this.add_relevant}
-                                   remove_relevant={this.remove_relevant}/>
+                    username={this.state.username}
+                    display_doc={NeuCLIRDocument}
+                    topics={this.state.topics}
+                    cur_topic={this.state.cur_topic}
+                    cur_req={this.state.cur_req}
+                    add_relevant={this.add_relevant}
+                    remove_relevant={this.remove_relevant} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="chinese">
                   <SimpleSearchTab index="zho"
-                                   username={this.state.username}
-                                   display_doc={NeuCLIRDocument}
-                                   topics={this.state.topics}
-                                   cur_topic={this.state.cur_topic}
-                                   cur_req={this.state.cur_req}
-                                   add_relevant={this.add_relevant}
-                                   remove_relevant={this.remove_relevant}/>
+                    username={this.state.username}
+                    display_doc={NeuCLIRDocument}
+                    topics={this.state.topics}
+                    cur_topic={this.state.cur_topic}
+                    cur_req={this.state.cur_req}
+                    add_relevant={this.add_relevant}
+                    remove_relevant={this.remove_relevant} />
                 </Tab.Pane>
                 <Tab.Pane eventKey="topics">
                   <Topics topics={this.state.topics}
-                          cur_topic={this.state.cur_topic}
-                          change_writeup={this.change_writeup}
-                          set_current_topic={this.set_current_topic}
-                          delete_topic={this.delete_topic}
-                          new_topic={this.new_topic}/>
-                  </Tab.Pane>
+                    username={this.state.username}
+                    cur_topic={this.state.cur_topic}
+                    change_writeup={this.change_writeup}
+                    set_current_topic={this.set_current_topic}
+                    delete_topic={this.delete_topic}
+                    new_topic={this.new_topic} />
+                </Tab.Pane>
               </Tab.Content>
             </Col>
           </Row>
