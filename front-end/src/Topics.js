@@ -64,6 +64,11 @@ class TopicEditor extends React.Component {
       reldocs.push(<li>[{value.index}] {key}</li>);
     });
 
+    let disp_title = this.props.writeup.title;
+    if (disp_title.length > 80) {
+      disp_title = disp_title.substring(0, 80) + "...";
+    }
+
     return (
       <Card>
         <Modal show={this.state.copied_to_clipboard}
@@ -91,14 +96,15 @@ class TopicEditor extends React.Component {
           {this.props.current
             ? <strong>CURRENT TOPIC: </strong>
             : ''}
-          {this.props.writeup.title}
+          {disp_title}
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
             <Form.Group controlId="title">
               <Form.Label>Task title</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                rows="2"
                 placeholder="title"
                 name="title"
                 value={this.props.writeup.title}
@@ -145,7 +151,8 @@ class TopicEditor extends React.Component {
             <Form.Group controlId="desc">
               <Form.Label>Description</Form.Label>
               <Form.Control
-                type="text"
+                as="textarea"
+                rows="2"
                 placeholder="A sentence-length description of the information need."
                 name="desc"
                 value={this.props.writeup.desc}
