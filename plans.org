@@ -2,13 +2,17 @@
 
 * Updates for NeuCLIR
 
+** DONE Spin a wheel while waiting for the query to come back
+CLOSED: [2022-06-02 Thu 10:03]
+
 ** TODO Change the search layout from an accordion to a blue-link list with snippets, and open documents in a new tab
 
 ** DONE Port to run on Patapsco instead of ElasticSearch
 CLOSED: [2022-05-17 Tue 17:04]
 - backend changes done
 
-** TODO note language of relevant documents labeled
+** DONE note language of relevant documents labeled
+CLOSED: [2022-06-02 Thu 08:48]
 
 ** TODO add an inventory tab that lists all topics with title and count of reldocs by lang
 
@@ -26,10 +30,12 @@ CLOSED: [2022-05-17 Tue 17:04]
 - Spacy does not do Arabic.
 
 
-** TODO Multiple search tabs (one for English, one for Arabic)
+** DONE Multiple search tabs (one for English, one for Arabic)
+CLOSED: [2022-06-02 Thu 08:48]
 
 *** DONE make the search index a parameter setting
-*** TODO make the facets specified at the search tab
+*** DONE make the facets specified at the search tab
+CLOSED: [2022-06-02 Thu 08:48]
     - Almost there, entity rendering in the card is the last thing.
 
 ** DONE Topic development template
@@ -44,9 +50,10 @@ CLOSED: [2021-11-23 Tue 12:56]
 
 * Improvements to the system
 
-  ** Make the different app components (like a search tab on a collection, a topic writeup, a review pane) composable in a top-level App, easily.
+** Make the different app components (like a search tab on a collection, a topic writeup, a review pane) composable in a top-level App, easily.
 
-  ** Retargetable search tab: just specify endpoint and collection, with optional facet fields
+** DONE Retargetable search tab: just specify endpoint and collection, with optional facet fields
+CLOSED: [2022-06-02 Thu 08:49]
 
   ** Specify the writeup tab setup with a JSON template
 
@@ -54,8 +61,6 @@ CLOSED: [2021-11-23 Tue 12:56]
   
   
   ** Support complex Lucene queries.  Have a popup with query syntax, and report erroneous queries.
-
-  ** Spin a wheel while waiting for the query to come back
 
   ** Allow clicking on documents in the topic editor.  This should bring up a tab in the context for that document, that is, for its topic and request.  This document view should be the same as the ones that come off the search results list.
   

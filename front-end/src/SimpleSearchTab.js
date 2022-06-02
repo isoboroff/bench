@@ -15,6 +15,7 @@ class SimpleSearchTab extends React.Component {
       page: 1,
       facets: new Map(),
       results: "",
+      loading: false,
     };
 
     this.update_query = this.update_query.bind(this);
@@ -86,12 +87,17 @@ class SimpleSearchTab extends React.Component {
   do_search() {
     const url = window.location.href + "search?" + this.build_query();
 
+    this.setState({ loading: true });
+
     fetch(url)
       .then(response => {
         return response.json(); // ElasticSearch returns JSON data
       })
       .then(data => {
-        this.setState({ results: data }); // Update the search results
+        this.setState({
+          results: data,
+          loading: false
+        }); // Update the search results
       })
       .catch(err => {
         // do something on an error here.
@@ -129,6 +135,7 @@ class SimpleSearchTab extends React.Component {
               turn_page={this.turn_page}
               cur_topic={this.props.cur_topic}
               cur_req={this.props.cur_req}
+              loading={this.state.loading}
             />
           </Col>
         </Row>

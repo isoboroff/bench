@@ -4,6 +4,10 @@ import ReactDOMServer from "react-dom/server";
 import Card from "react-bootstrap/Card";
 import Accordion from "react-bootstrap/Accordion";
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+// import "@fortawesome/fontawesome-svg-core/styles.css"
+
 import SearchHit from "./SearchHit.js";
 import Pager from "./Pager.js";
 
@@ -20,8 +24,17 @@ class SearchResults extends React.Component {
       qrels = new Map();
     }
 
+    if (this.props.loading) {
+      return (
+        <div>
+          <p>
+            <FontAwesomeIcon icon={faSpinner} className="fa-2xl fa-spin mx-3" />
+            Loading...
+          </p>
+        </div>
+      );
 
-    if (hits.length > 0) {
+    } else if (hits.length > 0) {
       // This is a common React pattern: if you have an array of things to render,
       // use map() to convert it to a list of JSX things, then use that directly
       // in the JSX rendering.  (Otherwise JSX would need loop primitives, yuck)
@@ -29,16 +42,16 @@ class SearchResults extends React.Component {
       const hitlist = hits.map((hit, index) => {
         const doc = docs[hit.doc_id];
         return (<SearchHit
-                  display_doc={this.props.display_doc}
-                  direction={this.props.direction}
-                  seqno={index + (this.props.page - 1) * 10}
-                  hitkey={hit.doc_id}
-                  title={doc.title}
-                  content={doc}
-                  date={doc.date}
-                  rel={qrels.has(hit.doc_id) ? qrels.get(hit.doc_id) : null}
-                  on_relevant={this.props.on_relevant}
-                />);
+          display_doc={this.props.display_doc}
+          direction={this.props.direction}
+          seqno={index + (this.props.page - 1) * 10}
+          hitkey={hit.doc_id}
+          title={doc.title}
+          content={doc}
+          date={doc.date}
+          rel={qrels.has(hit.doc_id) ? qrels.get(hit.doc_id) : null}
+          on_relevant={this.props.on_relevant}
+        />);
       });
       let count = hits.length + " results found.";
       if (!isNaN(this.props.cur_topic) && this.props.cur_topic !== -1) {
