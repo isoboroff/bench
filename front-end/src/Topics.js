@@ -38,9 +38,9 @@ class TopicEditor extends React.Component {
 
     const pasteup = [
       this.props.username,
-      this.props.writeup.title,
-      this.props.writeup.desc,
-      this.props.writeup.narr,
+      this.props.writeup.title.replace(/\s+/g, ' ').trim(),
+      this.props.writeup.desc.replace(/\s+/g, ' ').trim(),
+      this.props.writeup.narr.replace(/\s+/g, ' ').trim(),
       (counts['fas'] > 0) ? counts['fas'] : '',
       (counts['fas'] > 0) ? this.props.username : '',
       (counts['rus'] > 0) ? counts['rus'] : '',
