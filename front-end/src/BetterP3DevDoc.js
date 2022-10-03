@@ -1,16 +1,8 @@
 import React from 'react';
 import Markup from 'interweave';
 
-function BetterDocument(props) {
-  const display_doc = (content_string) => {
-    let obj = null;
-    try {
-      obj = JSON.parse(content_string);
-    } catch (error) {
-      console.error(error);
-      return '';
-    }
-
+function BetterP3DevDoc(props) {
+  const display_doc = (obj) => {
     let doctext = obj['text']
 
     if (props.rel) {
@@ -42,4 +34,4 @@ function BetterDocument(props) {
   }
 }
 
-export { BetterDocument as default };
+export { BetterP3DevDoc as default };

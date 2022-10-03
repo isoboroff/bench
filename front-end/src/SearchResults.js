@@ -23,7 +23,6 @@ class SearchResults extends React.Component {
     if (qrels === null) {
       qrels = new Map();
     }
-
     if (this.props.loading) {
       return (
         <div>
