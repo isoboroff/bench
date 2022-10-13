@@ -148,12 +148,12 @@ class SearchTab extends React.Component {
     return (
       <Container fluid="true">
         <Row className="justify-content-md-center mt-5">
-          <Col sm="8">
+          <Col>
             <SearchBox index={this.props.index} on_search={this.update_query} />
           </Col>
         </Row>
         <Row>
-          <Col sm="2">
+          <Col xs={2}>
             <Button variant="primary" className="mb-3" onClick={this.clear_facets}>Clear facets</Button>
             <FacetView
               facets={this.props.search_facets}
@@ -162,7 +162,7 @@ class SearchTab extends React.Component {
               onCheck={this.update_facets}
             />
           </Col>
-          <Col sm="10">
+          <Col xs={10}>
             <SearchResults
               display_doc={this.props.display_doc}
               direction={this.props.direction}
@@ -175,8 +175,8 @@ class SearchTab extends React.Component {
               cur_req={this.props.cur_req}
             />
           </Col>
-        </Row>
-      </Container>
+        </Row >
+      </Container >
     );
   }
 }

@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 
 import SearchTab from "./SearchTab";
 import SimpleSearchTab from "./SimpleSearchTab";
-import Topics from "./Topics";
+import BetterTasks from "./BetterTasks";
 import NeuCLIRDocument from "./NeuCLIRDocument";
 
 function initial_bench_state() {
@@ -355,78 +355,95 @@ class Workbench extends React.Component {
             <Button variant="primary" onClick={this.do_login}>Log in</Button>
           </Modal.Footer>
         </Modal>
-        <Tab.Container defaultActiveKey="korean" id="workbench">
-          <Row className="m-2">
-            <Col sm={12}>
-              <Nav variant="tabs">
-                <Nav.Item><Nav.Link eventKey="korean">Search Korean</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link eventKey="russian">Search Russian</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link eventKey="chinese">Search Chinese</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
-                <Nav.Item className="ml-auto">
-                  <NavDropdown eventKey="user"
-                    title={"Logged in as " + this.state.username}
-                    id="utils-dropdown"
-                    alignRight>
-                    <NavDropdown.Item as="li"
-                      disabled={!this.state.needs_save}
-                      onClick={this.do_save}>
-                      {this.state.needs_save ? 'Save' : 'Saved'}
-                    </NavDropdown.Item>
-                    <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
-                  </NavDropdown>
-                </Nav.Item>
-              </Nav>
-            </Col>
-            <Col sm={12}>
-              <Tab.Content animation>
-                <Tab.Pane eventKey="korean">
-                  <SimpleSearchTab index="kor"
-                    username={this.state.username}
-                    display_doc={NeuCLIRDocument}
-                    topics={this.state.topics}
-                    cur_topic={this.state.cur_topic}
-                    cur_req={this.state.cur_req}
-                    add_relevant={this.add_relevant}
-                    remove_relevant={this.remove_relevant} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="russian">
-                  <SimpleSearchTab index="rus"
-                    username={this.state.username}
-                    display_doc={NeuCLIRDocument}
-                    topics={this.state.topics}
-                    cur_topic={this.state.cur_topic}
-                    cur_req={this.state.cur_req}
-                    add_relevant={this.add_relevant}
-                    remove_relevant={this.remove_relevant} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="chinese">
-                  <SimpleSearchTab index="zho"
-                    username={this.state.username}
-                    display_doc={NeuCLIRDocument}
-                    topics={this.state.topics}
-                    cur_topic={this.state.cur_topic}
-                    cur_req={this.state.cur_req}
-                    add_relevant={this.add_relevant}
-                    remove_relevant={this.remove_relevant} />
-                </Tab.Pane>
-                <Tab.Pane eventKey="topics">
-                  <BetterTasks topics={this.state.topics}
-                    cur_topic={this.state.cur_topic}
-                    cur_req={this.state.cur_req}
-                    change_writeup={this.change_writeup}
-                    set_current_topic={this.set_current_topic}
-                    delete_topic={this.delete_topic}
-                    new_topic={this.new_topic}
-                    change_reqtext={this.change_reqtext}
-                    set_current_request={this.set_current_request}
-                    delete_request={this.delete_request}
-                    new_request={this.new_request} />
-                </Tab.Pane>
-              </Tab.Content>
-            </Col>
-          </Row>
-        </Tab.Container>
+        <Row>
+          <Col>
+            <BetterTasks topics={this.state.topics}
+              cur_topic={this.state.cur_topic}
+              cur_req={this.state.cur_req}
+              changeq_writeup={this.change_writeup}
+              set_current_topic={this.set_current_topic}
+              delete_topic={this.delete_topic}
+              new_topic={this.new_topic}
+              change_reqtext={this.change_reqtext}
+              set_current_request={this.set_current_request}
+              delete_request={this.delete_request}
+              new_request={this.new_request} />
+          </Col>
+          <Col>
+            <Tab.Container defaultActiveKey="korean" id="workbench">
+              <Row className="m-2">
+                <Col sm={12}>
+                  <Nav variant="tabs">
+                    <Nav.Item><Nav.Link eventKey="korean">Search Korean</Nav.Link></Nav.Item>
+                    <Nav.Item><Nav.Link eventKey="russian">Search Russian</Nav.Link></Nav.Item>
+                    <Nav.Item><Nav.Link eventKey="chinese">Search Chinese</Nav.Link></Nav.Item>
+                    <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
+                    <Nav.Item className="ml-auto">
+                      <NavDropdown eventKey="user"
+                        title={"Logged in as " + this.state.username}
+                        id="utils-dropdown"
+                        alignRight>
+                        <NavDropdown.Item as="li"
+                          disabled={!this.state.needs_save}
+                          onClick={this.do_save}>
+                          {this.state.needs_save ? 'Save' : 'Saved'}
+                        </NavDropdown.Item>
+                        <NavDropdown.Item as="li" onClick={this.do_logout}>Log out</NavDropdown.Item>
+                      </NavDropdown>
+                    </Nav.Item>
+                  </Nav>
+                </Col>
+                <Col sm={12}>
+                  <Tab.Content animation>
+                    <Tab.Pane eventKey="korean">
+                      <SimpleSearchTab index="kor"
+                        username={this.state.username}
+                        display_doc={NeuCLIRDocument}
+                        topics={this.state.topics}
+                        cur_topic={this.state.cur_topic}
+                        cur_req={this.state.cur_req}
+                        add_relevant={this.add_relevant}
+                        remove_relevant={this.remove_relevant} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="russian">
+                      <SimpleSearchTab index="rus"
+                        username={this.state.username}
+                        display_doc={NeuCLIRDocument}
+                        topics={this.state.topics}
+                        cur_topic={this.state.cur_topic}
+                        cur_req={this.state.cur_req}
+                        add_relevant={this.add_relevant}
+                        remove_relevant={this.remove_relevant} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="chinese">
+                      <SimpleSearchTab index="zho"
+                        username={this.state.username}
+                        display_doc={NeuCLIRDocument}
+                        topics={this.state.topics}
+                        cur_topic={this.state.cur_topic}
+                        cur_req={this.state.cur_req}
+                        add_relevant={this.add_relevant}
+                        remove_relevant={this.remove_relevant} />
+                    </Tab.Pane>
+                    <Tab.Pane eventKey="topics">
+                      <BetterTasks topics={this.state.topics}
+                        cur_topic={this.state.cur_topic}
+                        cur_req={this.state.cur_req}
+                        change_writeup={this.change_writeup}
+                        set_current_topic={this.set_current_topic}
+                        delete_topic={this.delete_topic}
+                        new_topic={this.new_topic}
+                        change_reqtext={this.change_reqtext}
+                        set_current_request={this.set_current_request}
+                        delete_request={this.delete_request}
+                        new_request={this.new_request} />
+                    </Tab.Pane>
+                  </Tab.Content>
+                </Col>
+              </Row>
+            </Tab.Container>
+          </Col>
+        </Row>
       </>
     );
   }

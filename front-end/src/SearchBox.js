@@ -46,12 +46,12 @@ export default class SearchBox extends React.Component {
       add_dir = 'rtl';
       add_class = 'text-right';
     }
- 
+
     return (
       <Form onSubmit={this.handle_submit_event}>
         <Form.Group as={Row} controlID="searchBox">
-          <Form.Label column sm={2}>Search {this.props.index}:</Form.Label>
-          <Col sm={10}>
+          <Form.Label column xs={4}> {this.props.index}:</Form.Label>
+          <Col xs={8}>
             <Form.Control
               placeholder="Enter your query here"
               value={this.state.value}
@@ -61,7 +61,7 @@ export default class SearchBox extends React.Component {
             />
           </Col>
         </Form.Group>
-      </Form>
+      </Form >
     );
   }
 }
