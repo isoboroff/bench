@@ -360,7 +360,7 @@ class Workbench extends React.Component {
             <BetterTasks topics={this.state.topics}
               cur_topic={this.state.cur_topic}
               cur_req={this.state.cur_req}
-              changeq_writeup={this.change_writeup}
+              change_writeup={this.change_writeup}
               set_current_topic={this.set_current_topic}
               delete_topic={this.delete_topic}
               new_topic={this.new_topic}
