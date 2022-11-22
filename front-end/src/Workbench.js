@@ -355,11 +355,11 @@ class Workbench extends React.Component {
             <Button variant="primary" onClick={this.do_login}>Log in</Button>
           </Modal.Footer>
         </Modal>
-        <Tab.Container defaultActiveKey="farsi" id="workbench">
+        <Tab.Container defaultActiveKey="korean" id="workbench">
           <Row className="m-2">
             <Col sm={12}>
               <Nav variant="tabs">
-                <Nav.Item><Nav.Link eventKey="farsi">Search Farsi</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link eventKey="korean">Search Korean</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link eventKey="russian">Search Russian</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link eventKey="chinese">Search Chinese</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
@@ -380,9 +380,8 @@ class Workbench extends React.Component {
             </Col>
             <Col sm={12}>
               <Tab.Content animation>
-                <Tab.Pane eventKey="farsi">
-                  <SimpleSearchTab index="fas"
-                    direction="rtl"
+                <Tab.Pane eventKey="korean">
+                  <SimpleSearchTab index="kor"
                     username={this.state.username}
                     display_doc={NeuCLIRDocument}
                     topics={this.state.topics}
