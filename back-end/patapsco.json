@@ -1,6 +1,0 @@
-{ "indexes":
-  { "rus": "/Users/soboroff/neuclir-coll/runs/Russian-index",
-    "fas": "/Users/soboroff/neuclir-coll/runs/Farsi-indexing",
-    "zho": "/Users/soboroff/neuclir-coll/runs/Chinese-index"
-  }
-}

@@ -8,18 +8,8 @@ import re
 from pathlib import Path
 from datetime import datetime
 
-if (__name__ == '__main__'):
-    argparser = argparse.ArgumentParser(description='An Elastic interface server', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    argparser.add_argument('--conf', help='Config for Patapsco run locations', default='patapsco.json')
-    argparser.add_argument('--save', help='Location for saved data', default='save_dir')
-    args = argparser.parse_args()
-else:
-    args = argparse.Namespace(**{'save': 'save_dir',
-                                 'conf': 'patapsco.json',
-                                 })
-
 app = Flask(__name__, static_folder='../front-end/build/static', template_folder='../front-end/build')
-
+app.config.from_pyfile('settings.py')
 
 
 class Pat:
@@ -31,7 +21,7 @@ class Pat:
         self.config = ConfigHelper.load(str(self.config_path))
 
         self.db = DocumentDatabase(str(self.runpath), self.config.database.output, True)
-        self.lang = self.config.topics.input.lang
+        self.lang = self.config.documents.input.lang
         self.qproc = QueryProcessor(str(self.runpath), self.config.queries, self.lang)
         self.qproc.begin()
         self.retriever = RetrieverFactory.create(str(self.runpath), self.config.retrieve)
@@ -52,17 +42,17 @@ class Pat:
         query = self.qproc.process(query)
         return self.retriever.process(query)
 
-patconf = json.load(open(args.conf, 'r'))
+patconf = app.config['PATAPSCO']
 indexes = {}
-for lang, runpath in patconf['indexes'].items():
+for lang, runpath in patconf.items():
     indexes[lang] = Pat(runpath)
 
 print(indexes)
-    
-Path(args.save).mkdir(exist_ok=True)
+
+Path(app.config['SAVE']).mkdir(exist_ok=True)
 
 def log(user, event):
-    with open(Path(args.save) / f'{user}.log', 'a') as fp:
+    with open(Path(app.config['SAVE']) / f'{user}.log', 'a') as fp:
         print(datetime.now(), event, file=fp)
 
 @app.route('/')
@@ -82,7 +72,7 @@ def save():
             return('', 503)
 
         try:
-            with open(Path(args.save) / save_location, 'w') as fp:
+            with open(Path(app.config['SAVE']) / save_location, 'w') as fp:
                 print(json.dumps(data), file=fp)
         except Exception:
             app.logger.debug('Save failed: ' + sys.exc_info()[0])
@@ -101,7 +91,7 @@ def load():
         app.logger.debug('Load called with bad username: ' + username)
         return('', 404)
     try:
-        with open(Path(args.save) / username, 'r') as fp:
+        with open(Path(app.config['SAVE']) / username, 'r') as fp:
             data = fp.read()
             _ = json.loads(data)
             log(username, 'Load')
