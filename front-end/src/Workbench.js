@@ -1,5 +1,6 @@
 import React from "react";
 
+import Container from "react-bootstrap/Container";
 import Tab from "react-bootstrap/Tab";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -341,7 +342,7 @@ class Workbench extends React.Component {
 
   render() {
     return (
-      <>
+      <Container fluid className="d-flex flex-column min-vh-100 overflow-hidden">
         <Modal show={this.state.login_required} onHide={this.do_login}
           backdrop="static" keyboard={false}>
           <Modal.Header>
@@ -355,8 +356,8 @@ class Workbench extends React.Component {
             <Button variant="primary" onClick={this.do_login}>Log in</Button>
           </Modal.Footer>
         </Modal>
-        <Row>
-          <Col>
+        <Row className="vh-full">
+          <Col className="vh-full overflow-auto">
             <BetterTasks topics={this.state.topics}
               cur_topic={this.state.cur_topic}
               cur_req={this.state.cur_req}
@@ -369,7 +370,7 @@ class Workbench extends React.Component {
               delete_request={this.delete_request}
               new_request={this.new_request} />
           </Col>
-          <Col>
+          <Col className="vh-full overflow-auto">
             <Tab.Container defaultActiveKey="korean" id="workbench">
               <Row className="m-2">
                 <Col sm={12}>
@@ -430,7 +431,7 @@ class Workbench extends React.Component {
             </Tab.Container>
           </Col>
         </Row>
-      </>
+      </Container>
     );
   }
 }

@@ -9,3 +9,23 @@
 mark, .mark {
     background-color: #c0eef8;
 }
+
+html, body {
+    height: 100%;
+}
+
+.vh-full {
+    height: calc(100vh - 112px);
+}
+
+.outie {
+    overflow: hidden;
+}
+
+.innie {
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 30px;
+    box-sizing: content-box;
+}
