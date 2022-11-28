@@ -377,7 +377,6 @@ class Workbench extends React.Component {
                     <Nav.Item><Nav.Link eventKey="korean">Search Korean</Nav.Link></Nav.Item>
                     <Nav.Item><Nav.Link eventKey="russian">Search Russian</Nav.Link></Nav.Item>
                     <Nav.Item><Nav.Link eventKey="chinese">Search Chinese</Nav.Link></Nav.Item>
-                    <Nav.Item><Nav.Link eventKey="topics">Topic Editor</Nav.Link></Nav.Item>
                     <Nav.Item className="ml-auto">
                       <NavDropdown eventKey="user"
                         title={"Logged in as " + this.state.username}
@@ -424,19 +423,6 @@ class Workbench extends React.Component {
                         cur_req={this.state.cur_req}
                         add_relevant={this.add_relevant}
                         remove_relevant={this.remove_relevant} />
-                    </Tab.Pane>
-                    <Tab.Pane eventKey="topics">
-                      <BetterTasks topics={this.state.topics}
-                        cur_topic={this.state.cur_topic}
-                        cur_req={this.state.cur_req}
-                        change_writeup={this.change_writeup}
-                        set_current_topic={this.set_current_topic}
-                        delete_topic={this.delete_topic}
-                        new_topic={this.new_topic}
-                        change_reqtext={this.change_reqtext}
-                        set_current_request={this.set_current_request}
-                        delete_request={this.delete_request}
-                        new_request={this.new_request} />
                     </Tab.Pane>
                   </Tab.Content>
                 </Col>
