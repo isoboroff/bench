@@ -64,7 +64,7 @@ class TopicEditor extends React.Component {
             {(index === this.props.cur_req) ? <strong>CURRENT: </strong> : ''}
           Analytic request {index + 1}</Button>
           <dd>
-            {req.req_text}
+            <b>{req.req_text}</b>
             <div>
               Request-level relevant documents:
           <ul>{req_reldocs}</ul>

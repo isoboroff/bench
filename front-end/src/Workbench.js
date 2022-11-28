@@ -307,7 +307,7 @@ class Workbench extends React.Component {
       return;
     this.setState({
       cur_topic: topic_num,
-      cur_req: -1
+      cur_req: 0
     });
   }
 
