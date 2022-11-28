@@ -56,31 +56,21 @@ class TopicEditor extends React.Component {
       }
 
       return (
-        <Form.Group controlId="request-{index}">
-          <Form.Label>
-            {(index === this.props.cur_req)
-              ? <strong>CURRENT: </strong>
-              : ''
-            }
-        Analytic request {index + 1}</Form.Label>
-          <div class="d-flex">
-            <Form.Control
-              className="mr-1"
-              type="text"
-              value={req.req_text}
-              placeholder="An analytic request."
-              onFocus={this.props.set_current_request.bind(this, this.props.topic_num, index)}
-              onChange={this.update_request.bind(this, index)}
-            />
-          </div>
-          <Form.Text className="text-muted">
-            Enter a sentence-length information request related to the analytic task.
-        </Form.Text>
-          <div>
-            Request-level relevant documents:
+        <>
+          <Button
+            onClick={this.props.set_current_request.bind(this, this.props.topic_num, index)}
+            variant={(index === this.props.cur_req) ? "primary" : "light"}
+          >
+            {(index === this.props.cur_req) ? <strong>CURRENT: </strong> : ''}
+          Analytic request {index + 1}</Button>
+          <dd>
+            {req.req_text}
+            <div>
+              Request-level relevant documents:
           <ul>{req_reldocs}</ul>
-          </div>
-        </Form.Group>
+            </div>
+          </dd>
+        </>
       );
     });
 
@@ -98,96 +88,31 @@ class TopicEditor extends React.Component {
         </Accordion.Toggle>
         <Accordion.Collapse eventKey={event_key}>
           <Card.Body>
-            <Form.Group controlId="title">
-              <Form.Label>Task title</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="title"
-                name="title"
-                value={this.props.writeup.title}
-                onChange={this.change_fields}
-              />
-              <Form.Text className="text-muted">
-                A brief title for your analytic task.
-              </Form.Text>
-            </Form.Group>
+            <dl>
+              <dt>Task title:</dt>
+              <dd> {this.props.writeup.title} </dd>
 
-            <Form.Group controlId="desc">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="A sentence-length description of the analytic task."
-                name="desc"
-                value={this.props.writeup.desc}
-                onChange={this.change_fields}
-              />
-              <Form.Text className="text-muted">
-                A single sentence describing the overarching information need.
-              </Form.Text>
-            </Form.Group>
+              <dt>Description:</dt>
+              <dd> {this.props.writeup.desc} </dd>
 
-            <Form.Group controlId="narr">
-              <Form.Label>Narrative</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows="5"
-                placeholder="A narrative paragraph."
-                name="narr"
-                value={this.props.writeup.narr}
-                onChange={this.change_fields}
-              />
-              <Form.Text className="text-muted">
-                An expanded description of the information need, including gray
-                areas/areas of interpretation and how you interpreted them as the
-                user.
-              </Form.Text>
-            </Form.Group>
+              <dt>Narrative:</dt>
+              <dd> {this.props.writeup.narr} </dd>
 
-            <Form.Group controlId="inscope">
-              <Form.Label>In Scope</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows="2"
-                placeholder="Information that is in-scope."
-                name="inscope"
-                value={this.props.writeup.inscope}
-                onChange={this.change_fields}
-              />
-              <Form.Text className="text-muted">
-                Aspects of the information that you would consider in-scope.
-              </Form.Text>
-            </Form.Group>
+              <dt>In Scope:</dt>
+              <dd> {this.props.writeup.inscope} </dd>
 
-            <Form.Group controlId="outscope">
-              <Form.Label>Out of Scope</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows="2"
-                placeholder="Information that is out of scope."
-                name="outscope"
-                value={this.props.writeup.outscope}
-                onChange={this.change_fields}
-              />
-              <Form.Text className="text-muted">
-                Aspects of the information need that you woule consider to be out of scope.
-              </Form.Text>
-            </Form.Group>
+              <dt>Out of Scope:</dt>
+              <dd> {this.props.writeup.outscope} </dd>
+            </dl>
 
             <Row className="mt-3">
-              <Col md={10}>
-                Task-level Relevant documents:
-                <ul>{reldocs}</ul>
-              </Col>
-            </Row>
-
-            <Row className="mt-3">
-              <Col md={10}>
+              <Col md={10}><dl>
                 {requests}
-              </Col>
+              </dl></Col>
             </Row>
           </Card.Body>
         </Accordion.Collapse>
-      </Card>
+      </Card >
     );
   }
 }
