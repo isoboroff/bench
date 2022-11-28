@@ -105,8 +105,8 @@ class TopicEditor extends React.Component {
               <dd> {this.props.writeup.outscope} </dd>
             </dl>
 
-            <Row className="mt-3">
-              <Col md={10}><dl>
+            <Row>
+              <Col><dl>
                 {requests}
               </dl></Col>
             </Row>
