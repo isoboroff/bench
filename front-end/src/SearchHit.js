@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import Card from "react-bootstrap/Card";
+import Badge from "react-bootstrap/Badge";
 import Accordion from "react-bootstrap/Accordion";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -127,7 +128,7 @@ function SearchHit(props) {
             </Col>
             <Col>
               {props.rel
-                ? <span className="badge badge-primary">Relevant</span>
+                ? <Badge pill bg="warning" text="dark">Relevant</Badge>
                 : ""}
             </Col>
           </Row>
