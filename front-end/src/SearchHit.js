@@ -33,26 +33,28 @@ function SearchHit(props) {
       if (!sel.isCollapsed) {
         const start = Math.min(sel.anchorOffset, sel.focusOffset);
         const end = Math.max(sel.anchorOffset, sel.focusOffset);
-        return { "start": start,
-                 "length": end - start,
-                 "text": sel.toString() };
+        return {
+          "start": start,
+          "length": end - start,
+          "text": sel.toString()
+        };
       }
     }
     return null;
   }
 
   function cardHeader(seqno, title, direction) {
-    let dir='';
-    let cname='';
+    let dir = '';
+    let cname = '';
 
     if (direction && direction === 'rtl') {
-      dir='rtl';
-      cname='text-right';
+      dir = 'rtl';
+      cname = 'text-right';
     }
 
     return <span dir={dir} className={cname}>
-             {seqno + 1}. <strong>{title}</strong>{" "}
-           </span>
+      {seqno + 1}. <strong>{title}</strong>{" "}
+    </span>
   }
 
   /**
@@ -72,23 +74,23 @@ function SearchHit(props) {
   const entities = new Map();
   if (props.people) {
     for (let p of props.people) {
-      entities.set("p_"+p, (<span class="badge badge-info ml-1">{p}</span>));
+      entities.set("p_" + p, (<span class="badge badge-info ml-1">{p}</span>));
     }
   }
   if (props.orgs) {
     for (let o of props.orgs) {
-      entities.set("o_"+o, (<span class="badge badge-success ml-1">{o}</span>));
+      entities.set("o_" + o, (<span class="badge badge-success ml-1">{o}</span>));
     }
   }
   if (props.gpes) {
     for (let g of props.gpes) {
-      entities.set("g_"+g, (<span class="badge badge-warning ml-1">{g}</span>));
+      entities.set("g_" + g, (<span class="badge badge-warning ml-1">{g}</span>));
     }
   }
 
   let title = props.title;
   if (!title) {
-    title = props.content.text.substring(0,60) + "...";
+    title = props.content.text.substring(0, 60) + "...";
   }
 
   let row_class = 'd-flex';
@@ -98,7 +100,7 @@ function SearchHit(props) {
     hdr_class += ' justify-content-end';
   }
   return (
-    <Card docid={props.hitkey}>
+    <Accordion.Item eventKey={props.hitkey}>
       <Modal show={marked} onHide={() => setMarked(false)} backgroup="static" keyboard={false}>
         <Modal.Header>
           <Modal.Title>Mark relevant?</Modal.Title>
@@ -110,45 +112,43 @@ function SearchHit(props) {
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setMarked(false)}>Cancel</Button>
           <Button variant="primary"
-                  onClick={() => {
-                    on_relevant(highlight);
-                    setMarked(false)
-                  }}>Mark relevant</Button>
+            onClick={() => {
+              on_relevant(highlight);
+              setMarked(false)
+            }}>Mark relevant</Button>
         </Modal.Footer>
       </Modal>
 
-      <Accordion.Toggle as={Card.Header} eventKey={event_key}>
-          <Container fluid>
-            <Row className={row_class}>
-              <Col className={hdr_class}>
-                {cardHeader(props.seqno, title, props.direction)}
-              </Col>
-              <Col>
-                {props.rel
-                 ? <span className="badge badge-primary">Relevant</span>
-                 : ""}
-              </Col>
-            </Row>
-          </Container>
-        </Accordion.Toggle>
-      <Accordion.Collapse eventKey={event_key}>
-        <Card.Body>
-          {props.hitkey}
-          {props.rel ? <Button className="ml-2"
-                               onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
-          <p />
-          {entities.values()} <p />
-          <div onMouseUp={(e) => {
-                 if (props.on_relevant && !props.rel && hasSelection()) {
-                   setHighlight(getSelectedText());
-                   setMarked(true);
-                 }
-               }}>
-            {doc}
-          </div>
-        </Card.Body>
-      </Accordion.Collapse>
-    </Card>
+      <Accordion.Header>
+        <Container fluid>
+          <Row className={row_class}>
+            <Col className={hdr_class}>
+              {cardHeader(props.seqno, title, props.direction)}
+            </Col>
+            <Col>
+              {props.rel
+                ? <span className="badge badge-primary">Relevant</span>
+                : ""}
+            </Col>
+          </Row>
+        </Container>
+      </Accordion.Header>
+      <Accordion.Body>
+        {props.hitkey}
+        {props.rel ? <Button className="ml-2"
+          onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
+        <p />
+        {entities.values()} <p />
+        <div onMouseUp={(e) => {
+          if (props.on_relevant && !props.rel && hasSelection()) {
+            setHighlight(getSelectedText());
+            setMarked(true);
+          }
+        }}>
+          {doc}
+        </div>
+      </Accordion.Body>
+    </Accordion.Item>
   );
 }
 
