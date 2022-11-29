@@ -44,15 +44,10 @@ class TopicEditor extends React.Component {
 
   render() {
     let event_key = "topic-" + this.props.topic_num;
-    const reldocs = [];
-    for (let [docid, extent] of this.props.qrels.entries()) {
-      reldocs.push(<li>{docid}: {extent.text}</li>);
-    }
-
     let requests = this.props.requests.map((req, index) => {
       const req_reldocs = [];
       for (let [docid, extent] of req.qrels.entries()) {
-        req_reldocs.push(<li>{docid}: {extent.text}</li>);
+        req_reldocs.push(<li key={docid}>{docid}: {extent.text}</li>);
       }
 
       return (
@@ -75,44 +70,39 @@ class TopicEditor extends React.Component {
     });
 
     return (
-      <Card>
-        <Accordion.Toggle as={Card.Header}
-          variant="link"
-          eventKey={event_key}
+      <Accordion.Item eventKey={event_key}>
+        <Accordion.Header
           onClick={this.props.set_current_topic.bind(this, this.props.topic_num)}>
-
           {this.props.current
             ? <strong>CURRENT TOPIC: </strong>
             : ''}
           {this.props.writeup.title}
-        </Accordion.Toggle>
-        <Accordion.Collapse eventKey={event_key}>
-          <Card.Body>
-            <dl>
-              <dt>Task title:</dt>
-              <dd> {this.props.writeup.title} </dd>
+        </Accordion.Header>
+        <Accordion.Body>
+          <dl>
+            <dt>Task title:</dt>
+            <dd> {this.props.writeup.title} </dd>
 
-              <dt>Description:</dt>
-              <dd> {this.props.writeup.desc} </dd>
+            <dt>Description:</dt>
+            <dd> {this.props.writeup.desc} </dd>
 
-              <dt>Narrative:</dt>
-              <dd> {this.props.writeup.narr} </dd>
+            <dt>Narrative:</dt>
+            <dd> {this.props.writeup.narr} </dd>
 
-              <dt>In Scope:</dt>
-              <dd> {this.props.writeup.inscope} </dd>
+            <dt>In Scope:</dt>
+            <dd> {this.props.writeup.inscope} </dd>
 
-              <dt>Out of Scope:</dt>
-              <dd> {this.props.writeup.outscope} </dd>
-            </dl>
+            <dt>Out of Scope:</dt>
+            <dd> {this.props.writeup.outscope} </dd>
+          </dl>
 
-            <Row>
-              <Col><dl>
-                {requests}
-              </dl></Col>
-            </Row>
-          </Card.Body>
-        </Accordion.Collapse>
-      </Card >
+          <Row>
+            <Col><dl>
+              {requests}
+            </dl></Col>
+          </Row>
+        </Accordion.Body>
+      </Accordion.Item>
     );
   }
 }
@@ -128,11 +118,13 @@ class BetterTasks extends React.Component {
 
     const topiclist = topics.map((hit, index) => (
       <TopicEditor topic_num={index}
+        key={`hit-${index}`}
         writeup={hit.writeup}
         qrels={hit.qrels}
         requests={hit.requests}
         current={index === this.props.cur_topic}
-        cur_req={(index === this.props.cur_topic) ? this.props.cur_req : -1}
+        cur_req={(index === this.props.cur_topic) ? this.props.cur_req : -1
+        }
         set_current_topic={this.props.set_current_topic}
         change_writeup={this.props.change_writeup}
         delete_topic={this.props.delete_topic}
@@ -146,7 +138,7 @@ class BetterTasks extends React.Component {
       <Container>
         <Row className="justify-content-md-center mt-5">
           <Col md={10}>
-            <Accordion defaultActiveKey={"topic-" + this.props.cur_topic}>
+            <Accordion defaultActiveKey={event_key}>
               {topiclist}
             </Accordion>
           </Col>

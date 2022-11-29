@@ -41,6 +41,29 @@ function empty_request() {
   return null;
 }
 
+function mergeDeep(...objects) {
+  const isObject = obj => obj && typeof obj === 'object';
+
+  return objects.reduce((prev, obj) => {
+    Object.keys(obj).forEach(key => {
+      const pVal = prev[key];
+      const oVal = obj[key];
+
+      if (Array.isArray(pVal) && Array.isArray(oVal)) {
+        prev[key] = pVal.concat(...oVal);
+      }
+      else if (isObject(pVal) && isObject(oVal)) {
+        prev[key] = mergeDeep(pVal, oVal);
+      }
+      else {
+        prev[key] = oVal;
+      }
+    });
+
+    return prev;
+  }, {});
+}
+
 class Workbench extends React.Component {
   constructor(props) {
     super(props);
@@ -168,7 +191,9 @@ class Workbench extends React.Component {
       })
       .then((data) => {
         if (data !== null) {
-          let new_state = JSON.parse(data, this.JSON_revive_maps);
+          let server_state = JSON.parse(data, this.JSON_revive_maps);
+          let new_state = mergeDeep(this.state, server_state);
+          console.log(new_state);
           this.setState(new_state);
         }
       })
