@@ -387,7 +387,7 @@ class Workbench extends React.Component {
               <Row className="m-2">
                 <Col sm={12}>
                   <Nav variant="tabs">
-                    <Nav.Item><Nav.Link eventKey="korean">Search Korean</Nav.Link></Nav.Item>
+                    <Nav.Item><Nav.Link eventKey="farsi">Search Farsi</Nav.Link></Nav.Item>
                     <Nav.Item><Nav.Link eventKey="russian">Search Russian</Nav.Link></Nav.Item>
                     <Nav.Item><Nav.Link eventKey="chinese">Search Chinese</Nav.Link></Nav.Item>
                     <Nav.Item className="ml-auto">
@@ -407,10 +407,11 @@ class Workbench extends React.Component {
                 </Col>
                 <Col sm={12}>
                   <Tab.Content animation>
-                    <Tab.Pane eventKey="korean">
-                      <SimpleSearchTab index="kor"
+                    <Tab.Pane eventKey="farsi">
+                      <SimpleSearchTab index="fas"
                         username={this.state.username}
                         display_doc={NeuCLIRDocument}
+                        direction="rtl"
                         topics={this.state.topics}
                         cur_topic={this.state.cur_topic}
                         cur_req={this.state.cur_req}
