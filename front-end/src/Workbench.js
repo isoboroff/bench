@@ -383,7 +383,7 @@ class Workbench extends React.Component {
         </Modal>
         <Row className="vh-full">
           <Col className="vh-full overflow-auto">
-            <Tab.Container defaultActiveKey="korean" id="workbench">
+            <Tab.Container defaultActiveKey="farsi" id="workbench">
               <Row className="m-2">
                 <Col sm={12}>
                   <Nav variant="tabs">
