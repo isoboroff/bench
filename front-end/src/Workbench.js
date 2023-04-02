@@ -383,19 +383,6 @@ class Workbench extends React.Component {
         </Modal>
         <Row className="vh-full">
           <Col className="vh-full overflow-auto">
-            <BetterTasks topics={this.state.topics}
-              cur_topic={this.state.cur_topic}
-              cur_req={this.state.cur_req}
-              change_writeup={this.change_writeup}
-              set_current_topic={this.set_current_topic}
-              delete_topic={this.delete_topic}
-              new_topic={this.new_topic}
-              change_reqtext={this.change_reqtext}
-              set_current_request={this.set_current_request}
-              delete_request={this.delete_request}
-              new_request={this.new_request} />
-          </Col>
-          <Col className="vh-full overflow-auto">
             <Tab.Container defaultActiveKey="korean" id="workbench">
               <Row className="m-2">
                 <Col sm={12}>
