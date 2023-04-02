@@ -80,16 +80,16 @@ class Workbench extends React.Component {
     this.do_save = this.do_save.bind(this);
     this.do_logout = this.do_logout.bind(this);
     this.do_login = this.do_login.bind(this);
-    this.add_relevant = this.add_relevant.bind(this);
-    this.remove_relevant = this.remove_relevant.bind(this);
-    this.change_writeup = this.change_writeup.bind(this);
-    this.change_reqtext = this.change_reqtext.bind(this);
-    this.delete_topic = this.delete_topic.bind(this);
-    this.delete_request = this.delete_request.bind(this);
-    this.new_topic = this.new_topic.bind(this);
-    this.new_request = this.new_request.bind(this);
-    this.set_current_topic = this.set_current_topic.bind(this);
-    this.set_current_request = this.set_current_request.bind(this);
+    // this.add_relevant = this.add_relevant.bind(this);
+    // this.remove_relevant = this.remove_relevant.bind(this);
+    // this.change_writeup = this.change_writeup.bind(this);
+    // this.change_reqtext = this.change_reqtext.bind(this);
+    // this.delete_topic = this.delete_topic.bind(this);
+    // this.delete_request = this.delete_request.bind(this);
+    // this.new_topic = this.new_topic.bind(this);
+    // this.new_request = this.new_request.bind(this);
+    // this.set_current_topic = this.set_current_topic.bind(this);
+    // this.set_current_request = this.set_current_request.bind(this);
   }
 
   clear_state() {

@@ -49,17 +49,16 @@ class SearchResults extends React.Component {
           content={doc}
           date={doc.date}
           rel={qrels.has(hit.doc_id) ? qrels.get(hit.doc_id) : null}
-          on_relevant={this.props.on_relevant}
         />);
       });
       let count = hits.length + " results found.";
-      if (!isNaN(this.props.cur_topic) && this.props.cur_topic !== -1) {
-        count += "  Highlight passages to mark a document relevant for topic "
-          + (this.props.cur_topic + 1);
-        if (this.props.cur_req !== -1) {
-          count += ", request " + (this.props.cur_req + 1);
-        }
-      }
+      // if (!isNaN(this.props.cur_topic) && this.props.cur_topic !== -1) {
+      //   count += "  Highlight passages to mark a document relevant for topic "
+      //     + (this.props.cur_topic + 1);
+      //   if (this.props.cur_req !== -1) {
+      //     count += ", request " + (this.props.cur_req + 1);
+      //   }
+      // }
       let num_pages = Math.floor(this.props.results.hits.length / 10);
       return (
         <div>

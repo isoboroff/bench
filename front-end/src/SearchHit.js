@@ -136,16 +136,9 @@ function SearchHit(props) {
       </Accordion.Header>
       <Accordion.Body>
         {props.hitkey}
-        {props.rel ? <Button className="ml-2"
-          onClick={() => on_relevant(null)}>Clear relevant</Button> : ""}
         <p />
         {entities.values()} <p />
-        <div onMouseUp={(e) => {
-          if (props.on_relevant && !props.rel && hasSelection()) {
-            setHighlight(getSelectedText());
-            setMarked(true);
-          }
-        }}>
+        <div>
           {doc}
         </div>
       </Accordion.Body>
